@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: broad-fhir
+spec:
+  selector:
+    app: broad-fhir
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broad-fhir
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broad-fhir
+  template:
+    metadata:
+      labels:
+        app: broad-fhir
+    spec:
+      containers:
+        - name: app
+          image: gcr.io/node-test-288119/broad/fhir:latest
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always
