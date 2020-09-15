@@ -1,0 +1,8 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "arrow-body-style": "off",
+    "object-curly-newline": "off",
+    "operator-linebreak": "off"
+  }
+}

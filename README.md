@@ -1,48 +1,9 @@
-# Deploying to GCP Kubernetes Engine
+# Broad FHIR
 
-Source: https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
+> FHIR is an interoperability standard intended to facilitate the exchange of healthcare information between healthcare providers, patients, caregivers, payers, researchers, and any one else involved in the healthcare ecosystem. It consists of 2 main parts – a content model in the form of ‘resources’, and a specification for the exchange of these resources in the form of real-time RESTful interfaces as well as messaging and Documents.
 
-## Enable the Container Registry API for your Project
+## Documentation
 
-```
-https://cloud.google.com/container-registry/docs/quickstart
-```
+Read our docs pages for information on deployment, tech stack, design decisions, and more.
 
-## Get Authorized
-
-```
-gcloud auth login
-gcloud auth configure-docker
-```
-
-## Create Cluster
-
-```
-gcloud config set project ${PROJECT_ID} # node-test-288119
-gcloud config set compute/zone us-central-1 # Or other compute zone
-gcloud container clusters create my-cluster # Will take a minute to spin up
-gcloud compute instances list
-```
-
-## Build this image
-
-```
-docker build . -t gcr.io/${PROJECT_ID}/broad-fhir
-```
-
-ex: `docker build . -t gcr.io/node-test-288119/broad/fhir`
-
-3. Push to GCP Container Registry
-
-```
-docker push gcr.io/${PROJECT_ID}/asymmetrik/broad-fhir
-```
-
-ex: `docker push gcr.io/node-test-288119/broad/fhir`
-
-## Create deployment
-
-```
-kubectl create deployment my-deployment --image=gcr.io/node-test-288119/broad/fhir
-kubectl autoscale deployment my-deployment --cpu-percent=80 --min=1 --max=5
-```
+[Docs](./docs/index.md)

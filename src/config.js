@@ -5,6 +5,7 @@ const path = require('path');
 // Set up whitelist
 const whitelistEnv =
   (env.WHITELIST && env.WHITELIST.split(',').map((host) => host.trim())) || false;
+
 // If there are multiple, keep them as an array
 const whitelist = whitelistEnv && whitelistEnv.length === 1 ? whitelistEnv[0] : whitelistEnv;
 
@@ -16,9 +17,9 @@ const fhirServerConfig = {
   //     // if you use this strategy, you need to add the corresponding env vars to docker-compose
   //     //
   //     // strategy: {
-  //     // 	name: 'bearer',
-  //     // 	useSession: false,
-  //     // 	service: './src/strategies/bearer.strategy.js'
+  //     //   name: 'bearer',
+  //     //   useSession: false,
+  //     //   service: './src/strategies/bearer.strategy.js'
   //     // },
   //   },
   server: {
@@ -54,8 +55,8 @@ const fhirServerConfig = {
   //
   // Example:
   // Account: {
-  //		service: './src/services/account/account.service.js',
-  //		versions: [ VERSIONS['4_0_0'], VERSIONS['3_0_1'], VERSIONS['1_0_2'] ]
+  //    service: './src/services/account/account.service.js',
+  //    versions: [ VERSIONS['4_0_0'], VERSIONS['3_0_1'], VERSIONS['1_0_2'] ]
   // },
   //
   profiles: {
@@ -63,7 +64,10 @@ const fhirServerConfig = {
       service: './src/services/patient/index.js',
       versions: [VERSIONS['4_0_0']],
       metadata: path.join(__dirname, './metadata/patient.metadata.js'),
-      baseUrl: '/r4',
+    },
+    molecularsequence: {
+      service: './src/services/molecularsequence/index.js',
+      versions: [VERSIONS['4_0_0']],
     },
   },
 };
