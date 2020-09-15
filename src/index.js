@@ -3,7 +3,7 @@ const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const logger = loggers.get();
 
-const { fhirServerConfig } = require('./config');
+const fhirServerConfig = require('./config');
 
 const main = async () => {
   // Start our FHIR server

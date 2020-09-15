@@ -1,14 +1,12 @@
-const { VERSIONS } = require("@asymmetrik/node-fhir-server-core").constants;
-const env = require("var");
-const path = require("path");
+const { VERSIONS } = require('@asymmetrik/node-fhir-server-core').constants;
+const env = require('var');
+const path = require('path');
 
 // Set up whitelist
 const whitelistEnv =
-  (env.WHITELIST && env.WHITELIST.split(",").map((host) => host.trim())) ||
-  false;
+  (env.WHITELIST && env.WHITELIST.split(',').map((host) => host.trim())) || false;
 // If there are multiple, keep them as an array
-const whitelist =
-  whitelistEnv && whitelistEnv.length === 1 ? whitelistEnv[0] : whitelistEnv;
+const whitelist = whitelistEnv && whitelistEnv.length === 1 ? whitelistEnv[0] : whitelistEnv;
 
 const fhirServerConfig = {
   //   auth: {
@@ -62,14 +60,12 @@ const fhirServerConfig = {
   //
   profiles: {
     patient: {
-      service: "./src/services/patient/index.js",
-      versions: [VERSIONS["4_0_0"]],
-      metadata: path.join(__dirname, "./metadata/patient.metadata.js"),
-      baseUrl: "/r4",
+      service: './src/services/patient/index.js',
+      versions: [VERSIONS['4_0_0']],
+      metadata: path.join(__dirname, './metadata/patient.metadata.js'),
+      baseUrl: '/r4',
     },
   },
 };
 
-module.exports = {
-  fhirServerConfig,
-};
+module.exports = fhirServerConfig;
