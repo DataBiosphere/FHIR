@@ -1,3 +1,4 @@
+require('dotenv').config();
 const FHIRServer = require('@asymmetrik/node-fhir-server-core');
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 

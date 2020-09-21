@@ -1,10 +1,9 @@
 const { VERSIONS } = require('@asymmetrik/node-fhir-server-core').constants;
-const env = require('var');
 const path = require('path');
 
 // Set up whitelist
 const whitelistEnv =
-  (env.WHITELIST && env.WHITELIST.split(',').map((host) => host.trim())) || false;
+  (process.env.WHITELIST && process.env.WHITELIST.split(',').map((host) => host.trim())) || false;
 
 // If there are multiple, keep them as an array
 const whitelist = whitelistEnv && whitelistEnv.length === 1 ? whitelistEnv[0] : whitelistEnv;
@@ -24,7 +23,7 @@ const fhirServerConfig = {
   //   },
   server: {
     // support various ENV that uses PORT vs SERVER_PORT
-    port: env.PORT || env.SERVER_PORT,
+    port: process.env.PORT || 3000,
     // allow Access-Control-Allow-Origin
     corsOptions: {
       maxAge: 86400,
@@ -32,7 +31,7 @@ const fhirServerConfig = {
     },
   },
   logging: {
-    level: env.LOGGING_LEVEL,
+    level: process.env.LOGGING_LEVEL || 'info',
   },
   //
   // If you want to set up conformance statement with security enabled
