@@ -32,7 +32,7 @@ docker build . -t gcr.io/${PROJECT_ID}/broad-fhir
 
 ex: `docker build . -t gcr.io/node-test-288119/broad/fhir`
 
-3. Push to GCP Container Registry
+## Push to GCP Container Registry
 
 ```
 docker push gcr.io/${PROJECT_ID}/asymmetrik/broad-fhir
@@ -45,6 +45,12 @@ ex: `docker push gcr.io/node-test-288119/broad/fhir`
 ```
 kubectl create deployment my-deployment --image=gcr.io/node-test-288119/broad/fhir
 kubectl autoscale deployment my-deployment --cpu-percent=80 --min=1 --max=5
+```
+
+## Redeploying new latest image
+
+```
+kubectl rollout restart deployment
 ```
 
 ## Up Next 👉

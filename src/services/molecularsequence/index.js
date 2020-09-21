@@ -14,7 +14,7 @@ module.exports.searchById = async () => {
 module.exports.create = async () => {
   logger.info('MolecularSequence >>> create');
   return {
-    id: 'test-id',
+    id: 'temp-test-id',
   };
 };
 
