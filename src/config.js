@@ -25,10 +25,7 @@ const fhirServerConfig = {
     // support various ENV that uses PORT vs SERVER_PORT
     port: process.env.PORT || 3000,
     // allow Access-Control-Allow-Origin
-    corsOptions: {
-      maxAge: 86400,
-      origin: whitelist,
-    },
+    corsOptions: {},
   },
   logging: {
     level: process.env.LOGGING_LEVEL || 'info',
@@ -63,6 +60,7 @@ const fhirServerConfig = {
       service: './src/services/patient/index.js',
       versions: [VERSIONS['4_0_0']],
       metadata: path.join(__dirname, './metadata/patient.metadata.js'),
+      baseUrls: ['/'],
     },
     molecularsequence: {
       service: './src/services/molecularsequence/index.js',
