@@ -60,9 +60,12 @@ const fhirServerConfig = {
       service: './src/services/patient/index.js',
       versions: [VERSIONS['4_0_0']],
       metadata: path.join(__dirname, './metadata/patient.metadata.js'),
-      baseUrls: ['/'],
     },
     molecularsequence: {
+      service: './src/services/molecularsequence/index.js',
+      versions: [VERSIONS['4_0_0']],
+    },
+    allergyintolerance: {
       service: './src/services/molecularsequence/index.js',
       versions: [VERSIONS['4_0_0']],
     },
