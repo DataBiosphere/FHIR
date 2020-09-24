@@ -6,4 +6,4 @@
 
 Read our docs pages for information on deployment, tech stack, design decisions, and more.
 
-[Docs](./docs/index.md)
+[Docs](./docs/INDEX.md)
