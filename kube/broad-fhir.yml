@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: gcr.io/node-test-288119/broad/fhir:latest
+          image: gcr.io/${PROJECT_ID}/broad/fhir:latest
           ports:
             - containerPort: 3000
           imagePullPolicy: Always
