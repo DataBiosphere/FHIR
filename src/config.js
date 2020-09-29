@@ -1,13 +1,6 @@
 const { VERSIONS } = require('@asymmetrik/node-fhir-server-core').constants;
 const path = require('path');
 
-// Set up whitelist
-const whitelistEnv =
-  (process.env.WHITELIST && process.env.WHITELIST.split(',').map((host) => host.trim())) || false;
-
-// If there are multiple, keep them as an array
-const whitelist = whitelistEnv && whitelistEnv.length === 1 ? whitelistEnv[0] : whitelistEnv;
-
 const fhirServerConfig = {
   //   auth: {
   //     // This servers URI
@@ -60,10 +53,12 @@ const fhirServerConfig = {
       service: './src/services/patient/index.js',
       versions: [VERSIONS['4_0_0']],
       metadata: path.join(__dirname, './metadata/patient.metadata.js'),
+      baseUrls: ['/api'],
     },
     molecularsequence: {
       service: './src/services/molecularsequence/index.js',
       versions: [VERSIONS['4_0_0']],
+      baseUrls: ['/api'],
     },
   },
 };

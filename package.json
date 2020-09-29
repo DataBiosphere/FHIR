@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@asymmetrik/node-fhir-server-core": "^2.1.1",
+    "@asymmetrik/node-fhir-server-core": "^2.2.0",
     "dotenv": "^8.2.0"
   },
   "devDependencies": {
