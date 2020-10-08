@@ -4,4 +4,4 @@ A fundemental concept for understanding this server is understanding [Node FHIR 
 
 ## Up Next 👉
 
-- [Home](./INDEX.md)
+- [Configuring the server](./CONFIGURATION.md)

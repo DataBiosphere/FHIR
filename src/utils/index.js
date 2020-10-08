@@ -1,12 +1,25 @@
+const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
+const { VERSIONS } = require('@asymmetrik/node-fhir-server-core/dist/constants');
+
 /**
- * @name exports
- * @summary Convenience wrapper for error handling async/await
- * @example
- *  const [ err, thing ] = await asyncHandler(somePromise(...));
- *  if (err) console.error('Something happened')
+ *
+ * @param {string} resources
+ * @param {string} fhirVersion
  */
-const asyncWrapper = (promise) => promise.then((data) => [undefined, data]).catch((err) => [err]);
+const buildSearchBundle = (resources, fhirVersion = VERSIONS['4_0_0']) => {
+  const Bundle = resolveSchema(fhirVersion, 'Bundle');
+  return new Bundle({
+    type: 'searchset',
+    timestamp: new Date(),
+    total: resources.length,
+    entry: resources.map((resource) => {
+      return {
+        resource,
+      };
+    }),
+  });
+};
 
 module.exports = {
-  asyncWrapper,
+  buildSearchBundle,
 };

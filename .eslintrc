@@ -1,8 +1,12 @@
 {
-  "extends": "airbnb",
+  "extends": ["airbnb", "prettier"],
+  "env": {
+    "jest": true
+  },
   "rules": {
     "arrow-body-style": "off",
     "object-curly-newline": "off",
-    "operator-linebreak": "off"
+    "operator-linebreak": "off",
+    "class-methods-use-this": "off"
   }
 }
