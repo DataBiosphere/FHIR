@@ -65,6 +65,6 @@ Reconfigure kubectl with gcloud
 gcloud container clusters get-credentials ${CLUSTER_NAME} --zone=${CLUSER_ZONE}
 ```
 
-## Up Next 👉
+## Up Next
 
 - [Home](./INDEX.md)

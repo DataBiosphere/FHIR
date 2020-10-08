@@ -13,6 +13,6 @@ environment variables. The following environment variables should be defined:
 | PORT                                | no       | 3000          |                                              |
 | HOST_NAME                           | no       | localhost     |                                              |
 
-## Up Next 👉
+## Up Next
 
 - [Deploying to Kubernetes](./DEPLOYMENT.md)
