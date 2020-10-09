@@ -16,7 +16,7 @@ describe('MolecularSequence service tests', () => {
   });
 
   it('should search for MolecularSequence', () => {
-    service.search();
+    service.search({ base_version: 'api' }, { req: { query: {} } });
     expect(getAllSpy).toHaveBeenCalled();
   });
 });

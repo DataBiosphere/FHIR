@@ -30,7 +30,7 @@ class MolecularSequenceService {
    * @param {number} page
    * @param {number} pageSize
    */
-  async getAll(selection = '*', page = 0, pageSize = 20) {
+  async getAll({ selection = '*', page = 0, pageSize = 20 } = {}) {
     const [offset, limit] = this.paginate(page, pageSize);
     const query = knex
       .select(selection)
@@ -38,7 +38,8 @@ class MolecularSequenceService {
       .offset(offset)
       .limit(limit)
       .toString();
-    return this.api.sendQuery(query);
+    const [rows] = await this.api.sendQuery(query);
+    return rows;
   }
 }
 

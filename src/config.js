@@ -14,6 +14,8 @@ const fhirServerConfig = {
       baseUrls: ['/api'],
     },
   },
+  url: process.env.URL,
+  bundleSize: process.env.BUNDLE_SIZE || 20,
 };
 
 module.exports = fhirServerConfig;
