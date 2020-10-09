@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:lts'
+        }
+    }
 
     environment {
         NODE_ENV = 'test'
