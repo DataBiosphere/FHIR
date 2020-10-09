@@ -20,11 +20,6 @@ const search = async (args, { req }) => {
   return buildSearchBundle({ resources: molecularSequences, page: _page, pageSize: _count });
 };
 
-const searchById = async () => {
-  logger.info('MolecularSequence >>> searchById');
-};
-
 module.exports = {
   search,
-  searchById,
 };

@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "jest src",
+    "test:coverage": "jest src --collectCoverage",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "prettier-check": "prettier --check \"**/*.{js,mjs,cjs,jsx,json,ts,tsx,md,mdx,css,html,yml,yaml,scss,less,graphql,graphqls,gql}\"",
