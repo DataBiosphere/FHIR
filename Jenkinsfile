@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image: 'node:lts'
+            image 'node:lts'
         }
     }
 
