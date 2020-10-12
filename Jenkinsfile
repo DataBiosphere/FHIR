@@ -1,12 +1,8 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts'
-        }
-    }
+    agent any
 
     tools {
-        docker 'docker'
+        nodejs 'node'
     }
 
     environment {
