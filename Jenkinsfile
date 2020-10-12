@@ -1,8 +1,12 @@
 pipeline {
     agent {
         docker {
-            image 'node:lts'
+            image: 'node:lts'
         }
+    }
+
+    tools {
+        docker 'docker'
     }
 
     environment {
@@ -27,21 +31,8 @@ pipeline {
             }
         }
 
-        stage('Build Docker') {
-            steps {
-                echo 'TODO'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'TODO'
-            }
-        }
-
         stage('Cleanup') {
             steps {
-                echo 'Cleanup'
                 sh 'npm prune'
                 sh 'rm node_modules -rf'
             }
