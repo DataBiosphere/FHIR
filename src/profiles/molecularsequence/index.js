@@ -17,7 +17,12 @@ const search = async (args, { req }) => {
     page: _page,
     pageSize: _count,
   });
-  return buildSearchBundle({ resources: molecularSequences, page: _page, pageSize: _count });
+  return buildSearchBundle({
+    resourceType: 'MolecularSequence',
+    resources: molecularSequences,
+    page: _page,
+    pageSize: _count,
+  });
 };
 
 module.exports = {

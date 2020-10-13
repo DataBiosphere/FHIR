@@ -47,7 +47,7 @@ const securityStatement = (securityUrls) => {
   };
 };
 
-const generateStatement = ({ base_version: version }) => {
+const generateStatement = (args) => {
   return {
     makeStatement,
     securityStatement,

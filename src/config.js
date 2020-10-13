@@ -13,6 +13,7 @@ const fhirServerConfig = {
       service: path.resolve('./src/profiles/molecularsequence/index.js'),
       metadata: path.resolve('./src/profiles/molecularsequence/metadata'),
       versions: [VERSIONS['4_0_0']],
+      baseUrls: ['/api'],
     },
   },
   url: process.env.URL,
