@@ -1,4 +1,5 @@
 const { VERSIONS } = require('@asymmetrik/node-fhir-server-core').constants;
+const path = require('path');
 
 const fhirServerConfig = {
   server: {
@@ -9,9 +10,9 @@ const fhirServerConfig = {
   },
   profiles: {
     molecularsequence: {
-      service: './src/profiles/molecularsequence/index.js',
+      service: path.resolve('./src/profiles/molecularsequence/index.js'),
+      metadata: path.resolve('./src/profiles/molecularsequence/metadata'),
       versions: [VERSIONS['4_0_0']],
-      baseUrls: ['/api'],
     },
   },
   url: process.env.URL,

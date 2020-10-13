@@ -7,6 +7,7 @@
     "arrow-body-style": "off",
     "object-curly-newline": "off",
     "operator-linebreak": "off",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "no-underscore-dangle"
   }
 }
