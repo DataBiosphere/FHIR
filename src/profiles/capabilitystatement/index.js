@@ -2,6 +2,7 @@ const { VERSIONS } = require('@asymmetrik/node-fhir-server-core/dist/constants')
 const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 
 const makeStatement = (resources) => {
+  console.log(resources);
   let CapabilityStatement = resolveSchema(VERSIONS['4_0_0'], 'CapabilityStatement');
 
   return new CapabilityStatement({
@@ -17,10 +18,19 @@ const makeStatement = (resources) => {
     implementation: {
       description: 'Broad FHIR Server',
     },
-    fhirVersion: 'r4',
+    fhirVersion: '4_0_0',
     acceptUnknown: 'extensions',
     format: ['application/fhir+json'],
-    rest: resources,
+    rest: {
+      ...resources,
+      searchParam: [
+        {
+          name: '_count',
+          definition: '',
+          type: 'number',
+        },
+      ],
+    },
   });
 };
 

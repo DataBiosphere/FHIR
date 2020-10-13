@@ -11,9 +11,19 @@ module.exports = {
     return {
       type: 'MolecularSequence',
       profile: {
-        reference: 'http://hl7.org/fhir/molecularsequence.html',
+        reference: 'http://www.hl7.org/fhir/molecularsequence.profile.json',
       },
-      searchParam: [_count],
+      documentation: 'This server not not let clients create MolecularSequences',
+      versioning: 'no-version',
+      readHistory: false,
+      updateCreate: false,
+      conditionalCreate: false,
+      conditionalRead: 'not-supported',
+      conditionalUpdate: false,
+      conditionalDelete: 'not-supported',
+      searchInclude: [],
+      searchRevInclude: [],
+      searchParam: [],
     };
   },
 };
