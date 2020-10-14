@@ -38,16 +38,15 @@ jobs:
       - name: Build
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-6`
-          echo $TAG
+          echo Building image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
           docker build -t "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" .
 
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-6`
-          echo $TAG
-          echo $PROJECT_ID
-          echo "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
           docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
           docker tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+          echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
           docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
