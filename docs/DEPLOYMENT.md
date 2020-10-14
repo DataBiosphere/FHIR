@@ -29,7 +29,7 @@ gcloud compute instances list
 ## Build this image
 
 ```
-docker build . -t gcr.io/${PROJECT_ID}/broad/fhir
+docker build . -t gcr.io/${PROJECT_ID}/broad/fhir:$(git log -1 --format=%h)
 ```
 
 ex: `docker build . -t gcr.io/project-288119/fhir`
@@ -37,7 +37,7 @@ ex: `docker build . -t gcr.io/project-288119/fhir`
 ## Push to GCP Container Registry
 
 ```
-docker push gcr.io/${PROJECT_ID}/broad/fhir
+docker push gcr.io/${PROJECT_ID}/broad/fhir:$(git log -1 --format=%h)
 ```
 
 ex: `docker push gcr.io/project-288119/broad/fhir`
@@ -45,14 +45,14 @@ ex: `docker push gcr.io/project-288119/broad/fhir`
 ## Create deployment
 
 ```
-kubectl create deployment deployment --image=gcr.io/${PROJECT_ID}/broad/fhir
-kubectl autoscale deployment deployment --cpu-percent=80 --min=1 --max=5
+kubectl create deployment fhir --image=gcr.io/${PROJECT_ID}/broad/fhir:$(git log -1 --format=%h)
+kubectl autoscale deployment fhir --cpu-percent=80 --min=1 --max=5
 ```
 
-## Redeploying new latest image
+## Deploying a new image
 
 ```
-kubectl rollout restart deployment
+kubectl set image deployments/fhir gcr.io/${PROJECT_ID}/broad/fhir:$(git log -1 --format=%h)
 ```
 
 ## Common issues
