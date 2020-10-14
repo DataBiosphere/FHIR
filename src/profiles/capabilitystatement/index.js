@@ -2,7 +2,7 @@ const { VERSIONS } = require('@asymmetrik/node-fhir-server-core/dist/constants')
 const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 
 const makeStatement = (resources) => {
-  let CapabilityStatement = resolveSchema(VERSIONS['4_0_0'], 'CapabilityStatement');
+  const CapabilityStatement = resolveSchema(VERSIONS['4_0_0'], 'CapabilityStatement');
 
   return new CapabilityStatement({
     status: 'draft',
@@ -56,7 +56,7 @@ const securityStatement = (securityUrls) => {
   };
 };
 
-const generateStatement = (args) => {
+const generateStatement = () => {
   return {
     makeStatement,
     securityStatement,
