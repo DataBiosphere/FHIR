@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb", "prettier"],
+  "extends": ["eslint:recommended", "airbnb", "prettier"],
   "env": {
     "jest": true
   },
@@ -8,6 +8,6 @@
     "object-curly-newline": "off",
     "operator-linebreak": "off",
     "class-methods-use-this": "off",
-    "no-underscore-dangle"
+    "no-underscore-dangle": 0
   }
 }

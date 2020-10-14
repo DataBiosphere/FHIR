@@ -26,7 +26,7 @@ const getLinks = ({ baseUrl, resourceType, page, pageSize }) => {
   const links = [];
 
   const linkSelf = new URL(resourceType, baseUrl);
-  console.log(linkSelf);
+
   linkSelf.searchParams.set('_page', Number(page));
   linkSelf.searchParams.set('_count', pageSize);
 
@@ -38,7 +38,7 @@ const getLinks = ({ baseUrl, resourceType, page, pageSize }) => {
   const urlSelf = buildLinkFromUrl('self', linkSelf);
 
   if (page > 1) {
-    const linkPrevious = new URL(resourcePath, baseUrl);
+    const linkPrevious = new URL(resourceType, baseUrl);
     linkNext.searchParams.set('_page', Number(page) - 1);
     linkNext.searchParams.set('_count', pageSize);
     links.push(buildLinkFromUrl('previous', linkPrevious));

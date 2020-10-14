@@ -11,10 +11,10 @@ describe('Utils tests', () => {
     const baseUrl = 'https://example.com';
     const page = 2;
     const pageSize = 20;
-    expect(getLinks(baseUrl, page, pageSize)).toEqual([
-      { relation: 'previous', url: 'https://example.com/' },
-      { relation: 'self', url: 'https://example.com/?_page=2&_count=20' },
-      { relation: 'next', url: 'https://example.com/?_page=3&_count=20' },
+    expect(getLinks({ baseUrl, resourceType: 'Patient', page, pageSize })).toEqual([
+      { relation: 'previous', url: 'https://example.com/Patient' },
+      { relation: 'self', url: 'https://example.com/Patient?_page=2&_count=20' },
+      { relation: 'next', url: 'https://example.com/Patient?_page=3&_count=20' },
     ]);
   });
 
