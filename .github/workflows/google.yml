@@ -9,6 +9,7 @@ on:
 env:
   GITHUB_SHA: ${{ github.sha }}
   GITHUB_REF: ${{ github.ref }}
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
   IMAGE: fhir
   ORGANIZATION: broad
   REGISTRY_HOSTNAME: gcr.io
@@ -45,6 +46,6 @@ jobs:
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-6`
           echo $TAG
-          docker push "$REGISTRY_HOSTNAME"/"$ORGANIZATION"/"$IMAGE":"$TAG"
-          docker tag "$REGISTRY_HOSTNAME"/"$ORGANIZATION"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$ORGANIZATION"/"$IMAGE":latest
-          docker push "$REGISTRY_HOSTNAME"/"$ORGANIZATION"/"$IMAGE":latest
+          docker push "$REGISTRY_HOSTNAME"/"PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker tag "$REGISTRY_HOSTNAME"/"PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$ORGANIZATION"/"$IMAGE":latest
+          docker push "$REGISTRY_HOSTNAME"/"PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
