@@ -52,7 +52,7 @@ kubectl autoscale deployment fhir --cpu-percent=80 --min=1 --max=5
 ## Deploying a new image
 
 ```
-kubectl set image deployments/fhir gcr.io/${PROJECT_ID}/broad/fhir:$(git log -1 --format=%h)
+kubectl set image deployments/fhir app=gcr.io/${PROJECT_ID}/broad/fhir:$(git log -1 --format=%h)
 ```
 
 ## Common issues
