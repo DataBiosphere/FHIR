@@ -46,7 +46,7 @@ jobs:
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-6`
           echo $TAG
-          echo $REGISTRY_HOSTNAME"/"PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
-          docker push "$REGISTRY_HOSTNAME"/"PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
-          docker tag "$REGISTRY_HOSTNAME"/"PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$ORGANIZATION"/"$IMAGE":latest
-          docker push "$REGISTRY_HOSTNAME"/"PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+          echo "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker push "$REGISTRY_HOSTNAME"/"P$ROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+          docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
