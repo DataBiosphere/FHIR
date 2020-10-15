@@ -62,6 +62,7 @@ jobs:
       - name: Print testsing
         run: |
           pwd
+          ls -a
           cat creds.json
 
       - name: Build

@@ -11,6 +11,8 @@
 require('dotenv').config();
 const fs = require('fs');
 
+const GCP_CRED_FILENAME = 'creds.json';
+
 const {
   TYPE,
   PROJECT_ID,
@@ -23,3 +25,19 @@ const {
   AUTH_PROVIDER_X509_CERT_URL,
   CLIENT_X509_CERT_URL,
 } = process.env;
+
+fs.writeFileSync(
+  GCP_CRED_FILENAME,
+  JSON.stringify({
+    TYPE,
+    PROJECT_ID,
+    PRIVATE_KEY_ID,
+    PRIVATE_KEY,
+    CLIENT_EMAIL,
+    CLIENT_ID,
+    AUTH_URI,
+    TOKEN_URI,
+    AUTH_PROVIDER_X509_CERT_URL,
+    CLIENT_X509_CERT_URL,
+  })
+);
