@@ -53,6 +53,9 @@ jobs:
       - name: Setup docker
         run: gcloud auth configure-docker
 
+      - name: Install Node Modules
+        run: npm install
+
       - name: Generate GCP Credentials
         run: node scripts/create-gcp-cred-file.js
 
