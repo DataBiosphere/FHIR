@@ -51,10 +51,10 @@ jobs:
           service_account_key: ${{ secrets.GCR_KEY }}
 
       - name: Setup docker
-      - run: gcloud auth configure-docker
+        run: gcloud auth configure-docker
 
       - name: Generate GCP Credentials
-      - run: node scripts/create-cred-file.js
+        run: node scripts/create-cred-file.js
 
       - name: Build
         run: |
