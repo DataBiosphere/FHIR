@@ -2,10 +2,9 @@ name: Build and Push to GCR
 
 on:
   push:
+    branches:
+      - master
 
-# Environment variables available to all jobs and steps in this workflow
-#  GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
-#  GKE_KEY: ${{ secrets.GKE_KEY }}
 env:
   GITHUB_SHA: ${{ github.sha }}
   GITHUB_REF: ${{ github.ref }}
@@ -15,7 +14,27 @@ env:
   REGISTRY_HOSTNAME: gcr.io
 
 jobs:
-  setup-build-publish-deploy:
+  test:
+    name: Run Jest tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+        env:
+          NODE_ENV: TEST
+      - name: Install
+        run: npm install
+      - name: Test
+        run: npm test
+  build-and-publish-to-gcr:
     name: Setup, Build, and Publish
     runs-on: ubuntu-latest
     steps:
@@ -33,14 +52,12 @@ jobs:
           # Set up docker to authenticate
           # via gcloud command-line tool.
           gcloud auth configure-docker
-
       # Build the Docker image
       - name: Build
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-6`
           echo Building image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
           docker build -t "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" .
-
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |
