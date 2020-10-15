@@ -54,7 +54,7 @@ jobs:
         run: gcloud auth configure-docker
 
       - name: Generate GCP Credentials
-        run: node scripts/create-cred-file.js
+        run: node scripts/create-gcp-cred-file.js
 
       - name: Build
         run: |
