@@ -59,6 +59,11 @@ jobs:
       - name: Generate GCP Credentials
         run: node scripts/create-gcp-cred-file.js
 
+      - name: Print testsing
+        run: |
+          pwd
+          cat creds.json
+
       - name: Build
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-7`
