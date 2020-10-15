@@ -41,24 +41,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Setup gcloud CLI
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '270.0.0'
           service_account_key: ${{ secrets.GCR_KEY }}
 
-      # Configure docker to use the gcloud command-line tool as a credential helper
-      - run: |
-          # Set up docker to authenticate
-          # via gcloud command-line tool.
-          gcloud auth configure-docker
-      # Build the Docker image
+      - name: Setup docker
+      - run: gcloud auth configure-docker
+
+      - name: Generate GCP Credentials
+      - run: node scripts/create-cred-file.js
+
       - name: Build
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-6`
           echo Building image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
           docker build -t "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" .
-      # Push the Docker image to Google Container Registry
+
       - name: Publish
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-6`
