@@ -61,13 +61,13 @@ jobs:
 
       - name: Build
         run: |
-          export TAG=`echo $GITHUB_SHA | cut -c1-6`
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
           echo Building image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
           docker build -t "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" .
 
       - name: Publish
         run: |
-          export TAG=`echo $GITHUB_SHA | cut -c1-6`
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
           echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
           docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
           docker tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
