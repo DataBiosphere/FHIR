@@ -68,11 +68,8 @@ jobs:
       - name: Generate GCP Credentials
         run: node scripts/create-gcp-cred-file.js
 
-      - name: Print testsing
-        run: |
-          pwd
-          ls -a
-          cat creds.json
+      - name: Generate env
+        run: echo
 
       - name: Build
         run: |

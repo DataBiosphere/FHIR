@@ -4,11 +4,11 @@ describe('CapabilityStatement tests', () => {
   it('', () => {
     const resources = [
       {
-        type: 'MolecularSequence',
+        type: 'DiagnosticReport',
         profile: {
-          reference: 'http://www.hl7.org/fhir/molecularsequence.profile.json',
+          reference: 'http://www.hl7.org/fhir/DiagnosticReport.profile.json',
         },
-        documentation: 'This server not not let clients create MolecularSequences',
+        documentation: 'This server does not let clients create DiagnosticReports',
         interaction: [
           {
             code: 'search-type',

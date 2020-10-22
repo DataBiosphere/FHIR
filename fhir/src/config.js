@@ -9,9 +9,9 @@ const fhirServerConfig = {
     level: process.env.LOGGING_LEVEL || 'info',
   },
   profiles: {
-    molecularsequence: {
-      service: path.resolve('./src/profiles/molecularsequence/index.js'),
-      metadata: path.resolve('./src/profiles/molecularsequence/metadata'),
+    DiagnosticReport: {
+      service: path.resolve('./src/profiles/DiagnosticReport/index.js'),
+      metadata: path.resolve('./src/profiles/DiagnosticReport/metadata'),
       versions: [VERSIONS['4_0_0']],
     },
   },

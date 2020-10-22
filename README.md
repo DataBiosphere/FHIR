@@ -34,10 +34,10 @@ Start the server
 npm start
 ```
 
-Query [MolecularSequence](https://www.hl7.org/fhir/molecularsequence.html)
+Query [DiagnosticReport](https://www.hl7.org/fhir/DiagnosticReport.html)
 
 ```
-curl http://localhost:3000/api/MolecularSequence
+curl http://localhost:3000/4_0_0/DiagnosticReport
 ```
 
 ## Documentation

@@ -1,27 +1,27 @@
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const { bundleSize } = require('../../config');
-
-const MolecularSequenceService = require('../../services/MolecularSequenceService');
 const { buildSearchBundle } = require('../../utils');
+const { TCGA } = require('../../services');
 
-const molecularSequenceService = new MolecularSequenceService();
+const tcga = new TCGA();
 
 const logger = loggers.get();
 
-const search = async (args, { req }) => {
+const search = async ({ base_version: baseVersion }, { req }) => {
+  logger.info('DiagnosticReport >>> search');
   const { query } = req;
   const { _page = 1, _count = bundleSize } = query;
-  logger.info('MolecularSequence >>> search');
-  const molecularSequences = await molecularSequenceService.getAll({
+  const { data } = await tcga.getAll({
     page: _page,
     pageSize: _count,
   });
   return buildSearchBundle({
-    resourceType: 'MolecularSequence',
-    resources: molecularSequences,
+    resourceType: 'DiagnosticReport',
+    resources: data,
     page: _page,
     pageSize: _count,
+    fhirVersion: baseVersion,
   });
 };
 

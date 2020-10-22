@@ -1,6 +1,21 @@
 version: '3.8'
 services:
   fhir:
-    build: .
+    image: fhir
+    build:
+      context: ./fhir
+      dockerfile: Dockerfile-dev
+    volumes:
+      - ./fhir:/usr/src/app
     ports:
       - 3000:3000
+
+  tcga:
+    image: tcga
+    build:
+      context: ./tcga
+      dockerfile: Dockerfile-dev
+    volumes:
+      - ./tcga:/usr/src/app
+    ports:
+      - 3001:3001

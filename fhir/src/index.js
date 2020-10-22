@@ -3,17 +3,19 @@ require('dotenv').config();
 const FHIRServer = require('@asymmetrik/node-fhir-server-core');
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
-const logger = loggers.get();
-
 const fhirServerConfig = require('./config');
 const { generateStatement } = require('./profiles/capabilitystatement');
 
-const main = async () => {
+const { PORT = 3000 } = process.env;
+
+const logger = loggers.get();
+
+const main = () => {
   const server = FHIRServer.initialize({
     ...fhirServerConfig,
     statementGenerator: generateStatement,
   });
-  server.listen(3000, () => logger.info('Server is up and running'));
+  server.listen(PORT, () => logger.info(`Broad FHIR listening on port ${PORT}`));
 };
 
 main();

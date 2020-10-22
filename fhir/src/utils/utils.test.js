@@ -19,10 +19,7 @@ describe('Utils tests', () => {
   });
 
   it('should build search bundles', () => {
-    const resources = [
-      { resourceType: 'MolecularSequence' },
-      { resourceType: 'MolecularSequence' },
-    ];
+    const resources = [{ resourceType: 'DiagnosticReport' }, { resourceType: 'DiagnosticReport' }];
     const page = 2;
     const pageSize = 3;
     expect(

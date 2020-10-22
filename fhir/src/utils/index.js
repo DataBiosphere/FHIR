@@ -3,6 +3,13 @@ const { VERSIONS } = require('@asymmetrik/node-fhir-server-core/dist/constants')
 
 const { url } = require('../config');
 
+const addTrailingSlash = (baseUrl) => {
+  if (baseUrl[baseUrl.length - 1] !== '/') {
+    return `${baseUrl}/`;
+  }
+  return baseUrl;
+};
+
 /**
  *
  * @param {string} relation
@@ -22,15 +29,16 @@ const buildLinkFromUrl = (relation, linkUrl) => {
  * @param {string} page
  * @param {string} pageSize
  */
-const getLinks = ({ baseUrl, resourceType, page, pageSize }) => {
+const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion }) => {
+  const urlAndVersion = addTrailingSlash(baseUrl) + fhirVersion;
   const links = [];
 
-  const linkSelf = new URL(resourceType, baseUrl);
+  const linkSelf = new URL(resourceType, urlAndVersion);
 
   linkSelf.searchParams.set('_page', Number(page));
   linkSelf.searchParams.set('_count', pageSize);
 
-  const linkNext = new URL(resourceType, baseUrl);
+  const linkNext = new URL(resourceType, urlAndVersion);
   linkNext.searchParams.set('_page', Number(page) + 1);
   linkNext.searchParams.set('_count', pageSize);
 
@@ -38,7 +46,7 @@ const getLinks = ({ baseUrl, resourceType, page, pageSize }) => {
   const urlSelf = buildLinkFromUrl('self', linkSelf);
 
   if (page > 1) {
-    const linkPrevious = new URL(resourceType, baseUrl);
+    const linkPrevious = new URL(resourceType, urlAndVersion);
     linkNext.searchParams.set('_page', Number(page) - 1);
     linkNext.searchParams.set('_count', pageSize);
     links.push(buildLinkFromUrl('previous', linkPrevious));
@@ -66,7 +74,7 @@ const buildSearchBundle = ({
     type: 'searchset',
     timestamp: new Date(),
     total: resources.length,
-    link: getLinks({ baseUrl: url, resourceType, page, pageSize }),
+    link: getLinks({ baseUrl: url, resourceType, page, pageSize, fhirVersion }),
     entry: resources.map((resource) => {
       return {
         resource,
