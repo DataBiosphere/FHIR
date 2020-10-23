@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
+        working-directory: ./broad
         run: npm install
       - name: Test
+        working-directory: ./broad
         run: npm test

@@ -1,0 +1,29 @@
+name: Run Unit Tests
+
+on:
+  push:
+
+env:
+  NODE_ENV: TEST
+
+jobs:
+  test:
+    name: Run Jest tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        working-directory: ./tcga
+        run: npm install
+      - name: Test
+        working-directory: ./tcga
+        run: npm test
