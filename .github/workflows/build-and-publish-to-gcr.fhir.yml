@@ -1,4 +1,4 @@
-name: Build and Publish to GCR
+name: FHIR - Build and Publish to GCR
 
 on:
   push:
