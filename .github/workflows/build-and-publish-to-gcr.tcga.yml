@@ -1,0 +1,95 @@
+name: TCGA - Build and Publish to GCR
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  GITHUB_REF: ${{ github.ref }}
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  IMAGE: tcga
+  ORGANIZATION: broad
+  REGISTRY_HOSTNAME: gcr.io
+  TYPE: ${{ secrets.TYPE }}
+  PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
+  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+  CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+  CLIENT_ID: ${{ secrets.CLIENT_ID }}
+  AUTH_URI: ${{ secrets.AUTH_URI }}
+  TOKEN_URI: ${{ secrets.TOKEN_URI }}
+  AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
+  CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
+
+jobs:
+  run-tests:
+    name: Run Jest tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: tcga
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: npm install
+      - name: Test
+        run: npm test
+
+  build-and-publish-to-gcr:
+    needs: run-tests
+    name: Setup, Build, and Publish
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: tcga
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: "270.0.0"
+          service_account_key: ${{ secrets.GCR_KEY }}
+
+      - name: Setup docker
+        run: gcloud auth configure-docker
+
+      - name: Install Node Modules
+        run: npm install
+
+      - name: Generate GCP Credentials
+        run: node scripts/create-gcp-cred-file.js
+
+      - name: Generate env
+        run: echo
+
+      - name: Build
+        run: |
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
+          echo Building image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker build -t "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" .
+
+      - name: Publish
+        run: |
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
+          echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+          echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+          docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest

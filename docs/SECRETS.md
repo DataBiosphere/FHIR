@@ -4,7 +4,7 @@ This repository takes advantage of several secrets in GITHUB. Make sure the
 following are defined in the repository secure secrets manager:
 
 ```
-  TYPE
+TYPE
 PROJECT_ID
 PRIVATE_KEY_ID
 PRIVATE_KEY
