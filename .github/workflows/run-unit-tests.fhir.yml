@@ -22,8 +22,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
-        working-directory: ./broad
+        working-directory: ./fhir
         run: npm install
       - name: Test
-        working-directory: ./broad
+        working-directory: ./fhir
         run: npm test
