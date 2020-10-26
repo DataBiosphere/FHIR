@@ -73,11 +73,8 @@ jobs:
       - name: Install Node Modules
         run: npm install
 
-      - name: Generate GCP Credentials
-        run: node ../scripts/create-gcp-cred-file.js
-
       - name: Generate env
-        run: echo
+        run: node ../scripts/create-env-file.js TCGA_URL=http://tcga:3001 URL=http://localhost:3000/4_0_0
 
       - name: Build
         run: |
