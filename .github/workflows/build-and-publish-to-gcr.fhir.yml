@@ -74,7 +74,7 @@ jobs:
         run: npm install
 
       - name: Generate GCP Credentials
-        run: node scripts/create-gcp-cred-file.js
+        run: node ../scripts/create-gcp-cred-file.js
 
       - name: Generate env
         run: echo
