@@ -25,8 +25,13 @@ spec:
         app: fhir
     spec:
       containers:
-        - name: app
+        - name: fhir
           image: gcr.io/broad-fhir-dev/broad/fhir:latest
           ports:
             - containerPort: 3000
+          imagePullPolicy: Always
+        - name: tcga
+          image: gcr.io/broad-fhir-dev/broad/tcga:latest
+          ports:
+            - containerPort: 3011
           imagePullPolicy: Always

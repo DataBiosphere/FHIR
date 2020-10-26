@@ -10,8 +10,8 @@ const fhirServerConfig = {
   },
   profiles: {
     DiagnosticReport: {
-      service: path.resolve('./src/profiles/DiagnosticReport/index.js'),
-      metadata: path.resolve('./src/profiles/DiagnosticReport/metadata'),
+      service: path.resolve('./src/profiles/diagnosticreport/index.js'),
+      metadata: path.resolve('./src/profiles/diagnosticreport/metadata'),
       versions: [VERSIONS['4_0_0']],
     },
   },
