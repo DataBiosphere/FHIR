@@ -10,7 +10,14 @@ describe('TCGA controller tests', () => {
       json: jest.fn(),
     };
 
-    await controller.getAll(null, mockRes);
+    const mockReq = {
+      query: {
+        page: 1,
+        pageSize: 10,
+      },
+    };
+
+    await controller.getAll(mockReq, mockRes);
 
     expect(mockRes.json.mock.calls[0][0]).toEqual([{ message: 'test' }]);
   });
