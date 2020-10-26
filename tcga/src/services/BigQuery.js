@@ -37,6 +37,7 @@ class BigQuery {
   }
 
   /**
+   * Open ended query
    *
    * @param {string} selection
    * @param {number} page
@@ -52,7 +53,7 @@ class BigQuery {
       .limit(limit)
       .where(where)
       .toString();
-    logger.info(`BigQuery >>> ${query}`);
+    logger.info(`BigQuery get >>> ${query}`);
     const [rows] = await this.sendQuery(query);
     return rows;
   }

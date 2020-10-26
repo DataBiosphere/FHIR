@@ -8,6 +8,14 @@ const getAll = async (req, res) => {
   res.json(tcgaData);
 };
 
+const getById = async (req, res) => {
+  logger.info('TCGA >>> getById');
+  const { id } = req.params;
+  const tcgaData = await service.getById(id);
+  res.json(tcgaData);
+};
+
 module.exports = {
   getAll,
+  getById,
 };

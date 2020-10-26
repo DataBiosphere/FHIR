@@ -25,6 +25,15 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   });
 };
 
+const searchById = async (args, { req }) => {
+  logger.info('DiagnosticReport >>> search');
+  const { params } = req;
+  const { id } = params;
+  const resource = await tcga.getByCaseId(id);
+  return resource;
+};
+
 module.exports = {
   search,
+  searchById,
 };
