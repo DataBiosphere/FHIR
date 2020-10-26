@@ -29,6 +29,12 @@ touch fhir/.env
 touch tcga/.env
 ```
 
+Run Docker Compose.
+
+```
+docker-compose up
+```
+
 ## Documentation
 
 Read our docs pages for information on deployment, tech stack, design decisions, and more.
