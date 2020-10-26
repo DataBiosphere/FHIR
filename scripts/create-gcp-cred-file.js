@@ -8,7 +8,6 @@
  *             https://cloud.google.com/bigquery/docs/authentication/service-account-file
  *
  */
-require('dotenv').config();
 const fs = require('fs');
 
 const GCP_CRED_FILENAME = 'creds.json';
