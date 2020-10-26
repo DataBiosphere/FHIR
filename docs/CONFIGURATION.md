@@ -1,17 +1,29 @@
 # Configuring the Broad FHIR server
 
 This project utilizes [dotenv](https://www.npmjs.com/package/dotenv) to manage
-environment variables. The following environment variables should be defined:
+environment variables. The following environment variables should be defined in `.env` files inside each microservice:
 
-| name                                | required | default value | description                                  |
-| ----------------------------------- | -------- | ------------- | -------------------------------------------- |
-| PROJECT_ID                          | yes      | -             | GCP Project ID                               |
-| CLUSTER_ZONE                        | yes      | -             | GCP Cluster Zone                             |
-| CLUSTER_NAME                        | yes      | -             | GCP Cluster Name                             |
-| GOOGLE_APPLICATION_CREDENTIALS      | yes      | -             | Path to GCP service account credentials file |
-| BIGQUERY_TABLE_NAME=TEST_TABLE_NAME | yes      | -             | The underlying BigQuery table to query       |
-| PORT                                | no       | 3000          |                                              |
-| HOST_NAME                           | no       | localhost     |                                              |
+## Microservices
+
+### FHIR
+
+Directory `fhir`.
+
+| name     | required | default value | description             |
+| -------- | -------- | ------------- | ----------------------- |
+| PORT     | no       | 3000          |
+| TCGA_URL | yes      |               |
+| URL      | yes      |               | . Used for FHIR Bundles |
+
+### TCGA
+
+Directory `tcga`.
+
+| name                           | required | default value | description                                                                                    |
+| ------------------------------ | -------- | ------------- | ---------------------------------------------------------------------------------------------- |
+| PORT                           | no       | 3001          |
+| GOOGLE_APPLICATION_CREDENTIALS | yes      |               | A path to the GCP creds file. See https://cloud.google.com/docs/authentication/getting-started |
+| PROJECT_ID                     | yes      |               | The GCP Service account name of the GCP creds file                                             |
 
 ## Up Next
 

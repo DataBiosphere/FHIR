@@ -31,7 +31,7 @@ class BigQuery {
    * @param {number} pageSize
    */
   paginate(page, pageSize) {
-    const offset = page <= 0 ? 0 : (+page - 1) * pageSize;
+    const offset = Number(page) <= 0 ? 0 : (+Number(page) - 1) * Number(pageSize);
     const limit = pageSize;
     return [offset, limit];
   }
@@ -54,7 +54,6 @@ class BigQuery {
       .toString();
     logger.info(`BigQuery >>> ${query}`);
     const [rows] = await this.sendQuery(query);
-    console.log(rows);
     return rows;
   }
 }

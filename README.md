@@ -22,22 +22,11 @@ Run the tests.
 npm run test
 ```
 
-Create a configuration, and specify your values. See [Configuration](./docs/CONFIGURATION.md)
+Create configuration, and specify your values. See [Configuration](./docs/CONFIGURATION.md)
 
 ```
-touch .env
-```
-
-Start the server
-
-```
-npm start
-```
-
-Query [DiagnosticReport](https://www.hl7.org/fhir/DiagnosticReport.html)
-
-```
-curl http://localhost:3000/4_0_0/DiagnosticReport
+touch fhir/.env
+touch tcga/.env
 ```
 
 ## Documentation

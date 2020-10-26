@@ -9,6 +9,9 @@ services:
       - ./fhir:/usr/src/app
     ports:
       - 3000:3000
+    environment:
+      - TCGA_URL=http://tcga:3001
+      - URL=http://localhost:3000/4_0_0
 
   tcga:
     image: tcga
@@ -19,3 +22,5 @@ services:
       - ./tcga:/usr/src/app
     ports:
       - 3001:3001
+    environment:
+      - PORT=3001
