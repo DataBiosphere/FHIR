@@ -41,6 +41,7 @@ class BigQuery {
    * @param {string} selection
    * @param {number} page
    * @param {number} pageSize
+   * @param {string} where
    */
   async get({ selection = '*', page = 0, pageSize = 20, where = {} } = {}) {
     const [offset, limit] = this.paginate(page, pageSize);
