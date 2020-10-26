@@ -47,5 +47,3 @@ Read our docs pages for information on deployment, tech stack, design decisions,
 [Docs](./docs/INDEX.md)
 
 ## Build Trigger
-
--
