@@ -77,7 +77,7 @@ jobs:
         run: node ../scripts/create-gcp-cred-file.js
 
       - name: Generate env
-        run: node ../scripts/create-env-file.js PORT=3001 GOOGLE_APPLICATION_CREDENTIALS=./creds.json PROJECT_ID={{ secrets.PROJECT_ID }}
+        run: node ../scripts/create-env-file.js PORT=3001 GOOGLE_APPLICATION_CREDENTIALS=./creds.json PROJECT_ID=${{ secrets.PROJECT_ID }}
 
       - name: Build
         run: |
