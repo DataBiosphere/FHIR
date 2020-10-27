@@ -67,4 +67,4 @@ gcloud container clusters get-credentials ${CLUSTER_NAME} --zone=${CLUSER_ZONE}
 
 ## Up Next
 
-- [Home](./INDEX.md)
+- [Secrets](./SECRETS.md)
