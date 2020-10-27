@@ -1,10 +1,18 @@
 const { BigQuery } = require('../services');
 
-const ClinicalGDCService = new BigQuery('isb-cgc-bq.TCGA.clinical_gdc_current');
-
-const ClinicalDiagnosisTreatments = new BigQuery(
-  'isb-cgc-bq.TCGA.clinical_diagnoses_treatments_gdc_current'
-);
+const ClinicalGDCService = new BigQuery({
+  table: 'isb-cgc-bq.TCGA.clinical_gdc_current',
+  joins: [
+    {
+      table: 'isb-cgc-bq.TCGA.clinical_diagnoses_treatments_gdc_current',
+      on: ['case_id', 'case_id'],
+    },
+    {
+      table: 'isb-cgc-bq.TCGA.biospecimen_gdc_current',
+      on: ['case_id', 'case_gdc_id'],
+    },
+  ],
+});
 
 const getAll = async ({ page, pageSize } = {}) => {
   return ClinicalGDCService.get({ page, pageSize });

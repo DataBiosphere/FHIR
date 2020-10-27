@@ -11,9 +11,10 @@ const bigQueryConfig = {
 };
 
 class BigQuery {
-  constructor(table) {
+  constructor({ table, joins }) {
     this.api = new BigQueryAPI(bigQueryConfig);
     this.table = table;
+    this.joins = joins;
   }
 
   async sendQuery(query, params) {
@@ -46,13 +47,33 @@ class BigQuery {
    */
   async get({ selection = '*', page = 0, pageSize = 20, where = {} } = {}) {
     const [offset, limit] = this.paginate(page, pageSize);
-    const query = knex
-      .select(selection)
-      .from(this.table)
-      .offset(offset)
-      .limit(limit)
-      .where(where)
-      .toString();
+    let counter = 0;
+    const tableAlias = `table_${counter}`;
+    let query = knex.select(selection).from(`${this.table} AS table_${counter}`);
+
+    if (this.joins) {
+      this.joins.forEach(({ table, on }) => {
+        counter += 1;
+        const joinTableAlias = `table_${counter}`;
+        const [leftOn, rightOn] = on;
+        query.leftJoin(
+          `${table} as ${joinTableAlias}`,
+          `${tableAlias}.${leftOn}`,
+          `${joinTableAlias}.${rightOn}`
+        );
+      });
+    }
+
+    const whereClause = Object.keys(where)
+      .map((column) => ({
+        [`${tableAlias}.${column}`]: where[column],
+      }))
+      .reduce((accum, val) => {
+        Object.assign(accum, val);
+        return accum;
+      }, {});
+
+    query = query.offset(offset).limit(limit).where(whereClause).toString();
     logger.info(`BigQuery get >>> ${query}`);
     const [rows] = await this.sendQuery(query);
     return rows;
