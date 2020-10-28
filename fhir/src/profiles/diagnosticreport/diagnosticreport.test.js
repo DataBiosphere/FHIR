@@ -8,22 +8,19 @@ describe('DiagnosticReport service tests', () => {
 
   beforeEach(() => {
     getAllSpy = jest.spyOn(TCGA.prototype, 'getAll').mockImplementation(() => {
-      return {
-        data: [
+      return [
+        [
           {
             message: 'foobar',
           },
         ],
-      };
+        20,
+      ];
     });
 
     getByIdSpy = jest.spyOn(TCGA.prototype, 'getByCaseId').mockImplementation(() => {
       return {
-        data: [
-          {
-            message: 'foobar',
-          },
-        ],
+        message: 'foobar',
       };
     });
   });

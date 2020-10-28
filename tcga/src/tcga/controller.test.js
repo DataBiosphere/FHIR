@@ -1,5 +1,5 @@
 jest.mock('./service', () => ({
-  getAll: jest.fn().mockImplementation(() => [{ message: 'test' }]),
+  getAll: jest.fn().mockImplementation(() => [100, [{ message: 'test' }]]),
   getById: jest.fn().mockImplementation(() => ({ message: 'test' })),
 }));
 
@@ -20,7 +20,7 @@ describe('TCGA controller tests', () => {
 
     await controller.getAll(mockReq, mockRes);
 
-    expect(mockRes.json.mock.calls[0][0]).toEqual([{ message: 'test' }]);
+    expect(mockRes.json.mock.calls[0][0]).toEqual({ count: [{ message: 'test' }], results: 100 });
   });
 
   it('should get by ID', async () => {

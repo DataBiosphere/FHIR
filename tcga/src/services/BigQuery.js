@@ -11,13 +11,15 @@ const bigQueryConfig = {
 };
 
 class BigQuery {
-  constructor({ table, joins }) {
+  constructor({ table, joins, primaryKey }) {
     this.api = new BigQueryAPI(bigQueryConfig);
     this.table = table;
     this.joins = joins;
+    this.primaryKey = primaryKey || 'id';
   }
 
   async sendQuery(query, params) {
+    logger.info(`BigQuery >>> ${query}`);
     const options = {
       query,
       params,
@@ -49,14 +51,14 @@ class BigQuery {
     const [offset, limit] = this.paginate(page, pageSize);
     let counter = 0;
     const tableAlias = `table_${counter}`;
-    let query = knex.select(selection).from(`${this.table} AS table_${counter}`);
+    let dataQuery = knex.from(`${this.table} AS table_${counter}`);
 
     if (this.joins) {
       this.joins.forEach(({ table, on }) => {
         counter += 1;
         const joinTableAlias = `table_${counter}`;
         const [leftOn, rightOn] = on;
-        query.leftJoin(
+        dataQuery.leftJoin(
           `${table} as ${joinTableAlias}`,
           `${tableAlias}.${leftOn}`,
           `${joinTableAlias}.${rightOn}`
@@ -73,10 +75,21 @@ class BigQuery {
         return accum;
       }, {});
 
-    query = query.offset(offset).limit(limit).where(whereClause).toString();
-    logger.info(`BigQuery get >>> ${query}`);
-    const [rows] = await this.sendQuery(query);
-    return rows;
+    dataQuery = dataQuery.where(whereClause);
+
+    const countQuery = dataQuery
+      .clone()
+      .countDistinct(`${tableAlias}.${this.primaryKey} as count`)
+      .toString();
+
+    dataQuery = dataQuery.select(selection).offset(offset).limit(limit).toString();
+
+    const [results] = await this.sendQuery(dataQuery);
+    const [countRows] = await this.sendQuery(countQuery);
+
+    const { count } = countRows[0];
+
+    return [results, count];
   }
 }
 

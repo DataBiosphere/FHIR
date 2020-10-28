@@ -1,4 +1,4 @@
-name: TCGA - Run Unit Tests
+name: TCGA - Tests
 
 on:
   push:

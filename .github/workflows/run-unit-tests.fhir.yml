@@ -1,4 +1,4 @@
-name: FHIR - Run Unit Tests
+name: FHIR - Tests
 
 on:
   push:
