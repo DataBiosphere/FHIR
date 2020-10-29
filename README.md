@@ -43,5 +43,3 @@ docker-compose up
 Read our docs pages for information on deployment, tech stack, design decisions, and more.
 
 [Docs](./docs/INDEX.md)
-
-## Build Trigger
