@@ -60,8 +60,7 @@ const searchById = async ({ baseVersion }, { req }) => {
   const { params } = req;
   const { id } = params;
   const tcgaResults = await tcga.getByCaseId(id);
-  const resource = new DiagnosticReport(tcgaResults);
-  return resource;
+  return tcgaResults;
 };
 
 module.exports = {
