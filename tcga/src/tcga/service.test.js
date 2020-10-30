@@ -9,6 +9,9 @@ BigQuery.mockImplementation(() => ({
 const service = require('./service');
 
 describe('service tests', () => {
+  it.todo('should getByID');
+  it.todo('should transform results from TCGA');
+
   it('should getAll', async () => {
     const [rows] = await service.getAll();
     expect(rows).toEqual([
