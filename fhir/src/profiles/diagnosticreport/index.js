@@ -60,7 +60,27 @@ const searchById = async ({ baseVersion }, { req }) => {
   const { params } = req;
   const { id } = params;
   const tcgaResults = await tcga.getByCaseId(id);
-  const resource = new DiagnosticReport(tcgaResults);
+
+  const resource = new DiagnosticReport({
+    id: tcgaResults.case_id,
+    status: 'final',
+    category: [
+      {
+        coding: [
+          {
+            system: 'http://terminology.hl7.org/CodeSystem/v2-0074',
+            code: 'GE',
+            display: 'Genetics',
+          },
+        ],
+      },
+    ],
+    subject: {
+      reference: `Patient/${tcgaResults.demo__demographic_id}`,
+    },
+    issues: tcgaResults.updated_datetime,
+    effectiveDatetime: tcgaResults.updated_datetime,
+  });
   return resource;
 };
 
