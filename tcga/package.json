@@ -19,6 +19,7 @@
     "@google-cloud/bigquery": "^5.3.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jest": "^26.6.1",
     "jest-cli": "^26.6.0",
     "knex": "^0.21.6",
     "lodash": "^4.17.20",
