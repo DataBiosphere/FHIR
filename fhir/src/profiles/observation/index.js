@@ -45,8 +45,6 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     pageSize: _count,
   });
 
-  console.log(results);
-
   return buildSearchBundle({
     resourceType: 'Observation',
     page: _page,
