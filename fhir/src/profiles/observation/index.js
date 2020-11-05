@@ -10,7 +10,7 @@ const logger = loggers.get();
 
 const includesMapping = {
   Observation: 'observations',
-  DiagnosticReport: 'diagnosticReport',
+  Observation: 'Observation',
 };
 
 const getStandardParameters = (query) => {
@@ -30,7 +30,7 @@ const getStandardParameters = (query) => {
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
-  logger.info('DiagnosticReport >>> search');
+  logger.info('Observation >>> search');
   const { query } = req;
   const { _page, _count, _id, _include } = getStandardParameters(query);
 
@@ -39,7 +39,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   if (_id) {
     const resource = await tcga.getByCaseId(_id);
     return buildSearchBundle({
-      resourceType: 'DiagnosticReport',
+      resourceType: 'Observation',
       resources: [resource],
       page: _page,
       pageSize: _count,
@@ -53,7 +53,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   });
 
   tcgaResults.forEach((tcgaResult) => {
-    resultsSet = resultsSet.concat(tcgaResult.diagnosticReport);
+    resultsSet = resultsSet.concat(tcgaResult.Observation);
     if (_include) {
       const includes = _include.split(',');
       includes.forEach((include) => {
@@ -65,7 +65,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   });
 
   return buildSearchBundle({
-    resourceType: 'DiagnosticReport',
+    resourceType: 'Observation',
     page: _page,
     pageSize: _count,
     fhirVersion: baseVersion,
@@ -75,12 +75,12 @@ const search = async ({ base_version: baseVersion }, { req }) => {
 };
 
 const searchById = async (args, { req }) => {
-  logger.info('DiagnosticReport >>> searchById');
+  logger.info('Observation >>> searchById');
   const { params } = req;
   const { id } = params;
-  const { diagnosticReport } = await tcga.getByCaseId(id);
+  const { Observation } = await tcga.getByCaseId(id);
 
-  return diagnosticReport;
+  return Observation;
 };
 
 module.exports = {

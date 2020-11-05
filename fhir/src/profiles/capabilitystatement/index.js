@@ -25,7 +25,7 @@ const makeStatement = (resources) => {
       searchParam: [
         {
           name: '_count',
-          definition: '',
+          definition: 'https://www.hl7.org/fhir/search.html#count',
           type: 'number',
         },
       ],
