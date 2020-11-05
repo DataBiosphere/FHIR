@@ -1,4 +1,4 @@
-const { loggers, resolveSchema } = require('@asymmetrik/node-fhir-server-core');
+const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const { bundleSize } = require('../../config');
 const { buildSearchBundle } = require('../../utils');
