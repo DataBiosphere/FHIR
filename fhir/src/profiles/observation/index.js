@@ -8,11 +8,6 @@ const tcga = new TCGA();
 
 const logger = loggers.get();
 
-const includesMapping = {
-  Observation: 'observations',
-  Observation: 'Observation',
-};
-
 const getStandardParameters = (query) => {
   const {
     _page = 1,
@@ -32,9 +27,7 @@ const getStandardParameters = (query) => {
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('Observation >>> search');
   const { query } = req;
-  const { _page, _count, _id, _include } = getStandardParameters(query);
-
-  let resultsSet = [];
+  const { _page, _count, _id } = getStandardParameters(query);
 
   if (_id) {
     const resource = await tcga.getByCaseId(_id);
@@ -47,22 +40,12 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     });
   }
 
-  const [tcgaResults, count] = await tcga.getAll({
+  const [results, count] = await tcga.getAll({
     page: _page,
     pageSize: _count,
   });
 
-  tcgaResults.forEach((tcgaResult) => {
-    resultsSet = resultsSet.concat(tcgaResult.Observation);
-    if (_include) {
-      const includes = _include.split(',');
-      includes.forEach((include) => {
-        if (Object.keys(includesMapping).includes(include)) {
-          resultsSet = resultsSet.concat(tcgaResult[includesMapping[include]]);
-        }
-      });
-    }
-  });
+  console.log(results);
 
   return buildSearchBundle({
     resourceType: 'Observation',
@@ -70,7 +53,9 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     pageSize: _count,
     fhirVersion: baseVersion,
     total: count,
-    resources: resultsSet,
+    resources: results
+      .map((result) => result.observations)
+      .reduce((accum, observations) => accum.concat(observations), []),
   });
 };
 
@@ -78,9 +63,9 @@ const searchById = async (args, { req }) => {
   logger.info('Observation >>> searchById');
   const { params } = req;
   const { id } = params;
-  const { Observation } = await tcga.getByCaseId(id);
+  const { observations } = await tcga.getByCaseId(id);
 
-  return Observation;
+  return observations;
 };
 
 module.exports = {
