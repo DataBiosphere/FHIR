@@ -11,7 +11,13 @@ describe('DiagnosticReport metadata test', () => {
       profile: { reference: 'http://www.hl7.org/fhir/DiagnosticReport.profile.json' },
       readHistory: false,
       searchInclude: [],
-      searchParam: [],
+      searchParam: [
+        {
+          definition: 'https://www.hl7.org/fhir/search.html#include',
+          name: '_include',
+          type: 'string',
+        },
+      ],
       searchRevInclude: [],
       type: 'DiagnosticReport',
       updateCreate: false,

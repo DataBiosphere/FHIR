@@ -1,4 +1,5 @@
 const axios = require('axios');
+const memoizee = require('memoizee');
 const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
@@ -77,15 +78,17 @@ const translateToFHIR = (tcgaResults) => {
   return tcgaResults.map(translateSingleToFhir);
 };
 
+const get = memoizee(axios.get, { maxAge: 10000, length: false });
+
 class TCGA {
   async getAll({ page, pageSize } = {}) {
-    const { data } = await axios.get(`${TCGA_URL}/api/tcga`, { params: { page, pageSize } });
+    const { data } = await get(`${TCGA_URL}/api/tcga`, { params: { page, pageSize } });
     const { results, count } = data;
     return [translateToFHIR(results), count];
   }
 
   async getByCaseId(id) {
-    const { data } = await axios.get(`${TCGA_URL}/api/tcga/${id}`);
+    const { data } = await get(`${TCGA_URL}/api/tcga/${id}`);
     return translateSingleToFhir(data);
   }
 }
