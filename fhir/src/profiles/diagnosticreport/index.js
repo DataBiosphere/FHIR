@@ -37,7 +37,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   let resultsSet = [];
 
   if (_id) {
-    const resource = await tcga.getByCaseId(_id);
+    const resource = await tcga.getDiagnosticReportById(_id);
     return buildSearchBundle({
       resourceType: 'DiagnosticReport',
       resources: [resource],
@@ -47,7 +47,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     });
   }
 
-  const [tcgaResults, count] = await tcga.getAll({
+  const [tcgaResults, count] = await tcga.getAllDiagnosticReports({
     page: _page,
     pageSize: _count,
   });

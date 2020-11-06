@@ -12,7 +12,7 @@ const { TCGA_URL } = process.env;
  *
  * @param {object} tcgaResult
  */
-const translateSingleToFhir = (tcgaResult) => {
+const translateSingleGdcResultsToFhir = (tcgaResult) => {
   const diagnosticReport = new DiagnosticReport({
     resourceType: 'DiagnosticReport',
     id: tcgaResult.case_id,
@@ -74,22 +74,33 @@ const translateSingleToFhir = (tcgaResult) => {
  *
  * @param {array} tcgaResults
  */
-const translateToFHIR = (tcgaResults) => {
-  return tcgaResults.map(translateSingleToFhir);
+const translateGdcResultsToFhir = (tcgaResults) => {
+  return tcgaResults.map(translateSingleGdcResultsToFhir);
 };
 
 const get = memoizee(axios.get, { maxAge: 10000, length: false });
 
 class TCGA {
-  async getAll({ page, pageSize } = {}) {
-    const { data } = await get(`${TCGA_URL}/api/tcga`, { params: { page, pageSize } });
+  async getAllDiagnosticReports({ page, pageSize } = {}) {
+    const { data } = await get(`${TCGA_URL}/api/gdc`, { params: { page, pageSize } });
     const { results, count } = data;
-    return [translateToFHIR(results), count];
+    return [translateGdcResultsToFhir(results), count];
   }
 
-  async getByCaseId(id) {
-    const { data } = await get(`${TCGA_URL}/api/tcga/${id}`);
-    return translateSingleToFhir(data);
+  async getDiagnosticReportById(id) {
+    const { data } = await get(`${TCGA_URL}/api/gdc/${id}`);
+    return translateSingleGdcResultsToFhir(data);
+  }
+
+  async getAllDiagnoses({ page, pageSize } = {}) {
+    const { data } = await get(`${TCGA_URL}/api/diagnosis`, { params: { page, pageSize } });
+    const { results, count } = data;
+    return [results, count];
+  }
+
+  async getDiagnosisById(id) {
+    const { data } = await get(`${TCGA_URL}/api/diagnosis/${id}`);
+    return data;
   }
 }
 

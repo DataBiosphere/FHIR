@@ -1,4 +1,4 @@
-const { loggers, resolveSchema } = require('@asymmetrik/node-fhir-server-core');
+const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const { bundleSize } = require('../../config');
 const { buildSearchBundle } = require('../../utils');
@@ -30,7 +30,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   const { _page, _count, _id } = getStandardParameters(query);
 
   if (_id) {
-    const resource = await tcga.getByCaseId(_id);
+    const resource = await tcga.getDiagnosisById(_id);
     return buildSearchBundle({
       resourceType: 'Observation',
       resources: [resource],
@@ -40,7 +40,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     });
   }
 
-  const [results, count] = await tcga.getAll({
+  const [results, count] = await tcga.getAllDiagnoses({
     page: _page,
     pageSize: _count,
   });
@@ -51,9 +51,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     pageSize: _count,
     fhirVersion: baseVersion,
     total: count,
-    resources: results
-      .map((result) => result.observations)
-      .reduce((accum, observations) => accum.concat(observations), []),
+    resources: results,
   });
 };
 
@@ -61,9 +59,9 @@ const searchById = async (args, { req }) => {
   logger.info('Observation >>> searchById');
   const { params } = req;
   const { id } = params;
-  const { observations } = await tcga.getByCaseId(id);
+  const observation = await tcga.getDiagnosisById(id);
 
-  return observations;
+  return observation;
 };
 
 module.exports = {
