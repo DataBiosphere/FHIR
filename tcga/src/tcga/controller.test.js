@@ -1,6 +1,6 @@
 jest.mock('./service', () => ({
-  getAllGdc: jest.fn().mockImplementation(() => [100, [{ message: 'test' }]]),
-  getGdcById: jest.fn().mockImplementation(() => ({ message: 'test' })),
+  getAllGdc: jest.fn().mockImplementation(() => [100, [{ id: 'test' }]]),
+  getGdcById: jest.fn().mockImplementation(() => ({ id: 'test' })),
 }));
 
 const controller = require('./controller');
@@ -20,7 +20,7 @@ describe('TCGA controller tests', () => {
 
     await controller.getAllGdc(mockReq, mockRes);
 
-    expect(mockRes.json.mock.calls[0][0]).toEqual({ count: [{ message: 'test' }], results: 100 });
+    expect(mockRes.json.mock.calls[0][0]).toEqual({ count: [{ id: 'test' }], results: 100 });
   });
 
   it('should get GDC data by ID', async () => {
@@ -36,6 +36,6 @@ describe('TCGA controller tests', () => {
 
     await controller.getGdcById(mockReq, mockRes);
 
-    expect(mockRes.json.mock.calls[0][0]).toEqual({ message: 'test' });
+    expect(mockRes.json.mock.calls[0][0]).toEqual({ id: 'test' });
   });
 });

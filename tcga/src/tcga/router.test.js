@@ -1,8 +1,8 @@
 jest.mock('./controller', () => ({
-  getAllGdc: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
-  getGdcById: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
-  getAllDiagnosis: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
-  getDiagnosisById: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
+  getAllGdc: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getGdcById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getAllDiagnosis: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getDiagnosisById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
 }));
 
 const express = require('express');

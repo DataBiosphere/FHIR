@@ -7,20 +7,20 @@ describe('Observation service tests', () => {
   let getByIdSpy;
 
   beforeEach(() => {
-    getAllSpy = jest.spyOn(TCGA.prototype, 'getAll').mockImplementation(() => {
+    getAllSpy = jest.spyOn(TCGA.prototype, 'getAllDiagnoses').mockImplementation(() => {
       return [
         [
           {
-            message: 'foobar',
+            id: 'foobar',
           },
         ],
         20,
       ];
     });
 
-    getByIdSpy = jest.spyOn(TCGA.prototype, 'getByCaseId').mockImplementation(() => {
+    getByIdSpy = jest.spyOn(TCGA.prototype, 'getDiagnosisById').mockImplementation(() => {
       return {
-        message: 'foobar',
+        id: 'foobar',
       };
     });
   });

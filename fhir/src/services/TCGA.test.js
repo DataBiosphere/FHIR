@@ -5,11 +5,14 @@ const TCGA = require('./TCGA');
 jest.mock('axios');
 
 describe('TCGA service tests', () => {
-  it('should get all TCGA data', async () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+  it('should get all TCGA DiagnosticReport data', async () => {
     axios.get.mockImplementation(() => ({ data: { count: 10, results: [tcgaResponseFixture] } }));
 
     const tcga = new TCGA();
-    const [results, count] = await tcga.getAll({ page: 2, pageSize: 10 });
+    const [results, count] = await tcga.getAllDiagnosticReports({ page: 2, pageSize: 10 });
 
     expect(JSON.parse(JSON.stringify(results))).toEqual([
       {
@@ -81,7 +84,7 @@ describe('TCGA service tests', () => {
       },
     ]);
     expect(count).toEqual(10);
-    expect(axios.get).toHaveBeenCalledWith('http://tcga/api/tcga', {
+    expect(axios.get).toHaveBeenCalledWith('http://tcga/api/gdc', {
       params: { page: 2, pageSize: 10 },
     });
   });
@@ -90,7 +93,7 @@ describe('TCGA service tests', () => {
     axios.get.mockImplementation(() => ({ data: tcgaResponseFixture }));
 
     const tcga = new TCGA();
-    const results = await tcga.getByCaseId('foobar');
+    const results = await tcga.getDiagnosticReportById('foobar');
 
     expect(JSON.parse(JSON.stringify(results))).toEqual({
       diagnosticReport: {
@@ -160,6 +163,6 @@ describe('TCGA service tests', () => {
         },
       ],
     });
-    expect(axios.get).toHaveBeenCalledWith('http://tcga/api/tcga/foobar');
+    expect(axios.get).toHaveBeenCalledWith('http://tcga/api/gdc/foobar');
   });
 });

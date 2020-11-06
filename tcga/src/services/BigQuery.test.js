@@ -25,7 +25,7 @@ describe('BigQuery client tests', () => {
     const querySpy = jest.spyOn(bigQueryClient, 'sendQuery').mockImplementation(() => [
       [
         {
-          message: 'hello',
+          id: 'hello',
         },
       ],
     ]);
@@ -42,7 +42,7 @@ describe('BigQuery client tests', () => {
     const querySpy = jest.spyOn(bigQueryClient, 'sendQuery').mockImplementation(() => [
       [
         {
-          message: 'hello',
+          id: 'hello',
         },
       ],
     ]);
@@ -65,7 +65,7 @@ describe('BigQuery client tests', () => {
     const querySpy = jest.spyOn(bigQueryClient, 'sendQuery').mockImplementation(() => [
       [
         {
-          message: 'hello',
+          id: 'hello',
         },
       ],
     ]);
@@ -96,7 +96,7 @@ describe('BigQuery client tests', () => {
     const querySpy = jest.spyOn(bigQueryClient, 'sendQuery').mockImplementation(() => [
       [
         {
-          message: 'hello',
+          id: 'hello',
         },
       ],
     ]);
@@ -127,7 +127,7 @@ describe('BigQuery client tests', () => {
     const querySpy = jest.spyOn(bigQueryClient, 'sendQuery').mockImplementation(() => [
       [
         {
-          message: 'hello',
+          id: 'hello',
         },
       ],
     ]);

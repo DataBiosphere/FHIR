@@ -78,7 +78,7 @@ const searchById = async (args, { req }) => {
   logger.info('DiagnosticReport >>> searchById');
   const { params } = req;
   const { id } = params;
-  const { diagnosticReport } = await tcga.getByCaseId(id);
+  const { diagnosticReport } = await tcga.getDiagnosticReportById(id);
 
   return diagnosticReport;
 };
