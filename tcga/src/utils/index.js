@@ -3,7 +3,7 @@
  *
  * @param {row} row
  */
-const transformTCGAResults = (row) => ({
+const transformGdcResults = (row) => ({
   case_id: row.case_id,
   current: {
     submitter_id: row.submitter_id,
@@ -143,13 +143,15 @@ function dedupeObjects(list) {
       return true;
     }
 
-    for (let key in a) {
+    /* eslint-disable no-restricted-syntax */
+    for (const key in a) {
       if (a[key] !== b[key]) return true;
     }
     return false;
   };
 
   return list.filter((search, index) => {
+    /* eslint-disable no-plusplus */
     for (let i = 0; i < index; i++) {
       if (!compareObjects(search, list[i])) return false;
     }
@@ -158,6 +160,6 @@ function dedupeObjects(list) {
 }
 
 module.exports = {
-  transformTCGAResults,
+  transformGdcResults,
   dedupeObjects,
 };

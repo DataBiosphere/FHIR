@@ -1,5 +1,10 @@
-const { dedupeObjects, transformTCGAResults } = require('../utils');
+const { dedupeObjects, transformGdcResults } = require('../utils');
 const { BigQuery } = require('../services');
+
+const ClinicalGDCRawService = new BigQuery({
+  table: 'isb-cgc-bq.TCGA.clinical_gdc_current',
+  primaryKey: 'case_id',
+});
 
 const ClinicalGDCService = new BigQuery({
   table: 'isb-cgc-bq.TCGA.clinical_gdc_current',
@@ -19,6 +24,12 @@ const ClinicalGDCService = new BigQuery({
 const DiagnosisService = new BigQuery({
   table: 'isb-cgc-bq.TCGA.clinical_diagnoses_treatments_gdc_current',
   primaryKey: 'diag__diagnosis_id',
+  joins: [
+    {
+      table: 'isb-cgc-bq.TCGA.clinical_gdc_current',
+      on: ['case_id', 'case_id'],
+    },
+  ],
 });
 
 /**
@@ -26,8 +37,8 @@ const DiagnosisService = new BigQuery({
  *
  * @param {array} rows
  */
-const transformRows = (rows) => {
-  const caseIdMappings = rows.map(transformTCGAResults).reduce((accum, ele) => {
+const transformGdcRows = (rows) => {
+  const caseIdMappings = rows.map(transformGdcResults).reduce((accum, ele) => {
     if (!accum[ele.case_id]) {
       accum[ele.case_id] = ele;
     } else {
@@ -50,10 +61,14 @@ const transformRows = (rows) => {
  * @param {string} page
  * @param {string} pageSize
  */
-const getAllGdc = async ({ page, pageSize } = {}) => {
-  const [rows, count] = await ClinicalGDCService.get({ page, pageSize });
+const getAllGdc = async ({ page = 1, pageSize = 10 } = {}) => {
+  const [caseIds] = await ClinicalGDCRawService.get({ selection: 'case_id', page, pageSize });
 
-  return [transformRows(rows), count];
+  const [rows, count] = await ClinicalGDCService.get({
+    whereIn: ['case_id', caseIds.map((row) => row.case_id)],
+  });
+
+  return [transformGdcRows(rows), count];
 };
 
 /**
@@ -64,7 +79,7 @@ const getGdcById = async (id) => {
   const [rows] = await ClinicalGDCService.get({ where: { case_id: id } });
 
   if (rows && rows.length) {
-    return transformRows(rows)[0];
+    return transformGdcRows(rows)[0];
   }
   return null;
 };

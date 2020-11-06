@@ -7,6 +7,32 @@ const Observation = resolveSchema('4_0_0', 'Observation');
 
 const { TCGA_URL } = process.env;
 
+const TEN_SECONDS = 1000 * 10;
+
+/**
+ * Translate a TCGA Diagnosis response to an Observation
+ *
+ * @param {object} diagnosis
+ */
+const translateDiagnosisToObservation = (diagnosis, gdcResult) => {
+  return new Observation({
+    resourceType: 'Observation',
+    id: diagnosis.diag__diagnosis_id,
+    text: {
+      status: 'generated',
+      div: `<div xmlns="http://www.w3.org/1999/xhtml">${diagnosis.diag__treat__treatment_type}</div>`,
+    },
+    meta: {
+      versionId: diagnosis.diag__diagnosis_id,
+      source: gdcResult.proj__project_id,
+      profile: ['https://www.hl7.org/fhir/observation.html'],
+    },
+    issued: gdcResult.diag__treat__updated_datetime,
+    effectiveDateTime: gdcResult.diag__treat__updated_datetime,
+    status: 'final',
+  });
+};
+
 /**
  * Convert a single TCGA Result to a DiagnosticResource
  *
@@ -47,24 +73,9 @@ const translateSingleGdcResultsToFhir = (tcgaResult) => {
     effectiveDatetime: tcgaResult.updated_datetime,
   });
 
-  const observations = tcgaResult.diagnoses.map((diagnosis) => {
-    return new Observation({
-      resourceType: 'Observation',
-      id: diagnosis.diag__diagnosis_id,
-      text: {
-        status: 'generated',
-        div: `<div xmlns="http://www.w3.org/1999/xhtml">${diagnosis.diag__treat__treatment_type}</div>`,
-      },
-      meta: {
-        versionId: diagnosis.diag__diagnosis_id,
-        source: tcgaResult.proj__project_id,
-        profile: ['https://www.hl7.org/fhir/observation.html'],
-      },
-      issued: tcgaResult.diag__treat__updated_datetime,
-      effectiveDateTime: tcgaResult.diag__treat__updated_datetime,
-      status: 'final',
-    });
-  });
+  const observations = tcgaResult.diagnoses.map((diagnosis) =>
+    translateDiagnosisToObservation(diagnosis, tcgaResult)
+  );
 
   return { diagnosticReport, observations };
 };
@@ -78,7 +89,7 @@ const translateGdcResultsToFhir = (tcgaResults) => {
   return tcgaResults.map(translateSingleGdcResultsToFhir);
 };
 
-const get = memoizee(axios.get, { maxAge: 10000, length: false });
+const get = memoizee(axios.get, { maxAge: TEN_SECONDS, length: false });
 
 class TCGA {
   async getAllDiagnosticReports({ page, pageSize } = {}) {
@@ -95,12 +106,15 @@ class TCGA {
   async getAllDiagnoses({ page, pageSize } = {}) {
     const { data } = await get(`${TCGA_URL}/api/diagnosis`, { params: { page, pageSize } });
     const { results, count } = data;
-    return [results, count];
+    return [
+      results.map((diagnosis) => translateDiagnosisToObservation(diagnosis, diagnosis)),
+      count,
+    ];
   }
 
   async getDiagnosisById(id) {
     const { data } = await get(`${TCGA_URL}/api/diagnosis/${id}`);
-    return data;
+    return translateDiagnosisToObservation(data, data);
   }
 }
 
