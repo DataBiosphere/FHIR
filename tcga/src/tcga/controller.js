@@ -11,10 +11,10 @@ const getAllGdc = async (req, res) => {
   });
 };
 
-const getByGdcById = async (req, res) => {
-  logger.info('TCGA >>> getByGdcById');
+const getGdcById = async (req, res) => {
+  logger.info('TCGA >>> getGdcById');
   const { id } = req.params;
-  const results = await service.getByGdcById(id);
+  const results = await service.getGdcById(id);
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -32,10 +32,10 @@ const getAllDiagnosis = async (req, res) => {
   });
 };
 
-const getByDiagnosisById = async (req, res) => {
-  logger.info('TCGA >>> getByDiagnosisById');
+const getDiagnosisById = async (req, res) => {
+  logger.info('TCGA >>> getDiagnosisById');
   const { id } = req.params;
-  const results = await service.getByDiagnosisById(id);
+  const results = await service.getDiagnosisById(id);
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -45,7 +45,7 @@ const getByDiagnosisById = async (req, res) => {
 
 module.exports = {
   getAllGdc,
-  getByGdcById,
+  getGdcById,
   getAllDiagnosis,
-  getByDiagnosisById,
+  getDiagnosisById,
 };

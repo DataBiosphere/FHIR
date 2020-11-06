@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.get('/gdc', controller.getAllGdc);
 
-router.get('/gdc/:id', controller.getByGdcById);
+router.get('/gdc/:id', controller.getGdcById);
 
 router.get('/diagnosis', controller.getAllDiagnosis);
 
-router.get('/diagnosis/:id', controller.getByDiagnosisById);
+router.get('/diagnosis/:id', controller.getDiagnosisById);
 
 module.exports = router;

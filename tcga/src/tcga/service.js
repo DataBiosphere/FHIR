@@ -60,7 +60,7 @@ const getAllGdc = async ({ page, pageSize } = {}) => {
  * Get GDC data by an ID
  * @param {string} id
  */
-const getByGdcById = async (id) => {
+const getGdcById = async (id) => {
   const [rows] = await ClinicalGDCService.get({ where: { case_id: id } });
 
   if (rows && rows.length) {
@@ -85,7 +85,7 @@ const getAllDiagnosis = async ({ page, pageSize } = {}) => {
  * Get Diagnosis data by an ID
  * @param {string} id
  */
-const getByDiagnosisById = async (id) => {
+const getDiagnosisById = async (id) => {
   const [rows] = await DiagnosisService.get({ where: { diag__diagnosis_id: id } });
 
   if (rows && rows.length) {
@@ -96,7 +96,7 @@ const getByDiagnosisById = async (id) => {
 
 module.exports = {
   getAllGdc,
-  getByGdcById,
+  getGdcById,
   getAllDiagnosis,
-  getByDiagnosisById,
+  getDiagnosisById,
 };

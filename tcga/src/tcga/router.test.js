@@ -1,6 +1,8 @@
 jest.mock('./controller', () => ({
-  getAll: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
-  getById: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
+  getAllGdc: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
+  getGdcById: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
+  getAllDiagnosis: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
+  getDiagnosisById: jest.fn().mockImplementation((req, res) => res.json({ message: 'test' })),
 }));
 
 const express = require('express');
@@ -22,17 +24,17 @@ describe('router tests', () => {
 
   it('should route base requests to the getAll function of the controller', (done) => {
     supertest(app)
-      .get('/')
+      .get('/gdc')
       .end(() => {
-        expect(controller.getAll.mock.calls.length).toEqual(1);
+        expect(controller.getAllGdc.mock.calls.length).toEqual(1);
         done();
       });
   });
   it('should route ID requests to the getById function of the controller', (done) => {
     supertest(app)
-      .get('/foobar')
+      .get('/gdc/foobar')
       .end(() => {
-        expect(controller.getById.mock.calls.length).toEqual(1);
+        expect(controller.getGdcById.mock.calls.length).toEqual(1);
         done();
       });
   });

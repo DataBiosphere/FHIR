@@ -12,7 +12,7 @@ const service = require('./service');
 
 describe('service tests', () => {
   it('should getByID', async () => {
-    const rows = await service.getById('foobar');
+    const rows = await service.getGdcById('foobar');
     expect(rows).toEqual({
       submitter_id: 'TCGA-CN-5363',
       case_id: '291b069c-9dde-4e1e-8430-85146bc94338',
@@ -190,7 +190,7 @@ describe('service tests', () => {
   });
 
   it('should getAll', async () => {
-    const [rows] = await service.getAll();
+    const [rows] = await service.getAllGdc();
     expect(rows).toEqual([
       {
         submitter_id: 'TCGA-CN-5363',
