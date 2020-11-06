@@ -16,6 +16,11 @@ const ClinicalGDCService = new BigQuery({
   ],
 });
 
+const DiagnosisService = new BigQuery({
+  table: 'isb-cgc-bq.TCGA.clinical_diagnoses_treatments_gdc_current',
+  primaryKey: 'diag__diagnosis_id',
+});
+
 /**
  * Convert a BigQuery results set to an organized model by caseID -> diagnoses|biospecimens
  *
@@ -40,22 +45,22 @@ const transformRows = (rows) => {
 };
 
 /**
- * getAll TCGA data by page and pageSize
+ * getAll GDC data by page and pageSize
  *
  * @param {string} page
  * @param {string} pageSize
  */
-const getAll = async ({ page, pageSize } = {}) => {
+const getAllGdc = async ({ page, pageSize } = {}) => {
   const [rows, count] = await ClinicalGDCService.get({ page, pageSize });
 
   return [transformRows(rows), count];
 };
 
 /**
- * Get TCGA data by an ID
+ * Get GDC data by an ID
  * @param {string} id
  */
-const getById = async (id) => {
+const getByGdcById = async (id) => {
   const [rows] = await ClinicalGDCService.get({ where: { case_id: id } });
 
   if (rows && rows.length) {
@@ -64,7 +69,34 @@ const getById = async (id) => {
   return null;
 };
 
+/**
+ * getAll Diagnosis data by page and pageSize
+ *
+ * @param {string} page
+ * @param {string} pageSize
+ */
+const getAllDiagnosis = async ({ page, pageSize } = {}) => {
+  const [rows, count] = await DiagnosisService.get({ page, pageSize });
+
+  return [rows, count];
+};
+
+/**
+ * Get Diagnosis data by an ID
+ * @param {string} id
+ */
+const getByDiagnosisById = async (id) => {
+  const [rows] = await DiagnosisService.get({ where: { diag__diagnosis_id: id } });
+
+  if (rows && rows.length) {
+    return rows[0];
+  }
+  return null;
+};
+
 module.exports = {
-  getAll,
-  getById,
+  getAllGdc,
+  getByGdcById,
+  getAllDiagnosis,
+  getByDiagnosisById,
 };
