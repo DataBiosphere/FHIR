@@ -1,0 +1,334 @@
+{
+	"info": {
+		"_postman_id": "b0eb21ad-6db1-4677-b87d-81bde017525d",
+		"name": "Broad",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get DiagnosticReport",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/DiagnosticReport/?_count=10&_page=2&_include=Observation",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"DiagnosticReport",
+						""
+					],
+					"query": [
+						{
+							"key": "_count",
+							"value": "10"
+						},
+						{
+							"key": "_page",
+							"value": "2"
+						},
+						{
+							"key": "_include",
+							"value": "Observation"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get DiagnosticReport By ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/DiagnosticReport/291b069c-9dde-4e1e-8430-85146bc94338",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"DiagnosticReport",
+						"291b069c-9dde-4e1e-8430-85146bc94338"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search DiagnosticReport By ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/DiagnosticReport/?_id=291b069c-9dde-4e1e-8430-85146bc94338",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"DiagnosticReport",
+						""
+					],
+					"query": [
+						{
+							"key": "_id",
+							"value": "291b069c-9dde-4e1e-8430-85146bc94338"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Observation By ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/Observation/4176108f-948d-5715-afbb-cc21f3cbfaf5",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"Observation",
+						"4176108f-948d-5715-afbb-cc21f3cbfaf5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Observation",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/Observation/?_count=10&_page=1",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"Observation",
+						""
+					],
+					"query": [
+						{
+							"key": "_count",
+							"value": "10"
+						},
+						{
+							"key": "_page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get metadata",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/metadata/",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"metadata",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get TCGA GDC All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/gdc/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"gdc",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get TCGA GDC By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/gdc/291b069c-9dde-4e1e-8430-85146bc94338",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"gdc",
+						"291b069c-9dde-4e1e-8430-85146bc94338"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get TCGA Diagnosis All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/diagnosis/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"diagnosis",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get TCGA Diagnosis By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/diagnosis/291b069c-9dde-4e1e-8430-85146bc94338",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"diagnosis",
+						"291b069c-9dde-4e1e-8430-85146bc94338"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "961e669b-c6df-42fc-98e7-33dfc1b4f56f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d261b1f7-6ba3-44eb-9d71-88d0cbb59404",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "e86efca6-6420-4630-bc12-0e067d8da08a",
+			"key": "URL",
+			"value": "localhost:3000"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

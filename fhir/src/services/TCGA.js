@@ -5,9 +5,11 @@ const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Observation = resolveSchema('4_0_0', 'Observation');
 
-const { TCGA_URL } = process.env;
+const { TCGA_URL, TCGA_CACHE_TTL } = process.env;
 
-const TEN_SECONDS = 1000 * 10;
+const THREE_MINUTES = 1000 * 60 * 3;
+
+const CACHE_TTL = TCGA_CACHE_TTL || THREE_MINUTES;
 
 /**
  * Translate a TCGA Diagnosis response to an Observation
@@ -89,7 +91,7 @@ const translateGdcResultsToFhir = (tcgaResults) => {
   return tcgaResults.map(translateSingleGdcResultsToFhir);
 };
 
-const get = memoizee(axios.get, { maxAge: TEN_SECONDS, length: false });
+const get = memoizee(axios.get, { maxAge: CACHE_TTL, primitive: true, length: 2 });
 
 class TCGA {
   async getAllDiagnosticReports({ page, pageSize } = {}) {

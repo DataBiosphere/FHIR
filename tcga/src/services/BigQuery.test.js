@@ -32,10 +32,13 @@ describe('BigQuery client tests', () => {
 
     await bigQueryClient.get();
 
-    expect(querySpy).toHaveBeenCalledWith('select * from `test-table` as `table_0` limit 20');
+    expect(querySpy.mock.calls).toEqual([
+      ['select * from `test-table` as `table_0`'],
+      ['select count(distinct `table_0`.`id`) as `count` from `test-table` as `table_0`'],
+    ]);
   });
 
-  it('should build a query to get data where a where clause', async () => {
+  it('should build a query to get data with a where clause', async () => {
     const bigQueryClient = new BigQuery({
       table: 'test-table',
     });
@@ -53,9 +56,12 @@ describe('BigQuery client tests', () => {
       },
     });
 
-    expect(querySpy).toHaveBeenCalledWith(
-      "select * from `test-table` as `table_0` where `table_0`.`id` = 'foobar' limit 20"
-    );
+    expect(querySpy.mock.calls).toEqual([
+      ["select * from `test-table` as `table_0` where `table_0`.`id` = 'foobar'"],
+      [
+        "select count(distinct `table_0`.`id`) as `count` from `test-table` as `table_0` where `table_0`.`id` = 'foobar'",
+      ],
+    ]);
   });
 
   it('should build a query to get data where a page and pageSize clause', async () => {
@@ -78,9 +84,14 @@ describe('BigQuery client tests', () => {
       pageSize: 30,
     });
 
-    expect(querySpy).toHaveBeenCalledWith(
-      "select * from `test-table` as `table_0` where `table_0`.`id` = 'foobar' limit 30 offset 60"
-    );
+    expect(querySpy.mock.calls).toEqual([
+      [
+        "select * from `test-table` as `table_0` where `table_0`.`id` = 'foobar' limit 30 offset 60",
+      ],
+      [
+        "select count(distinct `table_0`.`id`) as `count` from `test-table` as `table_0` where `table_0`.`id` = 'foobar'",
+      ],
+    ]);
   });
 
   it('should build a query to get data with joins', async () => {
@@ -109,9 +120,14 @@ describe('BigQuery client tests', () => {
       pageSize: 30,
     });
 
-    expect(querySpy).toHaveBeenCalledWith(
-      "select * from `test-table` as `table_0` left join `other-table` as `table_1` on `table_0`.`test-table-id` = `table_1`.`other-table-id` where `table_0`.`my_id` = 'foobar' limit 30 offset 60"
-    );
+    expect(querySpy.mock.calls).toEqual([
+      [
+        "select * from `test-table` as `table_0` left join `other-table` as `table_1` on `table_0`.`test-table-id` = `table_1`.`other-table-id` where `table_0`.`my_id` = 'foobar' limit 30 offset 60",
+      ],
+      [
+        "select count(distinct `table_0`.`id`) as `count` from `test-table` as `table_0` left join `other-table` as `table_1` on `table_0`.`test-table-id` = `table_1`.`other-table-id` where `table_0`.`my_id` = 'foobar'",
+      ],
+    ]);
   });
 
   it('should build a query to get data with joins', async () => {
@@ -141,8 +157,13 @@ describe('BigQuery client tests', () => {
       selection: 'name',
     });
 
-    expect(querySpy).toHaveBeenCalledWith(
-      "select `name` from `test-table` as `table_0` left join `other-table` as `table_1` on `table_0`.`test-table-id` = `table_1`.`other-table-id` where `table_0`.`my_id` = 'foobar' limit 30 offset 60"
-    );
+    expect(querySpy.mock.calls).toEqual([
+      [
+        "select `name` from `test-table` as `table_0` left join `other-table` as `table_1` on `table_0`.`test-table-id` = `table_1`.`other-table-id` where `table_0`.`my_id` = 'foobar' limit 30 offset 60",
+      ],
+      [
+        "select count(distinct `table_0`.`id`) as `count` from `test-table` as `table_0` left join `other-table` as `table_1` on `table_0`.`test-table-id` = `table_1`.`other-table-id` where `table_0`.`my_id` = 'foobar'",
+      ],
+    ]);
   });
 });
