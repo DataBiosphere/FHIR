@@ -1,11 +1,11 @@
 module.exports = {
   makeResource: () => {
     return {
-      type: 'DiagnosticReport',
+      type: 'Observation',
       profile: {
-        reference: 'http://www.hl7.org/fhir/DiagnosticReport.profile.json',
+        reference: 'http://www.hl7.org/fhir/Observation.profile.json',
       },
-      documentation: 'This server not not let clients create DiagnosticReports',
+      documentation: 'This server not not let clients create Observations',
       versioning: 'no-version',
       readHistory: false,
       updateCreate: false,
@@ -15,13 +15,7 @@ module.exports = {
       conditionalDelete: 'not-supported',
       searchInclude: [],
       searchRevInclude: [],
-      searchParam: [
-        {
-          name: '_include',
-          definition: 'https://www.hl7.org/fhir/search.html#include',
-          type: 'string',
-        },
-      ],
+      searchParam: [],
     };
   },
 };

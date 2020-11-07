@@ -8,11 +8,6 @@ const tcga = new TCGA();
 
 const logger = loggers.get();
 
-const includesMapping = {
-  Observation: 'observations',
-  DiagnosticReport: 'diagnosticReport',
-};
-
 const getStandardParameters = (query) => {
   const {
     _page = 1,
@@ -30,16 +25,14 @@ const getStandardParameters = (query) => {
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
-  logger.info('DiagnosticReport >>> search');
+  logger.info('Observation >>> search');
   const { query } = req;
-  const { _page, _count, _id, _include } = getStandardParameters(query);
-
-  let resultsSet = [];
+  const { _page, _count, _id } = getStandardParameters(query);
 
   if (_id) {
-    const resource = await tcga.getDiagnosticReportById(_id);
+    const resource = await tcga.getDiagnosisById(_id);
     return buildSearchBundle({
-      resourceType: 'DiagnosticReport',
+      resourceType: 'Observation',
       resources: [resource],
       page: _page,
       pageSize: _count,
@@ -47,40 +40,28 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     });
   }
 
-  const [tcgaResults, count] = await tcga.getAllDiagnosticReports({
+  const [results, count] = await tcga.getAllDiagnoses({
     page: _page,
     pageSize: _count,
   });
 
-  tcgaResults.forEach((tcgaResult) => {
-    resultsSet = resultsSet.concat(tcgaResult.diagnosticReport);
-    if (_include) {
-      const includes = _include.split(',');
-      includes.forEach((include) => {
-        if (Object.keys(includesMapping).includes(include)) {
-          resultsSet = resultsSet.concat(tcgaResult[includesMapping[include]]);
-        }
-      });
-    }
-  });
-
   return buildSearchBundle({
-    resourceType: 'DiagnosticReport',
+    resourceType: 'Observation',
     page: _page,
     pageSize: _count,
     fhirVersion: baseVersion,
     total: count,
-    resources: resultsSet,
+    resources: results,
   });
 };
 
 const searchById = async (args, { req }) => {
-  logger.info('DiagnosticReport >>> searchById');
+  logger.info('Observation >>> searchById');
   const { params } = req;
   const { id } = params;
-  const { diagnosticReport } = await tcga.getDiagnosticReportById(id);
+  const observation = await tcga.getDiagnosisById(id);
 
-  return diagnosticReport;
+  return observation;
 };
 
 module.exports = {

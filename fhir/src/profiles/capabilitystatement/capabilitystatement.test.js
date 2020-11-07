@@ -34,7 +34,17 @@ describe('CapabilityStatement tests', () => {
       kind: 'instance',
       publisher: 'The Publisher',
       resourceType: 'CapabilityStatement',
-      rest: [{ searchParam: [{ definition: '', name: '_count', type: 'number' }] }],
+      rest: [
+        {
+          searchParam: [
+            {
+              definition: 'https://www.hl7.org/fhir/search.html#count',
+              name: '_count',
+              type: 'number',
+            },
+          ],
+        },
+      ],
       software: { name: 'Broad', releaseDate: '20201013', version: '1.0.0' },
       status: 'draft',
     });

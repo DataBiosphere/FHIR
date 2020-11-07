@@ -1,25 +1,19 @@
 const { makeResource } = require('./metadata');
 
-describe('DiagnosticReport metadata test', () => {
+describe('Observation metadata test', () => {
   it('should have correct metadata ', () => {
     expect(makeResource()).toEqual({
       conditionalCreate: false,
       conditionalDelete: 'not-supported',
       conditionalRead: 'not-supported',
       conditionalUpdate: false,
-      documentation: 'This server not not let clients create DiagnosticReports',
-      profile: { reference: 'http://www.hl7.org/fhir/DiagnosticReport.profile.json' },
+      documentation: 'This server not not let clients create Observations',
+      profile: { reference: 'http://www.hl7.org/fhir/Observation.profile.json' },
       readHistory: false,
       searchInclude: [],
-      searchParam: [
-        {
-          definition: 'https://www.hl7.org/fhir/search.html#include',
-          name: '_include',
-          type: 'string',
-        },
-      ],
+      searchParam: [],
       searchRevInclude: [],
-      type: 'DiagnosticReport',
+      type: 'Observation',
       updateCreate: false,
       versioning: 'no-version',
     });

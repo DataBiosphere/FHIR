@@ -33,7 +33,7 @@ class BigQuery {
    * @param {number} page
    * @param {number} pageSize
    */
-  paginate(page, pageSize) {
+  paginate(page = 1, pageSize = 10) {
     const offset = Number(page) <= 0 ? 0 : (+Number(page) - 1) * Number(pageSize);
     const limit = pageSize;
     return [offset, limit];
@@ -47,8 +47,7 @@ class BigQuery {
    * @param {number} pageSize
    * @param {string} where
    */
-  async get({ selection = '*', page = 0, pageSize = 20, where = {} } = {}) {
-    const [offset, limit] = this.paginate(page, pageSize);
+  async get({ selection = '*', page, pageSize, where = {}, whereIn = [] } = {}) {
     let counter = 0;
     const tableAlias = `table_${counter}`;
     let dataQuery = knex.from(`${this.table} AS table_${counter}`);
@@ -67,9 +66,11 @@ class BigQuery {
     }
 
     const whereClause = Object.keys(where)
-      .map((column) => ({
-        [`${tableAlias}.${column}`]: where[column],
-      }))
+      .map((column) => {
+        return {
+          [`${tableAlias}.${column}`]: where[column],
+        };
+      })
       .reduce((accum, val) => {
         Object.assign(accum, val);
         return accum;
@@ -77,12 +78,23 @@ class BigQuery {
 
     dataQuery = dataQuery.where(whereClause);
 
+    // Only now do we clone the count query before adding possible limits and offsets
     const countQuery = dataQuery
       .clone()
       .countDistinct(`${tableAlias}.${this.primaryKey} as count`)
       .toString();
 
-    dataQuery = dataQuery.select(selection).offset(offset).limit(limit).toString();
+    if (whereIn.length) {
+      const [columnName, values] = whereIn;
+      dataQuery = dataQuery.whereIn(`${tableAlias}.${columnName}`, values);
+    }
+
+    if (page || pageSize) {
+      const [offset, limit] = this.paginate(page, pageSize);
+      dataQuery = dataQuery.offset(offset).limit(limit);
+    }
+
+    dataQuery = dataQuery.select(selection).toString();
 
     const [results] = await this.sendQuery(dataQuery);
     const [countRows] = await this.sendQuery(countQuery);

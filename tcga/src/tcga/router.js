@@ -3,8 +3,12 @@ const controller = require('./controller');
 
 const router = express.Router();
 
-router.get('/', controller.getAll);
+router.get('/gdc', controller.getAllGdc);
 
-router.get('/:id', controller.getById);
+router.get('/gdc/:id', controller.getGdcById);
+
+router.get('/diagnosis', controller.getAllDiagnosis);
+
+router.get('/diagnosis/:id', controller.getDiagnosisById);
 
 module.exports = router;

@@ -8,6 +8,7 @@
     "object-curly-newline": "off",
     "operator-linebreak": "off",
     "class-methods-use-this": "off",
-    "no-underscore-dangle": 0
+    "no-underscore-dangle": "off",
+    "no-param-reassign": "off"
   }
 }

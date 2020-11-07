@@ -78,6 +78,7 @@ const buildSearchBundle = ({
     entry: resources.map((resource) => {
       return {
         resource,
+        fullUrl: `${url}/${resourceType}/${resource.id}`,
       };
     }),
     total,
