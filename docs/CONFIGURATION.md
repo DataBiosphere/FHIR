@@ -7,7 +7,7 @@ environment variables. The following environment variables should be defined in 
 
 ### FHIR
 
-Directory `fhir`.
+Project directory `fhir`.
 
 | name     | required | default value | description             |
 | -------- | -------- | ------------- | ----------------------- |
@@ -17,7 +17,7 @@ Directory `fhir`.
 
 ### TCGA
 
-Directory `tcga`.
+Project directory `tcga`.
 
 | name                           | required | default value | description                                                                                    |
 | ------------------------------ | -------- | ------------- | ---------------------------------------------------------------------------------------------- |

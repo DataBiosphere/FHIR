@@ -22,29 +22,14 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{URL}}/4_0_0/DiagnosticReport/?_count=10&_page=2&_include=Observation",
+					"raw": "http://{{URL}}/4_0_0/DiagnosticReport",
 					"protocol": "http",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
 						"4_0_0",
-						"DiagnosticReport",
-						""
-					],
-					"query": [
-						{
-							"key": "_count",
-							"value": "10"
-						},
-						{
-							"key": "_page",
-							"value": "2"
-						},
-						{
-							"key": "_include",
-							"value": "Observation"
-						}
+						"DiagnosticReport"
 					]
 				}
 			},
@@ -222,7 +207,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3001/api/gdc/",
+					"raw": "http://localhost:3001/api/gdc?page=2&pageSize=5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -230,8 +215,17 @@
 					"port": "3001",
 					"path": [
 						"api",
-						"gdc",
-						""
+						"gdc"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "pageSize",
+							"value": "5"
+						}
 					]
 				}
 			},
@@ -325,7 +319,7 @@
 	],
 	"variable": [
 		{
-			"id": "e86efca6-6420-4630-bc12-0e067d8da08a",
+			"id": "604201ba-dd97-4e11-8923-6202bc601fea",
 			"key": "URL",
 			"value": "localhost:3000"
 		}
