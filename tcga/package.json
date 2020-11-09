@@ -1,7 +1,7 @@
 {
   "name": "tcga",
   "version": "1.0.0",
-  "description": "",
+  "description": "Broad FHIR TCGA Adapter",
   "main": "index.js",
   "scripts": {
     "test": "jest src",
@@ -24,6 +24,8 @@
     "knex": "^0.21.6",
     "lodash": "^4.17.20",
     "supertest": "^5.0.0",
+    "swagger-jsdoc": "^5.0.0",
+    "swagger-ui-express": "^4.1.4",
     "winston": "^3.3.3"
   },
   "devDependencies": {

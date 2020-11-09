@@ -1,6 +1,8 @@
 require('dotenv').config();
 
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swagger = require('./swagger');
 const logger = require('./logger');
 const { router: TCGARouter } = require('./tcga');
 
@@ -14,6 +16,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/', TCGARouter);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger));
 
 app.listen(PORT, () => {
   logger.info(`TCGA Adapter listening on port ${PORT}`);
