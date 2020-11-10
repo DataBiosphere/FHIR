@@ -50,20 +50,39 @@ describe('CapabilityStatement tests', () => {
     });
   });
   it('', () => {
-    expect(securityStatement()).toEqual({
-      cors: true,
-      extension: [
+    expect(
+      securityStatement([
         {
-          extension: undefined,
-          url: 'http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris',
+          url: 'authorize',
+          valueUri: 'https://accounts.google.com/o/oauth2/v2/auth',
         },
-      ],
+        {
+          url: 'token',
+          valueUri: 'https://oauth2.googleapis.com/token',
+        },
+      ])
+    ).toEqual({
+      cors: true,
       service: [
         {
           coding: [
-            { code: 'SMART-on-FHIR', system: 'http://hl7.org/fhir/restful-security-service' },
+            {
+              system: 'http://hl7.org/fhir/restful-security-service',
+              code: 'SMART-on-FHIR',
+              display: 'SMART-on-FHIR',
+            },
           ],
-          text: 'Custom OAuth2 using SMART-on-FHIR profile (see http://docs.smarthealthit.org)',
+          text: 'OAuth2 using SMART-on-FHIR profile (see http://docs.smarthealthit.org)',
+        },
+      ],
+      extension: [
+        {
+          url: 'authorize',
+          valueUri: 'https://accounts.google.com/o/oauth2/v2/auth',
+        },
+        {
+          url: 'token',
+          valueUri: 'https://oauth2.googleapis.com/token',
         },
       ],
     });

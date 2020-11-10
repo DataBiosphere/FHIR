@@ -34,7 +34,6 @@ const makeStatement = (resources) => {
 };
 
 const securityStatement = (securityUrls) => {
-  console.log('here', securityUrls);
   return {
     cors: true,
     service: [
