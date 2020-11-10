@@ -43,3 +43,13 @@ docker-compose up
 Read our docs pages for information on deployment, tech stack, design decisions, and more.
 
 [Docs](./docs/INDEX.md)
+
+## Auth endpoints
+
+### Authorize
+
+https://accounts.google.com/o/oauth2/v2/auth
+
+### Token
+
+https://oauth2.googleapis.com/token

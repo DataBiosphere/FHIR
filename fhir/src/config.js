@@ -22,6 +22,16 @@ const fhirServerConfig = {
   },
   url: process.env.URL,
   bundleSize: process.env.BUNDLE_SIZE || 20,
+  security: [
+    {
+      url: 'authorize',
+      valueUri: 'https://accounts.google.com/o/oauth2/v2/auth',
+    },
+    {
+      url: 'token',
+      valueUri: 'https://oauth2.googleapis.com/token',
+    },
+  ],
 };
 
 module.exports = fhirServerConfig;

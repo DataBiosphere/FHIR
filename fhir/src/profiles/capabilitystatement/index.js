@@ -34,6 +34,7 @@ const makeStatement = (resources) => {
 };
 
 const securityStatement = (securityUrls) => {
+  console.log('here', securityUrls);
   return {
     cors: true,
     service: [
@@ -42,17 +43,13 @@ const securityStatement = (securityUrls) => {
           {
             system: 'http://hl7.org/fhir/restful-security-service',
             code: 'SMART-on-FHIR',
+            display: 'SMART-on-FHIR',
           },
         ],
-        text: 'Custom OAuth2 using SMART-on-FHIR profile (see http://docs.smarthealthit.org)',
+        text: 'OAuth2 using SMART-on-FHIR profile (see http://docs.smarthealthit.org)',
       },
     ],
-    extension: [
-      {
-        url: 'http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris',
-        extension: securityUrls,
-      },
-    ],
+    extension: securityUrls,
   };
 };
 
