@@ -13,12 +13,12 @@ module.exports = {
       conditionalRead: 'not-supported',
       conditionalUpdate: false,
       conditionalDelete: 'not-supported',
-      searchInclude: [],
+      searchInclude: ['DiagnosticReport:result'],
       searchRevInclude: [],
       searchParam: [
         {
-          name: '_include',
-          definition: 'https://www.hl7.org/fhir/search.html#include',
+          name: 'researchStudy',
+          definition: 'http://hl7.org/fhir/StructureDefinition/workflow-researchStudy',
           type: 'string',
         },
       ],

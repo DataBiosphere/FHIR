@@ -73,6 +73,12 @@ const translateSingleGdcResultsToFhir = (tcgaResult) => {
 
     issued: tcgaResult.updated_datetime,
     effectiveDatetime: tcgaResult.updated_datetime,
+    extension: [
+      {
+        url: 'https://build.fhir.org/extension-workflow-researchstudy.html',
+        researchStudy: 'ResearchStudy/TCGA',
+      },
+    ],
   });
 
   const observations = tcgaResult.diagnoses.map((diagnosis) =>
