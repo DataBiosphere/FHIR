@@ -28,6 +28,15 @@ describe('TCGA service tests', () => {
               ],
             },
           ],
+          extension: [
+            {
+              url: 'https://build.fhir.org/extension-workflow-researchstudy.html',
+              valueReference: {
+                reference: 'ResearchStudy/TCGA',
+                type: 'ResearchStudy',
+              },
+            },
+          ],
           id: '291b069c-9dde-4e1e-8430-85146bc94338',
           issued: '2019-08-06T14:25:25.511101-05:00',
           meta: {
@@ -130,6 +139,15 @@ describe('TCGA service tests', () => {
         subject: {
           reference: 'Patient/2611cb61-6d05-5286-b94a-ce6cac2ba37b',
         },
+        extension: [
+          {
+            url: 'https://build.fhir.org/extension-workflow-researchstudy.html',
+            valueReference: {
+              reference: 'ResearchStudy/TCGA',
+              type: 'ResearchStudy',
+            },
+          },
+        ],
       },
 
       observations: [

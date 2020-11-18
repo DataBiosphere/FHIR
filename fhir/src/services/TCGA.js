@@ -76,7 +76,10 @@ const translateSingleGdcResultsToFhir = (tcgaResult) => {
     extension: [
       {
         url: 'https://build.fhir.org/extension-workflow-researchstudy.html',
-        researchStudy: 'ResearchStudy/TCGA',
+        valueReference: {
+          reference: 'ResearchStudy/TCGA',
+          type: 'ResearchStudy',
+        },
       },
     ],
   });

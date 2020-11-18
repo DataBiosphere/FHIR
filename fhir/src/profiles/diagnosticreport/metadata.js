@@ -16,11 +16,11 @@ module.exports = {
       searchInclude: ['DiagnosticReport:result'],
       searchRevInclude: [],
       searchParam: [
-        {
-          name: 'researchStudy',
-          definition: 'http://hl7.org/fhir/StructureDefinition/workflow-researchStudy',
-          type: 'string',
-        },
+        // {
+        //   name: 'researchStudy',
+        //   definition: 'http://hl7.org/fhir/StructureDefinition/workflow-researchStudy',
+        //   type: 'string',
+        // },
       ],
     };
   },

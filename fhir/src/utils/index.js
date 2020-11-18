@@ -64,7 +64,7 @@ const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion }) => {
  */
 const buildSearchBundle = ({
   resourceType,
-  resources,
+  entries,
   total,
   page,
   pageSize,
@@ -75,12 +75,7 @@ const buildSearchBundle = ({
     type: 'searchset',
     timestamp: new Date(),
     link: getLinks({ baseUrl: url, resourceType, page, pageSize, fhirVersion }),
-    entry: resources.map((resource) => {
-      return {
-        resource,
-        fullUrl: `${url}/${resourceType}/${resource.id}`,
-      };
-    }),
+    entry: entries,
     total,
   });
 };

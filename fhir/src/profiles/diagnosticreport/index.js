@@ -1,6 +1,6 @@
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
-const { bundleSize } = require('../../config');
+const { bundleSize, url } = require('../../config');
 const { buildSearchBundle } = require('../../utils');
 const { TCGA } = require('../../services');
 
@@ -9,8 +9,7 @@ const tcga = new TCGA();
 const logger = loggers.get();
 
 const includesMapping = {
-  Observation: 'observations',
-  DiagnosticReport: 'diagnosticReport',
+  'DiagnosticReport:result': 'observations',
 };
 
 const getStandardParameters = (query) => {
@@ -27,6 +26,16 @@ const getStandardParameters = (query) => {
     // _tag,
   } = query;
   return { _page, _count, _id, _include };
+};
+
+const buildEntry = (resource, searchMode = 'match') => {
+  return {
+    resource,
+    fullUrl: `${url}/${resource.resourceType}/${resource.id}`,
+    search: {
+      mode: searchMode,
+    },
+  };
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
@@ -53,12 +62,16 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   });
 
   tcgaResults.forEach((tcgaResult) => {
-    resultsSet = resultsSet.concat(tcgaResult.diagnosticReport);
+    const { diagnosticReport } = tcgaResult;
+    resultsSet = resultsSet.concat(buildEntry(diagnosticReport));
     if (_include) {
       const includes = _include.split(',');
       includes.forEach((include) => {
-        if (Object.keys(includesMapping).includes(include)) {
-          resultsSet = resultsSet.concat(tcgaResult[includesMapping[include]]);
+        if (includesMapping[include]) {
+          // Add other resources from TCGA
+          resultsSet = resultsSet.concat(
+            tcgaResult[includesMapping[include]].map((resource) => buildEntry(resource, 'include'))
+          );
         }
       });
     }
@@ -70,7 +83,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     pageSize: _count,
     fhirVersion: baseVersion,
     total: count,
-    resources: resultsSet,
+    entries: resultsSet,
   });
 };
 
