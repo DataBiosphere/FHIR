@@ -48,7 +48,12 @@ const securityStatement = (securityUrls) => {
         text: 'OAuth2 using SMART-on-FHIR profile (see http://docs.smarthealthit.org)',
       },
     ],
-    extension: securityUrls,
+    extension: [
+      {
+        url: 'http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris',
+        extension: securityUrls,
+      },
+    ],
   };
 };
 

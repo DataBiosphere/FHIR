@@ -77,12 +77,17 @@ describe('CapabilityStatement tests', () => {
       ],
       extension: [
         {
-          url: 'authorize',
-          valueUri: 'https://accounts.google.com/o/oauth2/v2/auth',
-        },
-        {
-          url: 'token',
-          valueUri: 'https://oauth2.googleapis.com/token',
+          url: 'http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris',
+          extension: [
+            {
+              url: 'authorize',
+              valueUri: 'https://accounts.google.com/o/oauth2/v2/auth',
+            },
+            {
+              url: 'token',
+              valueUri: 'https://oauth2.googleapis.com/token',
+            },
+          ],
         },
       ],
     });
