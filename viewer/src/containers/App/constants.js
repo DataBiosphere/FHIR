@@ -1,0 +1,9 @@
+/*
+ * App Action Types
+ *
+ */
+
+export const LOAD_SMART_INFO = 'App/LOAD_SMART_INFO';
+export const LOAD_SMART_INFO_SUCCESS = 'App/LOAD_SMART_INFO_SUCCESS';
+export const LOAD_SMART_INFO_FAILURE = 'App/LOAD_SMART_INFO_FAILURE';
+export const LOAD_PATIENT_INFO_SUCCESS = 'App/LOAD_PATIENT_INFO_SUCCESS';

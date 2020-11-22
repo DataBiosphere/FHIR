@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Broad FHIR Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/fhirclient/build/fhir-client.min.js"></script>
+</head>
+
+<body>
+    <script>
+        clientId = "{{ clientId }}";
+        scope = "{{ scope }}";
+        iss = "{{ iss }}";
+        redirectUri = "{{ redirectUri }}";
+        clientSecret = "{{ clientSecret }}";
+        FHIR.oauth2.authorize({
+            clientId: clientId,
+            scope: scope,
+            iss: iss,
+            redirectUri: redirectUri,
+            clientSecret: clientSecret
+        });
+    </script>
+</body>
+
+</html>

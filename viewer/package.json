@@ -1,0 +1,80 @@
+{
+  "name": "fhir-app-starter",
+  "version": "2.0.1",
+  "description": "Broad FHIR Viewer",
+  "keywords": [
+    "FHIR",
+    "React",
+    "Redux",
+    "Redux-Saga",
+    "Webpack",
+    "ES6"
+  ],
+  "author": "Asymmetrik Ltd.",
+  "contributors": [
+    "Shane O'Neill <soneill@asymmetrik.com>"
+  ],
+  "bugs": "https://github.com/databiosphere/fhir",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/databiosphere/fhir"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "babel-jest": "^26.6.3",
+    "connected-react-router": "^6.8.0",
+    "fhirclient": "^2.3.10",
+    "history": "^5.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-helmet-async": "^1.0.7",
+    "react-hook-form": "^6.11.0",
+    "react-redux": "^7.2.2",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.0",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^1.1.3",
+    "reselect": "^4.0.0",
+    "styled-components": "^5.2.1",
+    "web-vitals": "^0.2.4"
+  },
+  "scripts": {
+    "start": "yarn build:launch && react-scripts start",
+    "build": "yarn build:launch && react-scripts build",
+    "build:launch": "node ./internals/build.js",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint  --ext .js --ext .jsx src",
+    "format": "prettier \"**/*.{js,jsx}\" --write",
+    "changelog": "conventional-changelog -p angular -s -i CHANGELOG.md"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "4.0.0",
+    "handlebars": "^4.7.6",
+    "prettier": "^2.0.5"
+  }
+}
