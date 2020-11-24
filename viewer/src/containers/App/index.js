@@ -1,51 +1,270 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
-import styled from 'styled-components';
+import { Switch, Route } from 'react-router-dom';
 
-import { loadSmartInfoAction } from './actions';
-import { getSmartError, getPatient, getSmartInfo } from './selectors';
-import history from '../../modules/history';
-import Navbar from '../../components/Navbar';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
 
-const Container = styled.div`
-  margin-left: 300px;
-  margin-right: 300px;
-`;
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+import Badge from '@material-ui/core/Badge';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 
-const TextArea = styled.textarea`
-  width: 100%;
-`;
+import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import DashBoardIcon from '@material-ui/icons/Dashboard';
+import HomeIcon from '@material-ui/icons/Home';
+import SettingsIcon from '@material-ui/icons/Settings';
 
-class App extends React.Component {
-  componentDidMount() {
-    const { initializeSmartClient } = this.props;
-    initializeSmartClient();
-  }
+import PreferencesPage from '../../containers/Preferences/Loadable';
 
-  render() {
-    const { error, smart, patient } = this.props;
-    return (
-      <Router history={history}>
-        <Helmet />
-        <Container style={{ marginTop: '2rem' }}>
-          <Navbar />
-          <TextArea rows={30} value={JSON.stringify(smart, null, 4)} />
-        </Container>
-      </Router>
-    );
-  }
-}
+import Drawer from '../../components/Drawer';
+import Footer from '../../components/Footer';
+import Link from '../../components/Link';
 
-function mapStateToProps(state) {
-  return { error: getSmartError(state), smart: getSmartInfo(state), patient: getPatient(state) };
-}
+const drawerWidth = 240;
 
-function mapDispatchToProps(dispatch) {
-  return {
-    initializeSmartClient: () => dispatch(loadSmartInfoAction()),
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: 36,
+  },
+  brand: {
+    color: 'white',
+    flex: 1,
+  },
+  hide: {
+    display: 'none',
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+  },
+  drawerOpen: {
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerClose: {
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9) + 1,
+    },
+  },
+  toolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  drawerText: {
+    color: '#757575',
+    fontWeight: 'bold',
+  },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex',
+    },
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
+}));
+
+export default function App() {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
   };
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const menuId = 'primary-search-account-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+    </Menu>
+  );
+
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircleIcon />
+        </IconButton>
+        <p>Profile</p>
+      </MenuItem>
+    </Menu>
+  );
+
+  const top = [
+    {
+      icon: <HomeIcon />,
+      to: '/',
+      text: 'Home',
+    },
+  ];
+
+  const bottom = [
+    {
+      icon: <SettingsIcon />,
+      to: '/preferences',
+      text: 'Preferences',
+    },
+  ];
+
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
+            })}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Link className={classes.brand} to="/" underline="none">
+            <Typography className={classes.title} variant="h6" noWrap>
+              Broad FHIR Viewer
+            </Typography>
+          </Link>
+          <div className={classes.sectionDesktop}>
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircleIcon />
+            </IconButton>
+          </div>
+          <div className={classes.sectionMobile}>
+            <IconButton
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </div>
+        </Toolbar>
+      </AppBar>
+      {renderMenu}
+      {renderMobileMenu}
+
+      <Drawer open={open} handleDrawerClose={handleDrawerClose} top={top} bottom={bottom} />
+
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        <Switch>
+          <Route path="/preferences" component={PreferencesPage} />
+        </Switch>
+        <Footer />
+      </main>
+    </div>
+  );
+}
