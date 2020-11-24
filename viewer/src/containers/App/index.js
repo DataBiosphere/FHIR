@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import clsx from 'clsx';
@@ -8,18 +8,20 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import DashBoardIcon from '@material-ui/icons/Dashboard';
 import HomeIcon from '@material-ui/icons/Home';
 import SettingsIcon from '@material-ui/icons/Settings';
+import WhatshotIcon from '@material-ui/icons/Whatshot';
+import MUILink from '@material-ui/core/Link';
+
+import connect from '../../services/FhirClient';
 
 import PreferencesPage from '../../containers/Preferences/Loadable';
 
@@ -101,6 +103,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
+      alignItems: 'center',
     },
   },
   sectionMobile: {
@@ -109,13 +112,30 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  title: {
+    flexGrow: 1,
+  },
 }));
 
 export default function App() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [client, setClient] = useState({});
+  const [open, setOpen] = useState();
+  const [anchorEl, setAnchorEl] = useState();
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState();
+
+  useEffect(() => {
+    const smartAuth = async () => {
+      try {
+        const client = await connect();
+        console.log(client);
+        setClient(client);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    smartAuth();
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -229,6 +249,23 @@ export default function App() {
             </Typography>
           </Link>
           <div className={classes.sectionDesktop}>
+            {client.state ? (
+              <Typography className={classes.title} variant="h6" noWrap>
+                FHIR Server: {client.state.serverUrl}
+              </Typography>
+            ) : (
+              <Button
+                aria-label="SMART Launch"
+                aria-controls="smart-launch"
+                aria-haspopup="true"
+                color="green"
+                variant="contained"
+                component="button"
+                href="/launch.html?iss%3Dhttp%3A%2F%2F34.75.179.65%2F4_0_0%2F"
+              >
+                <WhatshotIcon /> SMART Launch
+              </Button>
+            )}
             <IconButton
               edge="end"
               aria-label="account of current user"
