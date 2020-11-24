@@ -17,7 +17,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import HomeIcon from '@material-ui/icons/Home';
-import SettingsIcon from '@material-ui/icons/Settings';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import GitHubIcon from '@material-ui/icons/GitHub';
 
