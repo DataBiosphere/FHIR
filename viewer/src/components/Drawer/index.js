@@ -80,13 +80,13 @@ const MyDrawer = ({ open, handleDrawerClose, top, bottom }) => {
       <Divider />
       <List>
         {top.map(({ icon, to, text }) => (
-          <Link icon={icon} to={to} text={text} />
+          <Link key={text} icon={icon} to={to} text={text} />
         ))}
       </List>
       <Divider />
       <List>
         {bottom.map(({ icon, to, text, external }) => (
-          <Link icon={icon} to={to} text={text} external={external} />
+          <Link key={text} icon={icon} to={to} text={text} external={external} />
         ))}
       </List>
     </Drawer>
@@ -94,18 +94,24 @@ const MyDrawer = ({ open, handleDrawerClose, top, bottom }) => {
 };
 
 MyDrawer.propTypes = {
-  open: PropTypes.bool.isRequired,
+  open: PropTypes.bool,
   handleDrawerClose: PropTypes.func.isRequired,
-  top: PropTypes.shape({
-    icon: PropTypes.node.isRequired,
-    to: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-  }),
-  bottom: PropTypes.shape({
-    icon: PropTypes.node.isRequired,
-    to: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-  }),
+  top: PropTypes.arrayOf(
+    PropTypes.shape({
+      icon: PropTypes.node.isRequired,
+      to: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+      external: PropTypes.bool,
+    })
+  ),
+  bottom: PropTypes.arrayOf(
+    PropTypes.shape({
+      icon: PropTypes.node.isRequired,
+      to: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+      external: PropTypes.bool,
+    })
+  ),
 };
 
 export default MyDrawer;
