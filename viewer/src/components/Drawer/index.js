@@ -16,7 +16,7 @@ import Link from './Link';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -74,11 +74,7 @@ const MyDrawer = ({ open, handleDrawerClose, top, bottom }) => {
     >
       <div className={classes.toolbar}>
         <IconButton onClick={handleDrawerClose}>
-          {theme.direction === 'rtl' ? (
-            <ChevronRightIcon />
-          ) : (
-            <ChevronLeftIcon />
-          )}
+          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </IconButton>
       </div>
       <Divider />
@@ -89,8 +85,8 @@ const MyDrawer = ({ open, handleDrawerClose, top, bottom }) => {
       </List>
       <Divider />
       <List>
-        {bottom.map(({ icon, to, text }) => (
-          <Link icon={icon} to={to} text={text} />
+        {bottom.map(({ icon, to, text, external }) => (
+          <Link icon={icon} to={to} text={text} external={external} />
         ))}
       </List>
     </Drawer>

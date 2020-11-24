@@ -17,17 +17,24 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MyLink = ({ icon, text, to }) => {
+const MyLink = ({ icon, text, to, external }) => {
   const classes = useStyles();
+
+  if (external) {
+    return (
+      <Link href={to} underline="none">
+        <ListItem button>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText primary={<Typography className={classes.drawerText}>{text}</Typography>} />
+        </ListItem>
+      </Link>
+    );
+  }
   return (
     <Link component={RouterLink} to={to} underline="none">
       <ListItem button>
         <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText
-          primary={
-            <Typography className={classes.drawerText}>{text}</Typography>
-          }
-        />
+        <ListItemText primary={<Typography className={classes.drawerText}>{text}</Typography>} />
       </ListItem>
     </Link>
   );

@@ -19,7 +19,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import HomeIcon from '@material-ui/icons/Home';
 import SettingsIcon from '@material-ui/icons/Settings';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
-import MUILink from '@material-ui/core/Link';
+import GitHubIcon from '@material-ui/icons/GitHub';
 
 import connect from '../../services/FhirClient';
 
@@ -114,6 +114,13 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+  },
+  fhirserver: {
+    border: 'solid 2px darkgreen',
+    borderRadius: '10px',
+    padding: '.5rem',
+    backgroundColor: 'green',
+    fontSize: '1rem',
   },
 }));
 
@@ -216,9 +223,10 @@ export default function App() {
 
   const bottom = [
     {
-      icon: <SettingsIcon />,
-      to: '/preferences',
-      text: 'Preferences',
+      icon: <GitHubIcon />,
+      to: 'https://github.com/databiosphere/fhir',
+      text: 'Github',
+      external: true,
     },
   ];
 
@@ -250,7 +258,7 @@ export default function App() {
           </Link>
           <div className={classes.sectionDesktop}>
             {client.state ? (
-              <Typography className={classes.title} variant="h6" noWrap>
+              <Typography className={classes.fhirserver} variant="h6" noWrap>
                 FHIR Server: {client.state.serverUrl}
               </Typography>
             ) : (
