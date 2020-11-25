@@ -38,3 +38,13 @@ spec:
           ports:
             - containerPort: 3001
           imagePullPolicy: Always
+---
+apiVersion: "extensions/v1beta1"
+kind: "Ingress"
+metadata:
+  name: "fhir"
+  namespace: "default"
+spec:
+  backend:
+    serviceName: "fhir"
+    servicePort: 80
