@@ -49,8 +49,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "yarn build:launch && react-scripts start",
-    "build": "yarn build:launch && react-scripts build",
+    "start": "npm run build:launch && react-scripts start",
+    "build": "npm run build:launch && react-scripts build",
     "build:launch": "node ./internals/build.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
