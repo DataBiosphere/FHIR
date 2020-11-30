@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { useState } from 'react';
 
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,7 +16,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 
-import { useFhirClient } from '../../providers/FhirClient';
+import { useFhirClient } from 'react-fhirclient';
 
 import Drawer from '../../components/Drawer';
 import Footer from '../../components/Footer';

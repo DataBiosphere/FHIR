@@ -1,6 +1,5 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { browserHistory } from 'react-router-dom';
 
@@ -18,10 +17,8 @@ describe('<Footer />', () => {
     const renderedComponent = renderer
       .create(
         <Provider store={store}>
-          <IntlProvider locale="en">
-            <Footer />
-          </IntlProvider>
-        </Provider>,
+          <Footer />
+        </Provider>
       )
       .toJSON();
 

@@ -9,8 +9,6 @@ import { Switch, Route } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import { FhirClientProvider } from './providers/FhirClient';
-
 import configureStore from './store';
 
 import theme from './theme';
@@ -25,17 +23,19 @@ const store = configureStore({}, history);
 
 const MOUNT_NODE = document.getElementById('root');
 
+let fhirClientRef;
+
+export const getFhirClient = () => fhirClientRef.state;
+
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <HelmetProvider>
         <ThemeProvider theme={theme}>
-          <FhirClientProvider>
-            <CssBaseline />
-            <Switch>
-              <Route path="/" component={App} />
-            </Switch>
-          </FhirClientProvider>
+          <CssBaseline />
+          <Switch>
+            <Route path="/" component={App} />
+          </Switch>
         </ThemeProvider>
       </HelmetProvider>
     </ConnectedRouter>

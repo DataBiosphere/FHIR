@@ -11,13 +11,13 @@ import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
+import { useInjectSaga } from '../../utils/injectSaga';
+import { useInjectReducer } from '../../utils/injectReducer';
 import makeSelectCapability from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 
-export function Capability() {
+export function Capability(props) {
   useInjectReducer({ key: 'capability', reducer });
   useInjectSaga({ key: 'capability', saga });
 
@@ -27,6 +27,13 @@ export function Capability() {
         <title>Capability Statement</title>
         <meta name="description" content="Description of Capability" />
       </Helmet>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
     </div>
   );
 }
