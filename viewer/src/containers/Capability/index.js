@@ -10,14 +10,6 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { compose } from 'redux';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
 import { selectMetadata, selectCapabilityDomain, selectSmartContext } from './selectors';
@@ -32,7 +24,7 @@ export function Capability(props) {
     <div>
       <Helmet>
         <title>Capability Statement</title>
-        <meta name="description" content="Description of Capability" />
+        <meta name="description" content="Capability Statement" />
       </Helmet>
       <h1>Capability Statement</h1>
       <pre>

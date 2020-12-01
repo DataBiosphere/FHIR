@@ -1,4 +1,4 @@
-import { take, call, put, select } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
 import { loadCapabilityAction } from './actions';
 import makeRequester from '../../utils/request';
 import connect from '../../services/FhirClient';

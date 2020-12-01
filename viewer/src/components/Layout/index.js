@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 
 import AppBar from '@material-ui/core/AppBar';
+import { Alert } from '@material-ui/lab';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,8 +16,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
-
-import { useFhirClient } from 'react-fhirclient';
 
 import Drawer from '../../components/Drawer';
 import Footer from '../../components/Footer';
@@ -114,6 +113,10 @@ const useStyles = makeStyles((theme) => ({
     padding: '.5rem',
     backgroundColor: 'green',
     fontSize: '1rem',
+  },
+
+  alert: {
+    margin: '1rem',
   },
 }));
 
@@ -223,17 +226,22 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
                 FHIR Server: {iss}
               </Typography>
             ) : (
-              <Button
-                aria-label="SMART Launch"
-                aria-controls="smart-launch"
-                aria-haspopup="true"
-                color="primary"
-                variant="contained"
-                component="button"
-                href="/launch.html?iss%3Dhttp%3A%2F%2F34.75.179.65%2F4_0_0%2F"
-              >
-                <WhatshotIcon /> SMART Launch
-              </Button>
+              <>
+                <Alert className={classes.alert} severity="error">
+                  Unconnected. Make sure you launch from a SMART on FHIR context.
+                </Alert>
+                <Button
+                  aria-label="SMART Launch"
+                  aria-controls="smart-launch"
+                  aria-haspopup="true"
+                  color="primary"
+                  variant="contained"
+                  component="button"
+                  href="/launch.html?iss%3Dhttp%3A%2F%2F34.75.179.65%2F4_0_0%2F"
+                >
+                  <WhatshotIcon /> SMART Launch
+                </Button>
+              </>
             )}
             <IconButton
               edge="end"
