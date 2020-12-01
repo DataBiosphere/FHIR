@@ -7,7 +7,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
 import { compose } from 'redux';
 
 import { useInjectSaga } from '../../utils/injectSaga';
@@ -15,6 +14,7 @@ import { useInjectReducer } from '../../utils/injectReducer';
 import { selectMetadata, selectCapabilityDomain, selectSmartContext } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import SEO from '../../components/SEO';
 
 export function Capability(props) {
   useInjectReducer({ key: 'capability', reducer });
@@ -22,10 +22,10 @@ export function Capability(props) {
 
   return (
     <div>
-      <Helmet>
+      <SEO>
         <title>Capability Statement</title>
         <meta name="description" content="Capability Statement" />
-      </Helmet>
+      </SEO>
       <h1>Capability Statement</h1>
       <pre>
         <code>{JSON.stringify(props.metadata, null, 2)}</code>

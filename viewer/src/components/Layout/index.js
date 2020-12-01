@@ -20,6 +20,7 @@ import WhatshotIcon from '@material-ui/icons/Whatshot';
 import Drawer from '../../components/Drawer';
 import Footer from '../../components/Footer';
 import Link from '../../components/Link';
+import SEO from '../SEO';
 
 const drawerWidth = 240;
 
@@ -117,13 +118,14 @@ const useStyles = makeStyles((theme) => ({
 
   alert: {
     margin: '1rem',
+    padding: '0px 16px',
   },
 }));
 
 export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }) {
   const classes = useStyles();
   const [open, setOpen] = useState();
-  const [anchorEl, setAnchorEl] = useState();
+  const [, setAnchorEl] = useState();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState();
 
   const handleDrawerOpen = () => {
@@ -176,6 +178,8 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
 
   return (
     <div className={classes.root}>
+      <SEO />
+
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
