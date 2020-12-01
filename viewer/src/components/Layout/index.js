@@ -234,7 +234,7 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
                   aria-label="SMART Launch"
                   aria-controls="smart-launch"
                   aria-haspopup="true"
-                  color="primary"
+                  color="secondary"
                   variant="contained"
                   component="button"
                   href="/launch.html?iss%3Dhttp%3A%2F%2F34.75.179.65%2F4_0_0%2F"
