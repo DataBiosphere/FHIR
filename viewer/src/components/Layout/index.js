@@ -155,21 +155,6 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
   };
 
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
-    </Menu>
-  );
-
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
@@ -267,7 +252,6 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
           </div>
         </Toolbar>
       </AppBar>
-      {renderMenu}
       {renderMobileMenu}
 
       <Drawer
