@@ -134,7 +134,6 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
     setOpen(false);
   };
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -143,11 +142,6 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
   };
 
   const handleMobileMenuOpen = (event) => {
