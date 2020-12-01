@@ -38,6 +38,18 @@ Run Docker Compose.
 docker-compose up
 ```
 
+## SMART App
+
+Broad FHIR comes with it's own [SMART on FHIR](http://www.hl7.org/fhir/smart-app-launch/) application. You can run it locally or host it statically.
+
+```
+cd viewer
+npm i
+npm start
+```
+
+![Viewer](./docs/images/viewer.png)
+
 ## Documentation
 
 Read our docs pages for information on deployment, tech stack, design decisions, and more.
