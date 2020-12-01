@@ -10,6 +10,7 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
+
 import { getSmartInfo, selectApp } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -18,6 +19,7 @@ import { loadSmartInfoAction } from './actions';
 import Layout from '../../components/Layout';
 
 import Capability from '../Capability';
+import Search from '../Search';
 
 function App(props) {
   const { dispatch, smart } = props;
@@ -55,6 +57,9 @@ function App(props) {
   return (
     <Layout topSideBarMenu={top} bottomSideBarMenu={bottom} iss={iss}>
       <Switch>
+        <Route path="/" exact>
+          <Search />
+        </Route>
         <Route path="/metadata">
           <Capability />
         </Route>
