@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router-dom';
 import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 
 import SearchIcon from '@material-ui/icons/Search';
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -11,7 +10,7 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
-import makeSelectApp from './selectors';
+import { getSmartInfo, selectApp } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import { loadSmartInfoAction } from './actions';
@@ -20,7 +19,10 @@ import Layout from '../../components/Layout';
 
 import Capability from '../Capability';
 
-function App({ dispatch }) {
+function App(props) {
+  const { dispatch, smart } = props;
+  const { serverUrl: iss } = smart;
+
   useInjectReducer({ key: 'app', reducer });
   useInjectSaga({ key: 'app', saga });
 
@@ -51,7 +53,7 @@ function App({ dispatch }) {
   ];
 
   return (
-    <Layout topSideBarMenu={top} bottomSideBarMenu={bottom}>
+    <Layout topSideBarMenu={top} bottomSideBarMenu={bottom} iss={iss}>
       <Switch>
         <Route path="/metadata">
           <Capability />
@@ -65,8 +67,9 @@ App.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = createStructuredSelector({
-  app: makeSelectApp(),
+const mapStateToProps = (state) => ({
+  app: selectApp(state),
+  smart: getSmartInfo(state) || {},
 });
 
 function mapDispatchToProps(dispatch) {

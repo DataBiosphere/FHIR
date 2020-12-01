@@ -19,7 +19,7 @@ const appReducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
       case LOAD_SMART_INFO_SUCCESS:
-        draft.smart = _.get(action.payload, 'state.tokenResponse');
+        draft.smart = _.get(action.payload, 'state');
         break;
       case LOAD_SMART_INFO_FAILURE:
         draft.error = action.payload;

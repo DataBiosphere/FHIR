@@ -20,10 +20,6 @@ export const getSmartInfo = createSelector([selectApp], (app) => {
   return app.smart;
 });
 
-export const getPatient = (state) => {
-  return _.get(state, 'home.patient');
-};
-
 /**
  * Default selector used by Capability
  */

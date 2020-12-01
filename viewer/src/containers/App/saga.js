@@ -11,7 +11,7 @@ import connect from '../../services/FhirClient';
 export function* loadSmartInfo() {
   try {
     const client = yield call(connect);
-    setContext({ fhirclient: client });
+    yield setContext({ fhirclient: client });
     yield put(addSmartInformationAction(client));
   } catch (e) {
     yield put(addSmartInformationErrorAction(e));

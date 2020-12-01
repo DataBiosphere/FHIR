@@ -117,13 +117,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function App({ topSideBarMenu, bottomSideBarMenu, children }) {
+export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }) {
   const classes = useStyles();
   const [open, setOpen] = useState();
   const [anchorEl, setAnchorEl] = useState();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState();
-
-  const fhirclient = useFhirClient();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -220,9 +218,9 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children }) {
             </Typography>
           </Link>
           <div className={classes.sectionDesktop}>
-            {fhirclient && fhirclient.state ? (
+            {iss ? (
               <Typography className={classes.fhirserver} variant="h6" noWrap>
-                FHIR Server: {fhirclient.state.serverUrl}
+                FHIR Server: {iss}
               </Typography>
             ) : (
               <Button

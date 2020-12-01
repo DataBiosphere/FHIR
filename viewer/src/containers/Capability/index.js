@@ -8,12 +8,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
-import makeSelectCapability from './selectors';
+import { selectMetadata, selectCapabilityDomain, selectSmartContext } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 
@@ -27,13 +34,10 @@ export function Capability(props) {
         <title>Capability Statement</title>
         <meta name="description" content="Description of Capability" />
       </Helmet>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
+      <h1>Capability Statement</h1>
+      <pre>
+        <code>{JSON.stringify(props.metadata, null, 2)}</code>
+      </pre>
     </div>
   );
 }
@@ -42,8 +46,10 @@ Capability.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = createStructuredSelector({
-  capability: makeSelectCapability(),
+const mapStateToProps = (state) => ({
+  capability: selectCapabilityDomain(state),
+  metadata: selectMetadata(state),
+  smart: selectSmartContext(state),
 });
 
 function mapDispatchToProps(dispatch) {

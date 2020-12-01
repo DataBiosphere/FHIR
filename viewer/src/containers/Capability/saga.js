@@ -1,7 +1,12 @@
-import { take, call, put, select, getContext } from 'redux-saga/effects';
+import { take, call, put, select } from 'redux-saga/effects';
+import { loadCapabilityAction } from './actions';
+import makeRequester from '../../utils/request';
+import connect from '../../services/FhirClient';
 
-// Individual exports for testing
-export default function* capabilitySaga() {
-  console.log(getContext('fhirclient'));
-  // See example in containers/HomePage/saga.js
+export default function* capabilitySaga(props) {
+  const client = yield call(connect);
+  const requester = makeRequester(client);
+
+  const metadata = yield call(requester, 'metadata');
+  yield put(loadCapabilityAction(metadata));
 }
