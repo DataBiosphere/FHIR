@@ -7,7 +7,7 @@ const Observation = resolveSchema('4_0_0', 'Observation');
 
 const { TCGA_URL, TCGA_CACHE_TTL } = process.env;
 
-const THREE_MINUTES = 1000 * 60 * 3;
+const TEN_MINUTES = 1000 * 60 * 10;
 
 const CACHE_TTL = TCGA_CACHE_TTL || THREE_MINUTES;
 
