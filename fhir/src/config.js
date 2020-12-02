@@ -21,7 +21,7 @@ const fhirServerConfig = {
     },
   },
   url: process.env.URL,
-  bundleSize: process.env.BUNDLE_SIZE || 20,
+  bundleSize: process.env.BUNDLE_SIZE || 25,
   security: [
     {
       url: 'authorize',
