@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
+import { Typography } from '@material-ui/core';
+
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
 import { selectMetadata, selectCapabilityDomain, selectSmartContext } from './selectors';
@@ -27,7 +29,7 @@ export function Capability(props) {
         <title>Capability Statement</title>
         <meta name="description" content="Capability Statement" />
       </SEO>
-      <h1>Capability Statement</h1>
+      <Typography variant="h1">Capability Statement</Typography>
       <pre>
         <code>{JSON.stringify(metadata, null, 2)}</code>
       </pre>

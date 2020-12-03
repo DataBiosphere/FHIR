@@ -3,7 +3,7 @@ import { loadCapabilityAction } from './actions';
 import makeRequester from '../../utils/request';
 import connect from '../../services/FhirClient';
 
-export default function* capabilitySaga(props) {
+export default function* capabilitySaga() {
   const client = yield call(connect);
   const requester = makeRequester(client);
 

@@ -38,7 +38,6 @@ export function Search(props) {
   const classes = useStyles();
 
   const onChangePage = (event, newPage) => {
-    console.log(newPage);
     setPage(newPage);
     getResources(newPage + 1);
   };
@@ -126,7 +125,6 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     getResources: (page) => {
-      console.log(page);
       dispatch({ type: GET_BUNDLE, page });
     },
   };
