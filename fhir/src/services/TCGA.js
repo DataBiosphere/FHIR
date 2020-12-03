@@ -1,5 +1,5 @@
 const axios = require('axios');
-const memoizee = require('memoizee');
+const memoize = require('fast-memoize');
 const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
@@ -100,7 +100,7 @@ const translateGdcResultsToFhir = (tcgaResults) => {
   return tcgaResults.map(translateSingleGdcResultsToFhir);
 };
 
-const get = memoizee(axios.get, { maxAge: CACHE_TTL, primitive: true, length: 2 });
+const get = memoize(axios.get);
 
 class TCGA {
   async getAllDiagnosticReports({ page, pageSize } = {}) {
@@ -110,12 +110,12 @@ class TCGA {
   }
 
   async getDiagnosticReportById(id) {
-    const { data } = await get(`${TCGA_URL}/api/gdc/${id}`);
+    const { data } = await axios.get(`${TCGA_URL}/api/gdc/${id}`);
     return translateSingleGdcResultsToFhir(data);
   }
 
   async getAllDiagnoses({ page, pageSize } = {}) {
-    const { data } = await get(`${TCGA_URL}/api/diagnosis`, { params: { page, pageSize } });
+    const { data } = await axios.get(`${TCGA_URL}/api/diagnosis`, { params: { page, pageSize } });
     const { results, count } = data;
     return [
       results.map((diagnosis) => translateDiagnosisToObservation(diagnosis, diagnosis)),
@@ -124,7 +124,7 @@ class TCGA {
   }
 
   async getDiagnosisById(id) {
-    const { data } = await get(`${TCGA_URL}/api/diagnosis/${id}`);
+    const { data } = await axios.get(`${TCGA_URL}/api/diagnosis/${id}`);
     return translateDiagnosisToObservation(data, data);
   }
 }
