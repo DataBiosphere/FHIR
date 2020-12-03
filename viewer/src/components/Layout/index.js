@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,9 +18,9 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 
-import Drawer from '../../components/Drawer';
-import Footer from '../../components/Footer';
-import Link from '../../components/Link';
+import Drawer from '../Drawer';
+import Footer from '../Footer';
+import Link from '../Link';
 import SEO from '../SEO';
 
 const drawerWidth = 240;
@@ -122,7 +123,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }) {
+function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }) {
   const classes = useStyles();
   const [open, setOpen] = useState();
   const [, setAnchorEl] = useState();
@@ -206,7 +207,8 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
           <div className={classes.sectionDesktop}>
             {iss ? (
               <Typography className={classes.fhirserver} variant="h6" noWrap>
-                FHIR Server: {iss}
+                FHIR Server:
+                {iss}
               </Typography>
             ) : (
               <>
@@ -222,7 +224,8 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
                   component="button"
                   href="/launch.html?iss%3Dhttp%3A%2F%2F34.75.179.65%2F4_0_0%2F"
                 >
-                  <WhatshotIcon /> SMART Launch
+                  <WhatshotIcon />
+                  SMART Launch
                 </Button>
               </>
             )}
@@ -267,3 +270,11 @@ export default function App({ topSideBarMenu, bottomSideBarMenu, children, iss }
     </div>
   );
 }
+
+Layout.propTypes = {
+  topSideBarMenu: PropTypes.shape({}).isRequired,
+  bottomSideBarMenu: PropTypes.shape({}).isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+export default Layout;

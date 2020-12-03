@@ -103,7 +103,7 @@ MyDrawer.propTypes = {
       text: PropTypes.string.isRequired,
       external: PropTypes.bool,
     })
-  ),
+  ).isRequired,
   bottom: PropTypes.arrayOf(
     PropTypes.shape({
       icon: PropTypes.node.isRequired,
@@ -111,7 +111,11 @@ MyDrawer.propTypes = {
       text: PropTypes.string.isRequired,
       external: PropTypes.bool,
     })
-  ),
+  ).isRequired,
+};
+
+MyDrawer.defaultProps = {
+  open: false,
 };
 
 export default MyDrawer;

@@ -23,10 +23,6 @@ const store = configureStore({}, history);
 
 const MOUNT_NODE = document.getElementById('root');
 
-let fhirClientRef;
-
-export const getFhirClient = () => fhirClientRef.state;
-
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>

@@ -17,6 +17,7 @@ import saga from './saga';
 import SEO from '../../components/SEO';
 
 export function Capability(props) {
+  const { metadata } = props;
   useInjectReducer({ key: 'capability', reducer });
   useInjectSaga({ key: 'capability', saga });
 
@@ -28,15 +29,11 @@ export function Capability(props) {
       </SEO>
       <h1>Capability Statement</h1>
       <pre>
-        <code>{JSON.stringify(props.metadata, null, 2)}</code>
+        <code>{JSON.stringify(metadata, null, 2)}</code>
       </pre>
     </div>
   );
 }
-
-Capability.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-};
 
 const mapStateToProps = (state) => ({
   capability: selectCapabilityDomain(state),
@@ -49,6 +46,10 @@ function mapDispatchToProps(dispatch) {
     dispatch,
   };
 }
+
+Capability.propTypes = {
+  metadata: PropTypes.shape({}).isRequired,
+};
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 

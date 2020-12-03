@@ -1,0 +1,22 @@
+{
+  "extends": ["eslint:recommended", "airbnb", "prettier"],
+  "env": {
+    "jest": true,
+    "browser": true 
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "arrow-body-style": "off",
+    "object-curly-newline": "off",
+    "operator-linebreak": "off",
+    "class-methods-use-this": "off",
+    "no-underscore-dangle": "off",
+    "no-param-reassign": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/jsx-filename-extension": "off",
+    "react/forbid-prop-types": "off",
+    "react/prop-types": "off",
+    "react/jsx-props-no-spreading": "off",
+    "import/no-named-as-default": "off"
+  }
+}

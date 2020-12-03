@@ -1,10 +1,6 @@
-/**
- * The App state selectors
- */
-import _ from 'lodash';
-import { initialState } from './reducer';
-
 import { createSelector } from 'reselect';
+
+import { initialState } from './reducer';
 
 /**
  * Other specific selectors

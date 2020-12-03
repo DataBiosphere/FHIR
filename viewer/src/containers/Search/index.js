@@ -4,22 +4,13 @@
  *
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Lorem from 'react-lorem-component';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import {
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableHead,
-  Typography,
-  Chip,
-} from '@material-ui/core';
+import { Typography, Chip, Button, Modal, makeStyles, Container } from '@material-ui/core';
 import { compose } from 'redux';
-import _ from 'lodash';
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
@@ -28,19 +19,37 @@ import { selectBundle } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import { GET_BUNDLE } from './constants';
+import PaginatedTable from '../../components/PaginatedTable';
+
+const useStyles = makeStyles(() => ({
+  table: {
+    marginTop: '1rem',
+  },
+}));
 
 export function Search(props) {
-  const { dispatch } = props;
+  const { dispatch, getResources, bundle } = props;
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
 
+  const [open, setOpen] = useState();
+  const [page, setPage] = useState(0);
+
+  const classes = useStyles();
+
+  const onChangePage = (event, newPage) => {
+    console.log(newPage);
+    setPage(newPage);
+    getResources(newPage + 1);
+  };
+
   useEffect(() => {
     // TODO replace me with an action creator
-    dispatch({ type: GET_BUNDLE, page: 1, pageSize: 20 });
+    dispatch({ type: GET_BUNDLE, page });
   }, []);
 
   const columns = ['Case ID', 'Subject', 'Study', 'Results'];
-  const rows = [
+  const renderer = [
     'id',
     'subject.reference',
     'extension[0].valueReference.reference',
@@ -67,41 +76,30 @@ export function Search(props) {
         <title>Search</title>
         <meta name="description" content="Description of Search" />
       </Helmet>
-      <h1>Search</h1>
-      <Typography variant="h5">DiagnosticReport</Typography>
-      <TableContainer>
-        <Table stickyHeader size="small">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell key={column}>
-                  <Typography variant="h6">{column}</Typography>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {props.bundle?.entry.map((entry) => {
-              return (
-                <TableRow>
-                  {rows.map((row) => {
-                    if (Array.isArray(row)) {
-                      const [key, renderer] = row;
-                      return renderer(_.get(entry.resource, key));
-                    } else {
-                      return <TableCell>{_.get(entry.resource, row)}</TableCell>;
-                    }
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
+      <Typography variant="h1">Search</Typography>
+      <Typography variant="h2">DiagnosticReport</Typography>
+      {bundle ? (
+        <div className={classes.table}>
+          <PaginatedTable
+            rows={bundle.entry.map(({ resource }) => resource)}
+            renderers={renderer}
+            columns={columns}
+            count={bundle.total}
+            page={page}
+            onView={() => setOpen(open)}
+            onChangePage={onChangePage}
+          />
+          <Modal open={open}>
+            <Container>
+              <Lorem />
+              <Button onClick={() => setOpen(false)}>Close</Button>
+            </Container>
+          </Modal>
+        </div>
+      ) : null}
       <h2>Raw Bundle</h2>
       <pre>
-        <code>{JSON.stringify(props.bundle, null, 2)}</code>
+        <code>{JSON.stringify(bundle, null, 2)}</code>
       </pre>
     </div>
   );
@@ -109,6 +107,15 @@ export function Search(props) {
 
 Search.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  getResources: PropTypes.func.isRequired,
+  bundle: PropTypes.shape({
+    entry: PropTypes.any,
+    total: PropTypes.any,
+  }),
+};
+
+Search.defaultProps = {
+  bundle: undefined,
 };
 
 const mapStateToProps = (state) => {
@@ -118,6 +125,10 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    getResources: (page) => {
+      console.log(page);
+      dispatch({ type: GET_BUNDLE, page });
+    },
   };
 }
 

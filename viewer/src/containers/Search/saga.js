@@ -5,10 +5,10 @@ import connect from '../../services/FhirClient';
 import { loadBundleSuccessAction } from './actions';
 import { GET_BUNDLE } from './constants';
 
-function* getDiagnosticReports(action) {
+function* getDiagnosticReports({ page }) {
   const client = yield call(connect);
   const requester = makeRequester(client);
-  const bundle = yield call(requester, 'DiagnosticReport');
+  const bundle = yield call(requester, `DiagnosticReport?_page=${page}`);
 
   yield put(loadBundleSuccessAction(bundle));
 }

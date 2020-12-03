@@ -44,6 +44,7 @@ MyLink.propTypes = {
   icon: PropTypes.node.isRequired,
   text: PropTypes.string.isRequired,
   to: PropTypes.string.isRequired,
+  external: PropTypes.bool.isRequired,
 };
 
 export default MyLink;

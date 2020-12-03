@@ -55,6 +55,12 @@ kubectl autoscale deployment fhir --cpu-percent=80 --min=1 --max=5
 kubectl set image deployments/fhir app=gcr.io/${PROJECT_ID}/broad/fhir:$(git log -1 --format=%h)
 ```
 
+## Deploy the K8 Spec file and monitor the deployment
+
+```
+kubectl apply -f kube/broad-fhir.yml && kubectl rollout status deployment/fhir
+```
+
 ## Common issues
 
 - Kubectl times out!
