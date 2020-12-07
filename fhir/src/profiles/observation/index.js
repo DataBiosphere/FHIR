@@ -1,7 +1,7 @@
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const { bundleSize } = require('../../config');
-const { buildSearchBundle } = require('../../utils');
+const { buildSearchBundle, buildEntry } = require('../../utils');
 const { TCGA } = require('../../services');
 
 const tcga = new TCGA();
@@ -51,7 +51,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     pageSize: _count,
     fhirVersion: baseVersion,
     total: count,
-    resources: results,
+    entries: results.map((resource) => buildEntry(resource)),
   });
 };
 

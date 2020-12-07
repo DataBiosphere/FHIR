@@ -82,9 +82,20 @@ const buildSearchBundle = ({
   });
 };
 
+const buildEntry = (resource, searchMode = 'match') => {
+  return {
+    resource,
+    fullUrl: `${url}/${resource.resourceType}/${resource.id}`,
+    search: {
+      mode: searchMode,
+    },
+  };
+};
+
 module.exports = {
   buildSearchBundle,
   buildLinkFromUrl,
+  buildEntry,
   getLinks,
   createCache,
 };

@@ -1,7 +1,7 @@
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
-const { bundleSize, url } = require('../../config');
-const { buildSearchBundle } = require('../../utils');
+const { bundleSize } = require('../../config');
+const { buildSearchBundle, buildEntry } = require('../../utils');
 const { TCGA } = require('../../services');
 
 const tcga = new TCGA();
@@ -26,16 +26,6 @@ const getStandardParameters = (query) => {
     // _tag,
   } = query;
   return { _page, _count, _id, _include };
-};
-
-const buildEntry = (resource, searchMode = 'match') => {
-  return {
-    resource,
-    fullUrl: `${url}/${resource.resourceType}/${resource.id}`,
-    search: {
-      mode: searchMode,
-    },
-  };
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
