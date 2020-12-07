@@ -122,7 +122,6 @@ class TCGA {
   async getAllDiagnoses({ page, pageSize } = {}) {
     const { data } = await get(`${TCGA_URL}/api/diagnosis`, { params: { page, pageSize } });
     const { results, count } = data;
-    console.log(results);
     return [
       results.map((diagnosis) => translateDiagnosisToObservation(diagnosis, diagnosis)),
       count,
