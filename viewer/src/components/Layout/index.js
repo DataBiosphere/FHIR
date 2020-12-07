@@ -275,6 +275,11 @@ Layout.propTypes = {
   topSideBarMenu: PropTypes.shape({}).isRequired,
   bottomSideBarMenu: PropTypes.shape({}).isRequired,
   children: PropTypes.node.isRequired,
+  iss: PropTypes.string,
+};
+
+Layout.defaultProps = {
+  iss: undefined,
 };
 
 export default Layout;

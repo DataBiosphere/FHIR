@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import {
   TableContainer,
@@ -79,5 +80,15 @@ function PaginatedTable({ count, rows, renderers, columns, onView, page, onChang
     </>
   );
 }
+
+PaginatedTable.propTypes = {
+  count: PropTypes.number.isRequired,
+  rows: PropTypes.array.isRequired,
+  renderers: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
+  onView: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  onChangePage: PropTypes.func.isRequired,
+};
 
 export default PaginatedTable;

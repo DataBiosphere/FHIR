@@ -108,8 +108,8 @@ Search.propTypes = {
   dispatch: PropTypes.func.isRequired,
   getResources: PropTypes.func.isRequired,
   bundle: PropTypes.shape({
-    entry: PropTypes.any,
-    total: PropTypes.any,
+    entry: PropTypes.array.isRequired,
+    total: PropTypes.number,
   }),
 };
 

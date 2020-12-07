@@ -70,6 +70,13 @@ function App(props) {
 
 App.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  smart: PropTypes.shape({
+    serverUrl: PropTypes.string,
+  }),
+};
+
+App.defaultProps = {
+  smart: undefined,
 };
 
 const mapStateToProps = (state) => ({

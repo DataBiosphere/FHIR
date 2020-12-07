@@ -5,6 +5,7 @@ export const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
 
 if (process.env.NODE_ENV === 'development') {
+  /* eslint-disable global-require */
   const { createLogger } = require('redux-logger');
   middleware.push(createLogger({ collapsed: true }));
 }

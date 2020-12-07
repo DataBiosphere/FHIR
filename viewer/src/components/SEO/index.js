@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
 function SEO({ children }) {
@@ -9,5 +10,9 @@ function SEO({ children }) {
     </Helmet>
   );
 }
+
+SEO.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default SEO;
