@@ -1,6 +1,8 @@
 const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 const { VERSIONS } = require('@asymmetrik/node-fhir-server-core/dist/constants');
 
+const createCache = require('./cache');
+
 const { url } = require('../config');
 
 const addTrailingSlash = (baseUrl) => {
@@ -84,4 +86,5 @@ module.exports = {
   buildSearchBundle,
   buildLinkFromUrl,
   getLinks,
+  createCache,
 };
