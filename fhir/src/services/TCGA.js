@@ -22,7 +22,7 @@ const CACHE_TTL = (TCGA_CACHE_TTL || ONE_MINUTE) * 1000;
 const translateDiagnosisToObservation = (diagnosis, gdcResult) => {
   return new Observation({
     resourceType: 'Observation',
-    id: diagnosis.diag__diagnosis_id,
+    id: diagnosis.diagnosis.diag__treat__treatment_id,
     text: {
       status: 'generated',
       div: `<div xmlns="http://www.w3.org/1999/xhtml">${diagnosis.diag__treat__treatment_type}</div>`,
@@ -69,7 +69,7 @@ const translateSingleGdcResultsToFhir = (tcgaResult) => {
     },
     result: tcgaResult.diagnoses.map((diagnosis) => {
       return {
-        reference: `Observation/${diagnosis.diag__diagnosis_id}`,
+        reference: `Observation/${diagnosis.diag__treat__treatment_id}`,
         display: diagnosis.diag__treat__treatment_type,
       };
     }),
