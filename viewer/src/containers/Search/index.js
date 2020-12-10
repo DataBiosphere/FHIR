@@ -5,7 +5,6 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import Lorem from 'react-lorem-component';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -18,13 +17,14 @@ import {
   Container,
   TableCell,
   Paper,
+  CircularProgress,
 } from '@material-ui/core';
 import { compose } from 'redux';
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
 
-import { selectBundle } from './selectors';
+import { selectBundle, selectLoading } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import { GET_BUNDLE } from './constants';
@@ -34,10 +34,21 @@ const useStyles = makeStyles(() => ({
   table: {
     marginTop: '1rem',
   },
+  loadingIcon: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: '1rem',
+    marginTop: '1rem',
+  },
 }));
 
 export function Search(props) {
-  const { dispatch, getResources, bundle } = props;
+  const { dispatch, getResources, bundle, loading } = props;
+  console.log(loading);
+  console.log(loading);
+  console.log(loading);
+  console.log(loading);
+  console.log(loading);
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
 
@@ -87,7 +98,7 @@ export function Search(props) {
       </Helmet>
       <Typography variant="h1">Search</Typography>
       <Typography variant="h2">DiagnosticReport</Typography>
-      {bundle ? (
+      {bundle && !loading ? (
         <div className={classes.table}>
           <PaginatedTable
             rows={bundle.entry.map(({ resource }) => resource)}
@@ -102,8 +113,8 @@ export function Search(props) {
             onChangePage={onChangePage}
             itemKey={itemKey}
           />
-          <Modal open={open}>
-            {viewingEntry ? (
+          {viewingEntry ? (
+            <Modal open={open}>
               <Container
                 style={{ padding: '1rem', marginTop: '2rem' }}
                 component={Paper}
@@ -115,14 +126,15 @@ export function Search(props) {
                 </pre>
                 <Button onClick={() => setOpen(false)}>Close</Button>
               </Container>
-            ) : null}
-          </Modal>
+            </Modal>
+          ) : null}
         </div>
       ) : null}
-      <h2>Raw Bundle</h2>
-      <pre>
-        <code>{JSON.stringify(bundle, null, 2)}</code>
-      </pre>
+      {loading ? (
+        <div className={classes.loadingIcon}>
+          <CircularProgress size={80} />
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -130,6 +142,7 @@ export function Search(props) {
 Search.propTypes = {
   dispatch: PropTypes.func.isRequired,
   getResources: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
   bundle: PropTypes.shape({
     entry: PropTypes.array.isRequired,
     total: PropTypes.number,
@@ -138,10 +151,11 @@ Search.propTypes = {
 
 Search.defaultProps = {
   bundle: undefined,
+  loading: true,
 };
 
 const mapStateToProps = (state) => {
-  return { bundle: selectBundle(state) };
+  return { bundle: selectBundle(state), loading: selectLoading(state) };
 };
 
 function mapDispatchToProps(dispatch) {

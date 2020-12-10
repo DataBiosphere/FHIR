@@ -2,15 +2,19 @@ import { call, put, all, takeEvery } from 'redux-saga/effects';
 import makeRequester from '../../utils/request';
 import connect from '../../services/FhirClient';
 
-import { loadBundleSuccessAction } from './actions';
+import { loadBundleSuccessAction, loadBundleRequestAction, loadBundleErrorAction } from './actions';
 import { GET_BUNDLE } from './constants';
 
 function* getDiagnosticReports({ page }) {
   const client = yield call(connect);
   const requester = makeRequester(client);
-  const bundle = yield call(requester, `DiagnosticReport?_page=${page}`);
-
-  yield put(loadBundleSuccessAction(bundle));
+  try {
+    yield put(loadBundleRequestAction());
+    const bundle = yield call(requester, `DiagnosticReport?_page=${page}`);
+    yield put(loadBundleSuccessAction(bundle));
+  } catch (e) {
+    loadBundleErrorAction(e);
+  }
 }
 
 export default function* searchSaga() {

@@ -11,7 +11,8 @@ const selectSearchDomain = (state) => state.search || initialState;
  * Other specific selectors
  */
 
-const selectBundle = createSelector(selectSearchDomain, (substate) => substate.bundle);
+export const selectBundle = createSelector(selectSearchDomain, (substate) => substate.bundle);
+export const selectLoading = createSelector(selectSearchDomain, (substate) => substate.loading);
 
 /**
  * Default selector used by Search
@@ -20,4 +21,3 @@ const selectBundle = createSelector(selectSearchDomain, (substate) => substate.b
 const makeSelectSearch = () => createSelector(selectSearchDomain, (substate) => substate);
 
 export default makeSelectSearch;
-export { selectSearchDomain, selectBundle };

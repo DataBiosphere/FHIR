@@ -4,7 +4,7 @@
  *
  */
 import produce from 'immer';
-import { DEFAULT_ACTION, GET_BUNDLE_SUCCESS } from './constants';
+import { DEFAULT_ACTION, GET_BUNDLE_REQUEST, GET_BUNDLE_SUCCESS } from './constants';
 
 export const initialState = {
   container: 'Search',
@@ -14,8 +14,12 @@ export const initialState = {
 const searchReducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case GET_BUNDLE_REQUEST:
+        draft.loading = true;
+        break;
       case GET_BUNDLE_SUCCESS:
         draft.bundle = action.payload;
+        draft.loading = false;
         break;
       case DEFAULT_ACTION:
         break;
