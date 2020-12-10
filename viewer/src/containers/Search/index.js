@@ -10,14 +10,16 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import {
   Typography,
-  Chip,
   Button,
   Modal,
   makeStyles,
   Container,
-  TableCell,
   Paper,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import { compose } from 'redux';
 
@@ -27,10 +29,11 @@ import { useInjectReducer } from '../../utils/injectReducer';
 import { selectBundle, selectLoading } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import mappings from './mappings';
 import { GET_BUNDLE } from './constants';
 import PaginatedTable from '../../components/PaginatedTable';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   table: {
     marginTop: '1rem',
   },
@@ -40,55 +43,39 @@ const useStyles = makeStyles(() => ({
     marginBottom: '1rem',
     marginTop: '1rem',
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }));
 
+const getColumnsAndRenderers = (resource) => {
+  return mappings[resource];
+};
+
 export function Search(props) {
-  const { dispatch, getResources, bundle, loading } = props;
-  console.log(loading);
-  console.log(loading);
-  console.log(loading);
-  console.log(loading);
-  console.log(loading);
+  const { getResources, bundle, loading } = props;
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
 
   const [open, setOpen] = useState(false);
   const [viewingEntry, setViewingEntry] = useState();
+  const [selectedResource, setSelectedResource] = useState('DiagnosticReport');
   const [page, setPage] = useState(0);
 
   const classes = useStyles();
 
   const onChangePage = (event, newPage) => {
     setPage(newPage);
-    getResources(newPage + 1);
   };
 
   useEffect(() => {
-    // TODO replace me with an action creator
-    dispatch({ type: GET_BUNDLE, page });
+    getResources(selectedResource, page + 1);
   }, []);
 
-  const columns = ['Case ID', 'Subject', 'Study', 'Results'];
-  const renderer = [
-    'id',
-    'subject.reference',
-    'extension[0].valueReference.reference',
-    [
-      'result',
-      (results) => {
-        return results.map((result) => (
-          <TableCell
-            key={`${result.display}${result.reference}`}
-            style={{ display: 'flex', flexDirection: 'column', padding: '.25rem' }}
-          >
-            <span>{result.display}</span>
-            <Chip label={result.reference} />
-          </TableCell>
-        ));
-      },
-    ],
-  ];
   const itemKey = 'id';
+
+  const { columns, renderers } = getColumnsAndRenderers(selectedResource);
 
   return (
     <div>
@@ -97,12 +84,24 @@ export function Search(props) {
         <meta name="description" content="Description of Search" />
       </Helmet>
       <Typography variant="h1">Search</Typography>
-      <Typography variant="h2">DiagnosticReport</Typography>
+      <FormControl className={classes.formControl}>
+        <InputLabel>Resource</InputLabel>
+        <Select
+          defaultValue="DiagnosticReport"
+          onChange={(event) => {
+            getResources(event.target.value, 0);
+            setSelectedResource(event.target.value);
+          }}
+        >
+          <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
+          <MenuItem value="Observation">Observation</MenuItem>
+        </Select>
+      </FormControl>
       {bundle && !loading ? (
         <div className={classes.table}>
           <PaginatedTable
             rows={bundle.entry.map(({ resource }) => resource)}
-            renderers={renderer}
+            renderers={renderers}
             columns={columns}
             count={bundle.total}
             page={page}
@@ -140,7 +139,6 @@ export function Search(props) {
 }
 
 Search.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   getResources: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   bundle: PropTypes.shape({
@@ -160,9 +158,8 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
-    getResources: (page) => {
-      dispatch({ type: GET_BUNDLE, page });
+    getResources: (resourceType, page) => {
+      dispatch({ type: GET_BUNDLE, page, resourceType });
     },
   };
 }
