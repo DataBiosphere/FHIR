@@ -9,7 +9,16 @@ import Lorem from 'react-lorem-component';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { Typography, Chip, Button, Modal, makeStyles, Container } from '@material-ui/core';
+import {
+  Typography,
+  Chip,
+  Button,
+  Modal,
+  makeStyles,
+  Container,
+  TableCell,
+  Paper,
+} from '@material-ui/core';
 import { compose } from 'redux';
 
 import { useInjectSaga } from '../../utils/injectSaga';
@@ -32,7 +41,8 @@ export function Search(props) {
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
 
-  const [open, setOpen] = useState();
+  const [open, setOpen] = useState(false);
+  const [viewingEntry, setViewingEntry] = useState();
   const [page, setPage] = useState(0);
 
   const classes = useStyles();
@@ -56,18 +66,18 @@ export function Search(props) {
       'result',
       (results) => {
         return results.map((result) => (
-          <ul>
-            <li>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span>{result.display}</span>
-                <Chip label={result.reference} />
-              </div>
-            </li>
-          </ul>
+          <TableCell
+            key={`${result.display}${result.reference}`}
+            style={{ display: 'flex', flexDirection: 'column', padding: '.25rem' }}
+          >
+            <span>{result.display}</span>
+            <Chip label={result.reference} />
+          </TableCell>
         ));
       },
     ],
   ];
+  const itemKey = 'id';
 
   return (
     <div>
@@ -85,14 +95,27 @@ export function Search(props) {
             columns={columns}
             count={bundle.total}
             page={page}
-            onView={() => setOpen(open)}
+            onView={(event, item) => {
+              setViewingEntry(item);
+              setOpen(true);
+            }}
             onChangePage={onChangePage}
+            itemKey={itemKey}
           />
           <Modal open={open}>
-            <Container>
-              <Lorem />
-              <Button onClick={() => setOpen(false)}>Close</Button>
-            </Container>
+            {viewingEntry ? (
+              <Container
+                style={{ padding: '1rem', marginTop: '2rem' }}
+                component={Paper}
+                maxWidth="md"
+              >
+                <Typography variant="h6">{`Viewing ${viewingEntry.resourceType} - ${viewingEntry.id}`}</Typography>
+                <pre>
+                  <code>{JSON.stringify(viewingEntry, null, 2)}</code>
+                </pre>
+                <Button onClick={() => setOpen(false)}>Close</Button>
+              </Container>
+            ) : null}
           </Modal>
         </div>
       ) : null}

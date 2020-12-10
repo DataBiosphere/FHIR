@@ -272,8 +272,8 @@ function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }) {
 }
 
 Layout.propTypes = {
-  topSideBarMenu: PropTypes.shape({}).isRequired,
-  bottomSideBarMenu: PropTypes.shape({}).isRequired,
+  topSideBarMenu: PropTypes.array.isRequired,
+  bottomSideBarMenu: PropTypes.array.isRequired,
   children: PropTypes.node.isRequired,
   iss: PropTypes.string,
 };

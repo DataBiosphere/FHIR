@@ -12,7 +12,11 @@ function SEO({ children }) {
 }
 
 SEO.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
+};
+
+SEO.defaultProps = {
+  children: undefined,
 };
 
 export default SEO;

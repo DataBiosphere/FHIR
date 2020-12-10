@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function PaginatedTable({ count, rows, renderers, columns, onView, page, onChangePage }) {
+function PaginatedTable({ count, rows, renderers, columns, onView, page, onChangePage, itemKey }) {
   const classes = useStyles();
 
   return (
@@ -55,18 +55,22 @@ function PaginatedTable({ count, rows, renderers, columns, onView, page, onChang
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((entry) => {
+            {rows.map((item) => {
               return (
-                <TableRow>
+                <TableRow key={item[itemKey]}>
                   {renderers.map((row) => {
                     if (Array.isArray(row)) {
                       const [key, renderer] = row;
-                      return renderer(_.get(entry, key));
+                      return renderer(_.get(item, key));
                     }
-                    return <TableCell>{_.get(entry, row)}</TableCell>;
+                    return <TableCell key={`${item.id}${row}`}>{_.get(item, row)}</TableCell>;
                   })}
                   <TableCell>
-                    <Button onClick={onView} variant="contained" color="primary" disabled>
+                    <Button
+                      onClick={(event) => onView(event, item)}
+                      variant="contained"
+                      color="primary"
+                    >
                       {/* TODO: coming soon un-disable it above when ready */}
                       View
                     </Button>
@@ -89,6 +93,7 @@ PaginatedTable.propTypes = {
   onView: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
+  itemKey: PropTypes.string.isRequired,
 };
 
 export default PaginatedTable;
