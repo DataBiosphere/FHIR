@@ -22,13 +22,13 @@ const CACHE_TTL = (TCGA_CACHE_TTL || ONE_MINUTE) * 1000;
 const translateDiagnosisToObservation = (diagnosis, gdcResult) => {
   return new Observation({
     resourceType: 'Observation',
-    id: diagnosis.diagnosis.diag__treat__treatment_id,
+    id: diagnosis.diag__treat__treatment_id,
     text: {
       status: 'generated',
       div: `<div xmlns="http://www.w3.org/1999/xhtml">${diagnosis.diag__treat__treatment_type}</div>`,
     },
     meta: {
-      versionId: diagnosis.diag__diagnosis_id,
+      versionId: diagnosis.diag__treat__treatment_id,
       source: gdcResult.proj__project_id,
       profile: ['https://www.hl7.org/fhir/observation.html'],
     },

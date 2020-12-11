@@ -48,11 +48,11 @@ describe('TCGA service tests', () => {
           result: [
             {
               display: 'Pharmaceutical Therapy, NOS',
-              reference: 'Observation/4176108f-948d-5715-afbb-cc21f3cbfaf5',
+              reference: 'Observation/e62a815e-6907-5bc7-acbc-932bc0a05b75',
             },
             {
               display: 'Radiation Therapy, NOS',
-              reference: 'Observation/4176108f-948d-5715-afbb-cc21f3cbfaf5',
+              reference: 'Observation/f46facb0-9a93-5077-a9b5-b8f907404520',
             },
           ],
           status: 'final',
@@ -62,11 +62,11 @@ describe('TCGA service tests', () => {
         },
         observations: [
           {
-            id: '4176108f-948d-5715-afbb-cc21f3cbfaf5',
+            id: 'e62a815e-6907-5bc7-acbc-932bc0a05b75',
             meta: {
               profile: ['https://www.hl7.org/fhir/observation.html'],
               source: 'TCGA-HNSC',
-              versionId: '4176108f-948d-5715-afbb-cc21f3cbfaf5',
+              versionId: 'e62a815e-6907-5bc7-acbc-932bc0a05b75',
             },
             resourceType: 'Observation',
             status: 'final',
@@ -76,11 +76,11 @@ describe('TCGA service tests', () => {
             },
           },
           {
-            id: '4176108f-948d-5715-afbb-cc21f3cbfaf5',
+            id: 'f46facb0-9a93-5077-a9b5-b8f907404520',
             meta: {
               profile: ['https://www.hl7.org/fhir/observation.html'],
               source: 'TCGA-HNSC',
-              versionId: '4176108f-948d-5715-afbb-cc21f3cbfaf5',
+              versionId: 'f46facb0-9a93-5077-a9b5-b8f907404520',
             },
             resourceType: 'Observation',
             status: 'final',
@@ -128,11 +128,11 @@ describe('TCGA service tests', () => {
         result: [
           {
             display: 'Pharmaceutical Therapy, NOS',
-            reference: 'Observation/4176108f-948d-5715-afbb-cc21f3cbfaf5',
+            reference: 'Observation/e62a815e-6907-5bc7-acbc-932bc0a05b75',
           },
           {
             display: 'Radiation Therapy, NOS',
-            reference: 'Observation/4176108f-948d-5715-afbb-cc21f3cbfaf5',
+            reference: 'Observation/f46facb0-9a93-5077-a9b5-b8f907404520',
           },
         ],
         status: 'final',
@@ -152,11 +152,11 @@ describe('TCGA service tests', () => {
 
       observations: [
         {
-          id: '4176108f-948d-5715-afbb-cc21f3cbfaf5',
+          id: 'e62a815e-6907-5bc7-acbc-932bc0a05b75',
           meta: {
             profile: ['https://www.hl7.org/fhir/observation.html'],
             source: 'TCGA-HNSC',
-            versionId: '4176108f-948d-5715-afbb-cc21f3cbfaf5',
+            versionId: 'e62a815e-6907-5bc7-acbc-932bc0a05b75',
           },
           resourceType: 'Observation',
           status: 'final',
@@ -166,11 +166,11 @@ describe('TCGA service tests', () => {
           },
         },
         {
-          id: '4176108f-948d-5715-afbb-cc21f3cbfaf5',
+          id: 'f46facb0-9a93-5077-a9b5-b8f907404520',
           meta: {
             profile: ['https://www.hl7.org/fhir/observation.html'],
             source: 'TCGA-HNSC',
-            versionId: '4176108f-948d-5715-afbb-cc21f3cbfaf5',
+            versionId: 'f46facb0-9a93-5077-a9b5-b8f907404520',
           },
           resourceType: 'Observation',
           status: 'final',
