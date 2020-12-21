@@ -1,0 +1,11 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: broad-fhir-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: broad-fhir
+    networking.gke.io/managed-certificates: broad-fhir-managedcert
+spec:
+  backend:
+    serviceName: fhir
+    servicePort: 80
