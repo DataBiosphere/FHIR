@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: broad-fhir-ingress
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: broad-fhir
+    kubernetes.io/ingress.global-static-ip-name: broad-fhir-ip
     networking.gke.io/managed-certificates: broad-fhir-managedcert
 spec:
   backend:

@@ -3,14 +3,13 @@
 1. Reserve your static IP
 
 ```
-gcloud compute addresses create broad-fhir --global
+gcloud compute addresses create broad-fhir-ip --global
 ```
 
 2. Describe your static IP
 
 ```
-gcloud compute addresses describe broad-fhir --global
-35.227.252.90
+gcloud compute addresses describe broad-fhir-ip --global
 ```
 
 3. Create your ManagedCert
