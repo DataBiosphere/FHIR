@@ -15,7 +15,8 @@
     "dev": "nodemon src/index.js",
     "prettier-check": "prettier --check \"**/*.{js,mjs,cjs,jsx,json,ts,tsx,md,mdx,css,html,yml,yaml,scss,less,graphql,graphqls,gql}\"",
     "prettier-fix": "prettier --write \"**/*.{js,mjs,cjs,jsx,json,ts,tsx,md,mdx,css,html,yml,yaml,scss,less,graphql,graphqls,gql}\"",
-    "lint": "eslint . --ext js,jsx,ts,tsx"
+    "lint": "npm run prettier-check && npm run eslint",
+    "eslint": "eslint . --ext js,jsx,ts,tsx"
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +25,7 @@
     "@google-cloud/bigquery": "^5.3.0",
     "axios": "^0.20.0",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "fast-memoize": "^2.5.2",
     "jest": "^26.6.3",
     "jest-cli": "^26.4.2",
