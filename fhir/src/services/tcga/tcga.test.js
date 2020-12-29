@@ -1,6 +1,6 @@
 const axios = require('axios');
-const tcgaResponseFixture = require('../../__fixtures__/tcgaResponse');
-const TCGA = require('./TCGA');
+const tcgaResponseFixture = require('../../../__fixtures__/tcgaResponse');
+const TCGA = require('.');
 
 jest.mock('axios');
 

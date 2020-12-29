@@ -1,4 +1,4 @@
-const TCGA = require('./TCGA');
+const TCGA = require('./tcga');
 
 module.exports = {
   TCGA,
