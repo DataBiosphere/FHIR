@@ -51,7 +51,7 @@ class TCGA {
    * @param {array} tcgaResults
    */
   translateGdcResultsToFhir(tcgaResults) {
-    return tcgaResults.map(this.translateSingleGdcResultsToFhir);
+    return tcgaResults.map((tcgaResult) => this.translateSingleGdcResultsToFhir(tcgaResult));
   }
 
   async getAllDiagnosticReports({ page, pageSize } = {}) {

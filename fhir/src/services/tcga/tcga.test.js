@@ -68,6 +68,9 @@ describe('TCGA service tests', () => {
               source: 'TCGA-HNSC',
               versionId: 'e62a815e-6907-5bc7-acbc-932bc0a05b75',
             },
+            code: {
+              text: 'Pharmaceutical Therapy, NOS',
+            },
             resourceType: 'Observation',
             status: 'final',
             text: {
@@ -81,6 +84,16 @@ describe('TCGA service tests', () => {
               profile: ['https://www.hl7.org/fhir/observation.html'],
               source: 'TCGA-HNSC',
               versionId: 'f46facb0-9a93-5077-a9b5-b8f907404520',
+            },
+            code: {
+              coding: [
+                {
+                  code: '21880-0',
+                  display: 'Radiation treatment therapy Cancer',
+                  system: 'http://loinc.org/',
+                },
+              ],
+              text: 'Radiation Therapy, NOS',
             },
             resourceType: 'Observation',
             status: 'final',
@@ -158,6 +171,9 @@ describe('TCGA service tests', () => {
             source: 'TCGA-HNSC',
             versionId: 'e62a815e-6907-5bc7-acbc-932bc0a05b75',
           },
+          code: {
+            text: 'Pharmaceutical Therapy, NOS',
+          },
           resourceType: 'Observation',
           status: 'final',
           text: {
@@ -171,6 +187,16 @@ describe('TCGA service tests', () => {
             profile: ['https://www.hl7.org/fhir/observation.html'],
             source: 'TCGA-HNSC',
             versionId: 'f46facb0-9a93-5077-a9b5-b8f907404520',
+          },
+          code: {
+            coding: [
+              {
+                code: '21880-0',
+                display: 'Radiation treatment therapy Cancer',
+                system: 'http://loinc.org/',
+              },
+            ],
+            text: 'Radiation Therapy, NOS',
           },
           resourceType: 'Observation',
           status: 'final',
