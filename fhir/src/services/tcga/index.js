@@ -10,7 +10,9 @@ const ONE_SECOND = 1;
 
 const ONE_MINUTE = ONE_SECOND * 60;
 
-const CACHE_TTL = (TCGA_CACHE_TTL || ONE_MINUTE) * 1000;
+const FIVE_MINUTES = ONE_MINUTE * 5;
+
+const CACHE_TTL = (TCGA_CACHE_TTL || FIVE_MINUTES) * 1000;
 
 const get = memoize(axios.get, {
   cache: createCache(CACHE_TTL),
