@@ -20,57 +20,68 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@material-ui/core';
 import { compose } from 'redux';
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
 
-import { selectBundle, selectLoading } from './selectors';
+import { selectBundle, selectLoading, selectSelectedResource, selectPage } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import mappings from './mappings';
 import { GET_BUNDLE } from './constants';
 import PaginatedTable from '../../components/PaginatedTable';
 
-const useStyles = makeStyles((theme) => ({
-  table: {
-    marginTop: '1rem',
-  },
-  loadingIcon: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: '1rem',
-    marginTop: '1rem',
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-}));
+const useStyles = makeStyles((theme) => {
+  return {
+    table: {
+      marginTop: '1rem',
+    },
+    loadingIcon: {
+      display: 'flex',
+      justifyContent: 'center',
+      marginBottom: '1rem',
+      marginTop: '1rem',
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+
+    viewingEntry: {
+      color: theme.palette.text.primary,
+    },
+  };
+});
 
 const getColumnsAndRenderers = (resource) => {
   return mappings[resource];
 };
 
 export function Search(props) {
-  const { getResources, bundle, loading } = props;
+  const { getResources, bundle, loading, selectedResource, page } = props;
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
 
   const [open, setOpen] = useState(false);
-  const [viewingEntry, setViewingEntry] = useState();
-  const [selectedResource, setSelectedResource] = useState('DiagnosticReport');
-  const [page, setPage] = useState(0);
+  const [viewingEntry, setviewingEntry] = useState();
 
   const classes = useStyles();
 
   const onChangePage = (event, newPage) => {
-    setPage(newPage);
+    getResources(selectedResource, newPage + 1);
   };
 
+  const closeViewingEntry = () => setOpen(false);
+
   useEffect(() => {
-    getResources(selectedResource, page + 1);
+    getResources(selectedResource, page);
   }, []);
 
   const itemKey = 'id';
@@ -90,7 +101,6 @@ export function Search(props) {
           defaultValue="DiagnosticReport"
           onChange={(event) => {
             getResources(event.target.value, 0);
-            setSelectedResource(event.target.value);
           }}
         >
           <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
@@ -104,28 +114,28 @@ export function Search(props) {
             renderers={renderers}
             columns={columns}
             count={bundle.total}
-            page={page}
+            page={page - 1}
             onView={(event, item) => {
-              setViewingEntry(item);
+              setviewingEntry(item);
               setOpen(true);
             }}
             onChangePage={onChangePage}
             itemKey={itemKey}
           />
           {viewingEntry ? (
-            <Modal open={open}>
-              <Container
-                style={{ padding: '1rem', marginTop: '2rem' }}
-                component={Paper}
-                maxWidth="md"
-              >
-                <Typography variant="h6">{`Viewing ${viewingEntry.resourceType} - ${viewingEntry.id}`}</Typography>
-                <pre>
-                  <code>{JSON.stringify(viewingEntry, null, 2)}</code>
-                </pre>
-                <Button onClick={() => setOpen(false)}>Close</Button>
-              </Container>
-            </Modal>
+            <Dialog open={open} onClose={closeViewingEntry} maxWidth="md">
+              <DialogTitle>
+                {`Viewing ${viewingEntry.resourceType} - ${viewingEntry.id}`}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText className={classes.viewingEntry}>
+                  <pre>
+                    <code>{JSON.stringify(viewingEntry, null, 2)}</code>
+                  </pre>
+                </DialogContentText>
+              </DialogContent>
+              <Button onClick={closeViewingEntry}>Close</Button>
+            </Dialog>
           ) : null}
         </div>
       ) : null}
@@ -141,6 +151,8 @@ export function Search(props) {
 Search.propTypes = {
   getResources: PropTypes.func.isRequired,
   loading: PropTypes.bool,
+  selectedResource: PropTypes.string,
+  page: PropTypes.string,
   bundle: PropTypes.shape({
     entry: PropTypes.array.isRequired,
     total: PropTypes.number,
@@ -150,10 +162,17 @@ Search.propTypes = {
 Search.defaultProps = {
   bundle: undefined,
   loading: true,
+  page: 1,
+  selectedResource: 'DiagnosticReport',
 };
 
 const mapStateToProps = (state) => {
-  return { bundle: selectBundle(state), loading: selectLoading(state) };
+  return {
+    bundle: selectBundle(state),
+    loading: selectLoading(state),
+    selectedResource: selectSelectedResource(state),
+    page: selectPage(state),
+  };
 };
 
 function mapDispatchToProps(dispatch) {
@@ -161,6 +180,8 @@ function mapDispatchToProps(dispatch) {
     getResources: (resourceType, page) => {
       dispatch({ type: GET_BUNDLE, page, resourceType });
     },
+
+    setViewingEntry: () => {},
   };
 }
 

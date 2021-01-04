@@ -11,7 +11,10 @@ import {
   GET_BUNDLE_ERROR,
 } from './constants';
 
-export const loadBundleRequestAction = () => ({ type: GET_BUNDLE_REQUEST });
+export const loadBundleRequestAction = (resourceType, page) => ({
+  type: GET_BUNDLE_REQUEST,
+  payload: { page, resourceType },
+});
 
 export const loadBundleSuccessAction = (bundle) => ({ type: GET_BUNDLE_SUCCESS, payload: bundle });
 

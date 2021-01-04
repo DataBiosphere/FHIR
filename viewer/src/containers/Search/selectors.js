@@ -13,6 +13,11 @@ const selectSearchDomain = (state) => state.search || initialState;
 
 export const selectBundle = createSelector(selectSearchDomain, (substate) => substate.bundle);
 export const selectLoading = createSelector(selectSearchDomain, (substate) => substate.loading);
+export const selectPage = createSelector(selectSearchDomain, (substate) => substate.page);
+export const selectSelectedResource = createSelector(
+  selectSearchDomain,
+  (substate) => substate.selectedResource
+);
 
 /**
  * Default selector used by Search

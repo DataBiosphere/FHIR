@@ -9,7 +9,7 @@ function* getDiagnosticReports({ resourceType, page }) {
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
-    yield put(loadBundleRequestAction());
+    yield put(loadBundleRequestAction(resourceType, page));
     const bundle = yield call(requester, `${resourceType}?_page=${page}`);
     yield put(loadBundleSuccessAction(bundle));
   } catch (e) {

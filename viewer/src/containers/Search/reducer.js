@@ -16,6 +16,8 @@ const searchReducer = (state = initialState, action) =>
     switch (action.type) {
       case GET_BUNDLE_REQUEST:
         draft.loading = true;
+        draft.selectedResource = action.payload.resourceType;
+        draft.page = action.payload.page;
         break;
       case GET_BUNDLE_SUCCESS:
         draft.bundle = action.payload;
