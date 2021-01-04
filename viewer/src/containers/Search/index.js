@@ -11,10 +11,7 @@ import { Helmet } from 'react-helmet';
 import {
   Typography,
   Button,
-  Modal,
   makeStyles,
-  Container,
-  Paper,
   CircularProgress,
   FormControl,
   InputLabel,
@@ -134,7 +131,9 @@ export function Search(props) {
                   </pre>
                 </DialogContentText>
               </DialogContent>
-              <Button onClick={closeViewingEntry}>Close</Button>
+              <DialogActions>
+                <Button onClick={closeViewingEntry}>Close</Button>
+              </DialogActions>
             </Dialog>
           ) : null}
         </div>
