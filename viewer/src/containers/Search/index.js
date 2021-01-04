@@ -100,7 +100,7 @@ export function Search(props) {
         <Select
           defaultValue="DiagnosticReport"
           onChange={(event) => {
-            getResources(event.target.value, 0);
+            getResources(event.target.value, 1);
           }}
         >
           <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
