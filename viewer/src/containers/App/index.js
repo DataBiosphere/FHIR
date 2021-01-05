@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import SearchIcon from '@material-ui/icons/Search';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import ReceiptIcon from '@material-ui/icons/Receipt';
+import HomeIcon from '@material-ui/icons/Home';
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
@@ -20,6 +21,7 @@ import Layout from '../../components/Layout';
 
 import Capability from '../Capability';
 import Search from '../Search';
+import Home from '../Home';
 
 function App(props) {
   const { dispatch, smart } = props;
@@ -34,8 +36,13 @@ function App(props) {
 
   const top = [
     {
-      icon: <SearchIcon />,
+      icon: <HomeIcon />,
       to: '/',
+      text: 'Home',
+    },
+    {
+      icon: <SearchIcon />,
+      to: '/search',
       text: 'Search',
     },
     {
@@ -58,6 +65,9 @@ function App(props) {
     <Layout topSideBarMenu={top} bottomSideBarMenu={bottom} iss={iss}>
       <Switch>
         <Route path="/" exact>
+          <Home />
+        </Route>
+        <Route path="/search" exact>
           <Search />
         </Route>
         <Route path="/metadata">

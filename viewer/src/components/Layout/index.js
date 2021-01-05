@@ -201,7 +201,7 @@ function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }) {
           </IconButton>
           <Link className={classes.brand} to="/" underline="none">
             <Typography className={classes.title} variant="h6" noWrap>
-              Broad FHIR Viewer
+              Broad FHIR
             </Typography>
           </Link>
           <div className={classes.sectionDesktop}>
