@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function Home(props) {
-  console.log(props);
   useInjectReducer({ key: 'home', reducer });
   useInjectSaga({ key: 'home', saga });
 
