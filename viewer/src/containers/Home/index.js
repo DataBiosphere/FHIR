@@ -18,6 +18,7 @@ import {
   CardHeader,
   CardContent,
   CardActions,
+  CircularProgress,
   Button,
   Table,
   TableBody,
@@ -29,7 +30,7 @@ import {
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
-import { selectSummaryInfo } from './selectors';
+import { selectSummaryInfo, selectLoading } from './selectors';
 import reducer from './reducer';
 import { getSummaryInfoAction } from './actions';
 import saga from './saga';
@@ -48,13 +49,17 @@ const useStyles = makeStyles((theme) => ({
   cardBlurb: {
     marginBottom: theme.spacing(2),
   },
+  loadingBox: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
 }));
 
 export function Home(props) {
   useInjectReducer({ key: 'home', reducer });
   useInjectSaga({ key: 'home', saga });
 
-  const { getSummaryInfo, summaryInfo } = props;
+  const { getSummaryInfo, summaryInfo, loading } = props;
 
   const classes = useStyles();
 
@@ -98,32 +103,39 @@ export function Home(props) {
           <Card>
             <CardHeader title="Overview" />
             <CardContent>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>
-                        <Typography>Resource Type</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>Total</Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {summaryInfo ? (
-                      summaryInfo.map((info) => (
+              {summaryInfo ? (
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>
+                          <Typography>Resource Type</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography>Total</Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {summaryInfo.map((info) => (
                         <TableRow>
                           <TableCell>{info.resourceType}</TableCell>
                           <TableCell>{info.total}</TableCell>
                         </TableRow>
-                      ))
-                    ) : (
-                      <></>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                <></>
+              )}
+              {loading ? (
+                <div className={classes.loadingBox}>
+                  <CircularProgress size={60} />
+                </div>
+              ) : (
+                <></>
+              )}
             </CardContent>
             <CardActions className={classes.cardFooter}>
               <Button color="primary" variant="contained" href="/search">
@@ -137,7 +149,26 @@ export function Home(props) {
   );
 }
 
-const mapStateToProps = (state) => ({ summaryInfo: selectSummaryInfo(state) });
+Home.propTypes = {
+  getSummaryInfo: PropTypes.func.isRequired,
+  summaryInfo: PropTypes.arrayOf(
+    PropTypes.shape({
+      resourceType: PropTypes.string.isRequired,
+      total: PropTypes.string.isRequired,
+    })
+  ),
+  loading: PropTypes.bool,
+};
+
+Home.defaultProps = {
+  summaryInfo: null,
+  loading: null,
+};
+
+const mapStateToProps = (state) => ({
+  summaryInfo: selectSummaryInfo(state),
+  loading: selectLoading(state),
+});
 
 function mapDispatchToProps(dispatch) {
   return {

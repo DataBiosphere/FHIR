@@ -11,5 +11,6 @@ export const selectSummaryInfo = createSelector(
   selectHomeDomain,
   (substate) => substate.summaryInfo
 );
+export const selectLoading = createSelector(selectHomeDomain, (substate) => substate.loading);
 
 export default selectHomeDomain;
