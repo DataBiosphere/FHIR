@@ -26,7 +26,11 @@ import {
   TableContainer,
   TableRow,
   TableCell,
+  CardActionArea,
 } from '@material-ui/core';
+
+import GitHub from '@material-ui/icons/GitHub';
+import ReceiptIcon from '@material-ui/icons/Receipt';
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
@@ -74,7 +78,7 @@ export function Home(props) {
         <meta name="description" content="Description of Home" />
       </Helmet>
       <Typography variant="h1" className={classes.title}>
-        Broad FHIR
+        Viewer
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
@@ -142,6 +146,43 @@ export function Home(props) {
                 Search
               </Button>
             </CardActions>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardHeader title="Explore the Broad FHIR Server" />
+            <CardContent>
+              <Grid>
+                <CardActionArea href="https://github.com/DataBiosphere/FHIR">
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <Typography color="primary" variant="h6">
+                      Broad FHIR on Github
+                    </Typography>
+                    <GitHub style={{ fontSize: 30 }} />
+                  </div>
+                </CardActionArea>
+                <CardActionArea href="/metadata">
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <Typography color="primary" variant="h6">
+                      View the CapabilityStatement
+                    </Typography>
+                    <ReceiptIcon style={{ fontSize: 30 }} />
+                  </div>
+                </CardActionArea>
+              </Grid>
+            </CardContent>
           </Card>
         </Grid>
       </Grid>
