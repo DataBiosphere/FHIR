@@ -1,4 +1,4 @@
-import { take, call, put, takeEvery, all } from 'redux-saga/effects';
+import { call, put, takeEvery, all } from 'redux-saga/effects';
 
 import makeRequester from '../../utils/request';
 import connect from '../../services/FhirClient';
