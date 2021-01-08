@@ -26,9 +26,8 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
-      - name: Use gcloud CLI
-        run: |
-          pwd
-          ls
-          gcloud info
-          node -v
+      - name: Build app
+        run: npm run build
+
+      - name: Deploy to GCP App Engine
+        run: gcloud -q app deploy
