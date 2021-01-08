@@ -10,11 +10,20 @@ import {
   getSummaryInfoErrorAction,
 } from './actions';
 
-export function* homeSaga({ resources = ['DiagnosticReport', 'Observation'] }) {
+export function* homeSaga() {
   const client = yield call(connect);
   const requester = makeRequester(client);
 
   try {
+    const metadata = yield call(requester, 'metadata');
+
+    const resources = metadata.rest
+      .map(({ resource }) => resource)
+      .reduce((accum, next) => {
+        return accum.concat(next);
+      }, [])
+      .map(({ type }) => type);
+
     yield put(getSummaryInfoRequestAction());
 
     const bundles = yield all(resources.map((resourceType) => call(requester, resourceType)));
