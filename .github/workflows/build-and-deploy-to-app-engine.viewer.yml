@@ -29,6 +29,9 @@ jobs:
       - name: Install
         run: npm install
 
+      - name: Generate env
+        run: node ../scripts/create-env-file.js REACT_APP_CLIENT_ID=738532639593-8hg9uu5e9skh4i4thi7l76h8tdtlv2uu.apps.googleusercontent.com REACT_APP_SCOPE="openid profile" REACT_APP_ISS=https://fhir.dev.envs-terra.bio/4_0_0/ REACT_APP_REDIRECT_URI=https://broad-fhir-dev.ue.r.appspot.com REACT_APP_CLIENT_SECRET=AITn5oeSt2vpqTD0a3BGzz9Q
+
       - name: Run lint
         run: npm run lint
 
