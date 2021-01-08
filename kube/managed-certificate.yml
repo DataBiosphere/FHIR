@@ -4,4 +4,4 @@ metadata:
   name: broad-fhir-managedcert
 spec:
   domains:
-    - fhir.terra.bio
+    - fhir.dev.envs-terra.bio

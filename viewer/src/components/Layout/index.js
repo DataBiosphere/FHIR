@@ -23,6 +23,10 @@ import Footer from '../Footer';
 import Link from '../Link';
 import SEO from '../SEO';
 
+import config from '../../config';
+
+const { iss: fhirUrl } = config;
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -222,7 +226,7 @@ function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }) {
                   color="secondary"
                   variant="contained"
                   component="button"
-                  href="/launch.html?iss%3Dhttp%3A%2F%2F34.75.179.65%2F4_0_0%2F"
+                  href={`/launch.html?iss=${encodeURIComponent(fhirUrl)}`}
                 >
                   <WhatshotIcon />
                   SMART Launch

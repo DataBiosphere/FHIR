@@ -7,5 +7,5 @@ metadata:
     networking.gke.io/managed-certificates: broad-fhir-managedcert
 spec:
   backend:
-    serviceName: fhir
+    serviceName: broad-fhir-loadbalancer
     servicePort: 80
