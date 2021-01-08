@@ -22,4 +22,4 @@ jobs:
           export_default_credentials: true
 
       - name: Use gcloud CLI
-        run: pwd
+        run: pwd && ls
