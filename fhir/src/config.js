@@ -19,6 +19,11 @@ const fhirServerConfig = {
       metadata: path.resolve('./src/profiles/observation/metadata'),
       versions: [VERSIONS['4_0_0']],
     },
+    Specimen: {
+      service: path.resolve('./src/profiles/specimen/index'),
+      metadata: path.resolve('./src/profiles/specimen/metadata'),
+      versions: [VERSIONS['4_0_0']],
+    },
   },
   url: process.env.URL,
   bundleSize: process.env.BUNDLE_SIZE || 25,

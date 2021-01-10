@@ -2,6 +2,7 @@ const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
+const Specimen = resolveSchema('4_0_0', 'Specimen');
 
 const observationCodeMappings = [
   {
@@ -104,7 +105,11 @@ class Translator {
     });
   }
 
-  toSpecimen() {}
+  toSpecimen(biospecimen) {
+    return new Specimen({
+      id: biospecimen.sample_gdc_id,
+    });
+  }
 }
 
 module.exports = Translator;

@@ -33,6 +33,15 @@ class TCGA {
   }
 
   /**
+   * Translate a TCGA Diagnosis response to an Specimen
+   *
+   * @param {object} diagnosis
+   */
+  translateBiospecimentoSpecimen(biospecimen) {
+    return this.resourceTranslator.toSpecimen(biospecimen);
+  }
+
+  /**
    * Convert a single TCGA Result to a DiagnosticResource
    *
    * @param {object} tcgaResult
@@ -44,7 +53,11 @@ class TCGA {
       this.translateDiagnosisToObservation(diagnosis, tcgaResult)
     );
 
-    return { diagnosticReport, observations };
+    const specimens = tcgaResult.biospecimen.map((biospecimen) =>
+      this.translateBiospecimentoSpecimen(biospecimen)
+    );
+
+    return { diagnosticReport, observations, specimens };
   }
 
   /**

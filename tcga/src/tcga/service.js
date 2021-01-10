@@ -32,6 +32,17 @@ const DiagnosisService = new BigQuery({
   ],
 });
 
+const BiospecimenService = new BigQuery({
+  table: 'isb-cgc-bq.TCGA.biospecimen_gdc_current',
+  primaryKey: 'sample_gdc_id',
+  joins: [
+    {
+      table: 'isb-cgc-bq.TCGA.clinical_gdc_current',
+      on: ['case_gdc_id', 'case_id'],
+    },
+  ],
+});
+
 /**
  * Convert a BigQuery results set to an organized model by caseID -> diagnoses|biospecimens
  *
@@ -61,7 +72,7 @@ const transformGdcRows = (rows) => {
  * @param {string} page
  * @param {string} pageSize
  */
-const getAllGdc = async ({ page = 1, pageSize = 10 } = {}) => {
+const getAllGdc = async ({ page, pageSize } = { page: 1, pageSize: 20 }) => {
   const [caseIds] = await ClinicalGDCRawService.get({ selection: 'case_id', page, pageSize });
 
   const [rows, count] = await ClinicalGDCService.get({
@@ -90,7 +101,7 @@ const getGdcById = async (id) => {
  * @param {string} page
  * @param {string} pageSize
  */
-const getAllDiagnosis = async ({ page, pageSize } = {}) => {
+const getAllDiagnosis = async ({ page, pageSize } = { page: 1, pageSize: 20 }) => {
   const [rows, count] = await DiagnosisService.get({ page, pageSize });
 
   return [rows, count];
@@ -106,6 +117,33 @@ const getDiagnosisById = async (id) => {
   if (rows && rows.length) {
     return rows[0];
   }
+
+  return null;
+};
+
+/**
+ * getAll Biospecimen data by page and pageSize
+ *
+ * @param {string} page
+ * @param {string} pageSize
+ */
+const getAllBiospecimen = async ({ page, pageSize } = { page: 1, pageSize: 20 }) => {
+  const [rows, count] = await BiospecimenService.get({ page, pageSize });
+
+  return [rows, count];
+};
+
+/**
+ * Get Biospecimen data by an ID
+ * @param {string} id
+ */
+const getBiospecimenById = async (id) => {
+  const [rows] = await BiospecimenService.get({ where: { sample_gdc_id: id } });
+
+  if (rows && rows.length) {
+    return rows[0];
+  }
+
   return null;
 };
 
@@ -114,4 +152,6 @@ module.exports = {
   getGdcById,
   getAllDiagnosis,
   getDiagnosisById,
+  getAllBiospecimen,
+  getBiospecimenById,
 };

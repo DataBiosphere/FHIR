@@ -11,4 +11,8 @@ router.get('/diagnosis', controller.getAllDiagnosis);
 
 router.get('/diagnosis/:id', controller.getDiagnosisById);
 
+router.get('/biospecimen', controller.getAllBiospecimen);
+
+router.get('/biospecimen/:id', controller.getBiospecimenById);
+
 module.exports = router;
