@@ -93,6 +93,20 @@ class TCGA {
     const { data } = await get(`${TCGA_URL}/api/diagnosis/${id}`);
     return this.translateDiagnosisToObservation(data, data);
   }
+
+  async getAllSpecimen({ page, pageSize } = {}) {
+    const { data } = await get(`${TCGA_URL}/api/biospecimen`, { params: { page, pageSize } });
+    const { results, count } = data;
+    return [
+      results.map((diagnosis) => this.translateBiospecimentoSpecimen(diagnosis, diagnosis)),
+      count,
+    ];
+  }
+
+  async getSpecimenById(id) {
+    const { data } = await get(`${TCGA_URL}/api/biospecimen/${id}`);
+    return this.translateBiospecimentoSpecimen(data, data);
+  }
 }
 
 module.exports = TCGA;

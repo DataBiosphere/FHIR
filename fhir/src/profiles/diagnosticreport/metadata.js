@@ -5,7 +5,7 @@ module.exports = {
       profile: {
         reference: 'http://www.hl7.org/fhir/DiagnosticReport.profile.json',
       },
-      documentation: 'This server not not let clients create DiagnosticReports',
+      documentation: 'This server does not let clients create DiagnosticReports',
       versioning: 'no-version',
       readHistory: false,
       updateCreate: false,

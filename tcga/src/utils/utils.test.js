@@ -26,7 +26,7 @@ describe('Utils tests', () => {
     ]);
   });
 
-  it('should not not remove any objects', () => {
+  it('should does not remove any objects', () => {
     expect(
       dedupeObjects([
         {

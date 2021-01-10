@@ -5,7 +5,7 @@ module.exports = {
       profile: {
         reference: 'http://www.hl7.org/fhir/Observation.profile.json',
       },
-      documentation: 'This server not not let clients create Observations',
+      documentation: 'This server does not let clients create Observations',
       versioning: 'no-version',
       readHistory: false,
       updateCreate: false,

@@ -7,7 +7,7 @@ describe('Observation metadata test', () => {
       conditionalDelete: 'not-supported',
       conditionalRead: 'not-supported',
       conditionalUpdate: false,
-      documentation: 'This server not not let clients create Observations',
+      documentation: 'This server does not let clients create Observations',
       profile: { reference: 'http://www.hl7.org/fhir/Observation.profile.json' },
       readHistory: false,
       searchInclude: [],

@@ -1,11 +1,11 @@
 module.exports = {
   makeResource: () => {
     return {
-      type: 'Observation',
+      type: 'Specimen',
       profile: {
-        reference: 'http://www.hl7.org/fhir/Observation.profile.json',
+        reference: 'http://www.hl7.org/fhir/Specimen.profile.json',
       },
-      documentation: 'This server not not let clients create Observations',
+      documentation: 'This server does not let clients create Specimens',
       versioning: 'no-version',
       readHistory: false,
       updateCreate: false,

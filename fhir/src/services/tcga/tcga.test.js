@@ -60,6 +60,7 @@ describe('TCGA service tests', () => {
             reference: 'Patient/2611cb61-6d05-5286-b94a-ce6cac2ba37b',
           },
         },
+
         observations: [
           {
             id: 'e62a815e-6907-5bc7-acbc-932bc0a05b75',
@@ -101,6 +102,17 @@ describe('TCGA service tests', () => {
               div: '<div xmlns="http://www.w3.org/1999/xhtml">Radiation Therapy, NOS</div>',
               status: 'generated',
             },
+          },
+        ],
+
+        specimens: [
+          {
+            id: '591e99ec-46f9-442d-ac20-745dccc8a52b',
+            resourceType: 'Specimen',
+          },
+          {
+            id: '5e4e1e21-8016-4e27-8f72-2411714203e8',
+            resourceType: 'Specimen',
           },
         ],
       },
@@ -204,6 +216,17 @@ describe('TCGA service tests', () => {
             div: '<div xmlns="http://www.w3.org/1999/xhtml">Radiation Therapy, NOS</div>',
             status: 'generated',
           },
+        },
+      ],
+
+      specimens: [
+        {
+          id: '591e99ec-46f9-442d-ac20-745dccc8a52b',
+          resourceType: 'Specimen',
+        },
+        {
+          id: '5e4e1e21-8016-4e27-8f72-2411714203e8',
+          resourceType: 'Specimen',
         },
       ],
     });
