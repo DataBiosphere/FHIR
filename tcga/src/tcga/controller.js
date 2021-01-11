@@ -64,6 +64,27 @@ const getBiospecimenById = async (req, res) => {
   }
 };
 
+const getAllProjects = async (req, res) => {
+  logger.info('TCGA >>> getAllProjects');
+  const { page, pageSize } = req.query;
+  const [results, count] = await service.getAllProjects({ page, pageSize });
+  res.json({
+    results,
+    count,
+  });
+};
+
+const getProjectById = async (req, res) => {
+  logger.info('TCGA >>> getProjectById');
+  const { id } = req.params;
+  const results = await service.getProjectById(id);
+  if (!results) {
+    res.sendStatus(404);
+  } else {
+    res.json(results);
+  }
+};
+
 module.exports = {
   getAllGdc,
   getGdcById,
@@ -71,4 +92,6 @@ module.exports = {
   getDiagnosisById,
   getAllBiospecimen,
   getBiospecimenById,
+  getAllProjects,
+  getProjectById,
 };

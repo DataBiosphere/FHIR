@@ -5,6 +5,8 @@ jest.mock('./controller', () => ({
   getDiagnosisById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getAllBiospecimen: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getBiospecimenById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getAllProjects: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getProjectById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
 }));
 
 const express = require('express');
@@ -71,6 +73,23 @@ describe('router tests', () => {
       .get('/biospecimen/foobar')
       .end((err, res) => {
         expect(controller.getBiospecimenById.mock.calls.length).toEqual(1);
+        done();
+      });
+  });
+
+  it('should route Projects base requests to the getAllBiospecimen function of the controller', (done) => {
+    supertest(app)
+      .get('/projects')
+      .end(() => {
+        expect(controller.getAllProjects.mock.calls.length).toEqual(1);
+        done();
+      });
+  });
+  it('should route Project ID requests to the getBiospecimenById function of the controller', (done) => {
+    supertest(app)
+      .get('/projects/foobar')
+      .end((err, res) => {
+        expect(controller.getProjectById.mock.calls.length).toEqual(1);
         done();
       });
   });

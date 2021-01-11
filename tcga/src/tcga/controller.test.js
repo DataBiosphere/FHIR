@@ -5,6 +5,8 @@ jest.mock('./service', () => ({
   getDiagnosisById: jest.fn().mockImplementation(() => ({ id: 'test' })),
   getAllBiospecimen: jest.fn().mockImplementation(() => [[{ id: 'test' }], 100]),
   getBiospecimenById: jest.fn().mockImplementation(() => ({ id: 'test' })),
+  getAllProjects: jest.fn().mockImplementation(() => [[{ id: 'test' }], 100]),
+  getProjectById: jest.fn().mockImplementation(() => ({ id: 'test' })),
 }));
 
 const controller = require('./controller');
@@ -105,6 +107,39 @@ describe('TCGA controller tests', () => {
     };
 
     await controller.getBiospecimenById(mockReq, mockRes);
+
+    expect(mockRes.json.mock.calls[0][0]).toEqual({ id: 'test' });
+  });
+
+  it('should get all Project data', async () => {
+    const mockRes = {
+      json: jest.fn(),
+    };
+
+    const mockReq = {
+      query: {
+        page: 1,
+        pageSize: 10,
+      },
+    };
+
+    await controller.getAllProjects(mockReq, mockRes);
+
+    expect(mockRes.json.mock.calls[0][0]).toEqual({ count: 100, results: [{ id: 'test' }] });
+  });
+
+  it('should get Project data by ID', async () => {
+    const mockRes = {
+      json: jest.fn(),
+    };
+
+    const mockReq = {
+      params: {
+        id: 'foobar',
+      },
+    };
+
+    await controller.getProjectById(mockReq, mockRes);
 
     expect(mockRes.json.mock.calls[0][0]).toEqual({ id: 'test' });
   });

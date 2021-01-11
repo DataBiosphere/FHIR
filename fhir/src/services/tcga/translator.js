@@ -3,6 +3,7 @@ const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
+const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 
 const observationCodeMappings = [
   {
@@ -108,6 +109,25 @@ class Translator {
   toSpecimen(biospecimen) {
     return new Specimen({
       id: biospecimen.sample_gdc_id,
+    });
+  }
+
+  toResearchStudy(project) {
+    return new ResearchStudy({
+      id: project.proj__project_id,
+      title: project.proj__name,
+      status: 'administratively-completed',
+      category: [
+        {
+          coding: [
+            {
+              system: 'http://terminology.hl7.org/CodeSystem/v2-0074',
+              code: 'GE',
+              display: 'Genetics',
+            },
+          ],
+        },
+      ],
     });
   }
 }

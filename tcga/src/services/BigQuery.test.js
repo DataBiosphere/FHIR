@@ -154,7 +154,7 @@ describe('BigQuery client tests', () => {
       },
       page: 3,
       pageSize: 30,
-      selection: 'name',
+      selection: ['name'],
     });
 
     expect(querySpy.mock.calls).toEqual([

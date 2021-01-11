@@ -41,6 +41,10 @@ class TCGA {
     return this.resourceTranslator.toSpecimen(biospecimen);
   }
 
+  translateProjectToResearchStudy(project) {
+    return this.resourceTranslator.toResearchStudy(project);
+  }
+
   /**
    * Convert a single TCGA Result to a DiagnosticResource
    *
@@ -106,6 +110,20 @@ class TCGA {
   async getSpecimenById(id) {
     const { data } = await get(`${TCGA_URL}/api/biospecimen/${id}`);
     return this.translateBiospecimentoSpecimen(data, data);
+  }
+
+  async getAllResearchStudy({ page, pageSize } = {}) {
+    const { data } = await get(`${TCGA_URL}/api/projects`, { params: { page, pageSize } });
+    const { results, count } = data;
+    return [
+      results.map((diagnosis) => this.translateProjectToResearchStudy(diagnosis, diagnosis)),
+      count,
+    ];
+  }
+
+  async getResearchStudyById(id) {
+    const { data } = await get(`${TCGA_URL}/api/projects/${id}`);
+    return this.translateProjectToResearchStudy(data, data);
   }
 }
 

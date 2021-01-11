@@ -15,4 +15,8 @@ router.get('/biospecimen', controller.getAllBiospecimen);
 
 router.get('/biospecimen/:id', controller.getBiospecimenById);
 
+router.get('/projects', controller.getAllProjects);
+
+router.get('/projects/:id', controller.getProjectById);
+
 module.exports = router;

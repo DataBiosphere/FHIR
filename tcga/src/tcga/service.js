@@ -1,6 +1,8 @@
 const { dedupeObjects, transformGdcResults } = require('../utils');
 const { BigQuery } = require('../services');
 
+const PROJECT_IDENTIFIER_COLUMN = 'proj__project_id';
+
 const ClinicalGDCRawService = new BigQuery({
   table: 'isb-cgc-bq.TCGA.clinical_gdc_current',
   primaryKey: 'case_id',
@@ -73,7 +75,7 @@ const transformGdcRows = (rows) => {
  * @param {string} pageSize
  */
 const getAllGdc = async ({ page, pageSize } = { page: 1, pageSize: 20 }) => {
-  const [caseIds] = await ClinicalGDCRawService.get({ selection: 'case_id', page, pageSize });
+  const [caseIds] = await ClinicalGDCRawService.get({ selection: ['case_id'], page, pageSize });
 
   const [rows, count] = await ClinicalGDCService.get({
     whereIn: ['case_id', caseIds.map((row) => row.case_id)],
@@ -147,6 +149,37 @@ const getBiospecimenById = async (id) => {
   return null;
 };
 
+/**
+ * getAll Project data by page and pageSize
+ *
+ * @param {string} page
+ * @param {string} pageSize
+ */
+const getAllProjects = async ({ page, pageSize } = { page: 1, pageSize: 20 }) => {
+  const [rows, count] = await ClinicalGDCRawService.get({
+    selection: ['proj__name', PROJECT_IDENTIFIER_COLUMN],
+    page,
+    pageSize,
+    distinct: true,
+  });
+
+  return [rows, count];
+};
+
+/**
+ * Get Project data by an ID
+ * @param {string} id
+ */
+const getProjectById = async (id) => {
+  const [rows] = await ClinicalGDCRawService.get({ where: { [PROJECT_IDENTIFIER_COLUMN]: id } });
+
+  if (rows && rows.length) {
+    return rows[0];
+  }
+
+  return null;
+};
+
 module.exports = {
   getAllGdc,
   getGdcById,
@@ -154,4 +187,6 @@ module.exports = {
   getDiagnosisById,
   getAllBiospecimen,
   getBiospecimenById,
+  getAllProjects,
+  getProjectById,
 };
