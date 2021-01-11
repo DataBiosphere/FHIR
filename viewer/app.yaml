@@ -13,6 +13,9 @@ handlers:
   - url: /(.*\.(json|ico))$
     static_files: build/\1
     upload: build/.*\.(json|ico)$
+  - url: /launch.html(.*)
+    static_files: build/launch.html
+    upload: build/launch.html
   - url: /
     static_files: build/index.html
     upload: build/index.html
