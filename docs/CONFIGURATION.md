@@ -9,11 +9,11 @@ environment variables. The following environment variables should be defined in 
 
 Project directory `fhir`.
 
-| name     | required | default value | description           | example                      |
-| -------- | -------- | ------------- | --------------------- | ---------------------------- |
-| PORT     | no       | 3000          |                       |                              |
-| TCGA_URL | yes      |               | http://tcga:3001      |
-| URL      | yes      |               | Used for FHIR Bundles | http://localhost:3001/4_0_0/ |
+| name     | required | default value | description                       | example                      |
+| -------- | -------- | ------------- | --------------------------------- | ---------------------------- |
+| PORT     | no       | 3000          |                                   |                              |
+| TCGA_URL | yes      |               | Where the TCGA Microservice lives | http://tcga:3001             |
+| URL      | yes      |               | Used for FHIR Bundles             | http://localhost:3001/4_0_0/ |
 
 ### TCGA
 
