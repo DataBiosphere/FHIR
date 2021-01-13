@@ -22,7 +22,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{URL}}/4_0_0/DiagnosticReport",
+					"raw": "http://{{URL}}/4_0_0/DiagnosticReport?_page=3",
 					"protocol": "http",
 					"host": [
 						"{{URL}}"
@@ -30,6 +30,52 @@
 					"path": [
 						"4_0_0",
 						"DiagnosticReport"
+					],
+					"query": [
+						{
+							"key": "_page",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get DiagnosticReport Include Observations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/DiagnosticReport?_include=DiagnosticReport:result&_count=1",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"DiagnosticReport"
+					],
+					"query": [
+						{
+							"key": "_include",
+							"value": "DiagnosticReport:result"
+						},
+						{
+							"key": "_count",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -68,6 +114,43 @@
 		},
 		{
 			"name": "Search DiagnosticReport By ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/DiagnosticReport/?_id=291b069c-9dde-4e1e-8430-85146bc94338",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"DiagnosticReport",
+						""
+					],
+					"query": [
+						{
+							"key": "_id",
+							"value": "291b069c-9dde-4e1e-8430-85146bc94338"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search DiagnosticReport By ID and Include DiagnosticReport",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -151,7 +234,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{URL}}/4_0_0/Observation/?_count=10&_page=1",
+					"raw": "http://{{URL}}/4_0_0/Observation/",
 					"protocol": "http",
 					"host": [
 						"{{URL}}"
@@ -160,23 +243,13 @@
 						"4_0_0",
 						"Observation",
 						""
-					],
-					"query": [
-						{
-							"key": "_count",
-							"value": "10"
-						},
-						{
-							"key": "_page",
-							"value": "1"
-						}
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get metadata",
+			"name": "Get Specimen",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -184,18 +257,116 @@
 						"key": "Content-Type",
 						"type": "text",
 						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
 					}
 				],
 				"url": {
-					"raw": "http://{{URL}}/4_0_0/metadata/",
+					"raw": "http://{{URL}}/4_0_0/Specimen/",
 					"protocol": "http",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
 						"4_0_0",
-						"metadata",
+						"Specimen",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specimen by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/Specimen/e3600348-0cac-4731-8ef2-41983573a5c0",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"Specimen",
+						"e3600348-0cac-4731-8ef2-41983573a5c0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ResearchStudy",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/ResearchStudy/",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"ResearchStudy",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ResearchStudy by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/ResearchStudy/TCGA-HNSC",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"ResearchStudy",
+						"TCGA-HNSC"
 					]
 				}
 			},
@@ -207,7 +378,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3001/api/gdc?page=2&pageSize=5",
+					"raw": "http://localhost:3001/api/gdc?page=100&pageSize=5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -220,7 +391,7 @@
 					"query": [
 						{
 							"key": "page",
-							"value": "2"
+							"value": "100"
 						},
 						{
 							"key": "pageSize",
@@ -258,7 +429,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3001/api/diagnosis/",
+					"raw": "http://localhost:3001/api/diagnosis/?page=1&pageSize=20",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -268,6 +439,16 @@
 						"api",
 						"diagnosis",
 						""
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "20"
+						}
 					]
 				}
 			},
@@ -293,13 +474,153 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get TCGA Biospecimen",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/biospecimen/?page=1&pageSize=20",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"biospecimen",
+						""
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get TCGA Biospecimen By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/biospecimen/e3600348-0cac-4731-8ef2-41983573a5c0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"biospecimen",
+						"e3600348-0cac-4731-8ef2-41983573a5c0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get metadata",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/fhir+json"
+					}
+				],
+				"url": {
+					"raw": "http://{{URL}}/4_0_0/metadata/",
+					"protocol": "http",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"4_0_0",
+						"metadata",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RAS Authorize",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get TCGA Project",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/projects/?page=1&pageSize=20",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"projects",
+						""
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get TCGA Project By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/projects/e3600348-0cac-4731-8ef2-41983573a5c0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"projects",
+						"e3600348-0cac-4731-8ef2-41983573a5c0"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "961e669b-c6df-42fc-98e7-33dfc1b4f56f",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -309,7 +630,6 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "d261b1f7-6ba3-44eb-9d71-88d0cbb59404",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -319,10 +639,8 @@
 	],
 	"variable": [
 		{
-			"id": "604201ba-dd97-4e11-8923-6202bc601fea",
 			"key": "URL",
 			"value": "localhost:3000"
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
