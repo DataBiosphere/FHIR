@@ -32,7 +32,7 @@ describe('TCGA service tests', () => {
             {
               url: 'https://build.fhir.org/extension-workflow-researchstudy.html',
               valueReference: {
-                reference: 'ResearchStudy/TCGA',
+                reference: 'ResearchStudy/TCGA-HNSC',
                 type: 'ResearchStudy',
               },
             },
@@ -168,7 +168,7 @@ describe('TCGA service tests', () => {
           {
             url: 'https://build.fhir.org/extension-workflow-researchstudy.html',
             valueReference: {
-              reference: 'ResearchStudy/TCGA',
+              reference: 'ResearchStudy/TCGA-HNSC',
               type: 'ResearchStudy',
             },
           },
