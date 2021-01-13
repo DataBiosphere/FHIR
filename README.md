@@ -25,11 +25,12 @@ Run the tests.
 npm run test
 ```
 
-Create configuration, and specify your values. See [Configuration](./docs/CONFIGURATION.md)
+Configure your projects. This project uses [dotenv](https://github.com/motdotla/dotenv) extensively to make configuration easy. See [Configuration](./docs/CONFIGURATION.md)
 
 ```
 touch fhir/.env
 touch tcga/.env
+touch viewer/.env
 ```
 
 Run Docker Compose.
