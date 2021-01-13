@@ -6,7 +6,7 @@ services:
       context: ./fhir
       dockerfile: Dockerfile-dev
     volumes:
-      - ./fhir:/usr/src/app
+      - ./fhir/src:/usr/src/app/src
     ports:
       - 3000:3000
     environment:
@@ -19,7 +19,7 @@ services:
       context: ./tcga
       dockerfile: Dockerfile-dev
     volumes:
-      - ./tcga:/usr/src/app
+      - ./tcga/src:/usr/src/app/src
     ports:
       - 3001:3001
     environment:
