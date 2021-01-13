@@ -98,7 +98,7 @@ class Translator {
         {
           url: 'https://build.fhir.org/extension-workflow-researchstudy.html',
           valueReference: {
-            reference: 'ResearchStudy/TCGA',
+            reference: `ResearchStudy/${tcgaResult.proj__project_id}`,
             type: 'ResearchStudy',
           },
         },
