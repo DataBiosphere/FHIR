@@ -50,6 +50,8 @@ Thumbs.db
 
 # Env file
 .env
+env.local
+env.production
 
 # GCP Credentials
 creds.json
