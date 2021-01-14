@@ -58,3 +58,6 @@ creds.json
 
 # Coverage
 coverage
+
+# Python
+.venv
