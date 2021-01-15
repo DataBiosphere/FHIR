@@ -98,7 +98,7 @@ class BigQuery {
       // Cleverness below!
       countQuery = dataQuery
         .clone()
-        .select(knex.raw(`count(distinct(concat(${selection.join(', ')}))) as count`))
+        .select(knex.raw(`count(distinct concat(${selection.join(', ')})))`))
         .toString();
     }
 

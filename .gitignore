@@ -58,3 +58,6 @@ creds.json
 
 # Coverage
 coverage
+
+# Dev files
+.vscode/launch.json
