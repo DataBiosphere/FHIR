@@ -102,6 +102,7 @@ export function Search(props) {
         >
           <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
           <MenuItem value="Observation">Observation</MenuItem>
+          <MenuItem value="Specimen">Specimen</MenuItem>
           <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
         </Select>
       </FormControl>
