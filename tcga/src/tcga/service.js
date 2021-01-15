@@ -158,6 +158,7 @@ const getBiospecimenById = async (id) => {
 const getAllProjects = async ({ page, pageSize } = { page: 1, pageSize: 20 }) => {
   const [rows, count] = await ClinicalGDCRawService.get({
     selection: ['proj__name', PROJECT_IDENTIFIER_COLUMN],
+    concatSelection: true,
     page,
     pageSize,
     distinct: true,

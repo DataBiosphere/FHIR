@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: fhir
-          image: gcr.io/broad-fhir-dev/broad/fhir:170c9ea
+          image: gcr.io/broad-fhir-dev/broad/fhir:89e5fed
           ports:
             - containerPort: 3000
           env:
@@ -36,7 +36,7 @@ spec:
             value: http://localhost:3001
           imagePullPolicy: Always
         - name: tcga
-          image: gcr.io/broad-fhir-dev/broad/tcga:170c9ea
+          image: gcr.io/broad-fhir-dev/broad/tcga:89e5fed
           ports:
             - containerPort: 3001
           imagePullPolicy: Always
