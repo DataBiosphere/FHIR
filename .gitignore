@@ -59,5 +59,8 @@ creds.json
 # Coverage
 coverage
 
-# Dev files
-.vscode/launch.json
+# Python
+.venv
+
+# VS Code
+.vscode
