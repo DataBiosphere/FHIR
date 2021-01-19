@@ -58,3 +58,9 @@ creds.json
 
 # Coverage
 coverage
+
+# Python
+.venv
+
+# VS Code
+.vscode
