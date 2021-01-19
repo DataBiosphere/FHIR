@@ -166,4 +166,27 @@ describe('BigQuery client tests', () => {
       ],
     ]);
   });
+
+  it('should build a with concatSelection', async () => {
+    const bigQueryClient = new BigQuery({
+      table: 'test-table',
+    });
+    const querySpy = jest.spyOn(bigQueryClient, 'sendQuery').mockImplementation(() => [
+      [
+        {
+          id: 'hello',
+        },
+      ],
+    ]);
+
+    await bigQueryClient.get({
+      selection: ['select-1', 'select-2'],
+      distinct: true,
+    });
+
+    expect(querySpy.mock.calls).toEqual([
+      ['select distinct `select-1`, `select-2` from `test-table` as `table_0`'],
+      ['select count(distinct concat(select-1, select-2)) as count from `test-table` as `table_0`'],
+    ]);
+  });
 });
