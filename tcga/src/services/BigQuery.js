@@ -87,18 +87,17 @@ class BigQuery {
     dataQuery = dataQuery.where(whereClause);
 
     // Only now do we clone the count query before adding possible limits and offsets
-
     let countQuery;
-    if (!concatSelection) {
+    if (concatSelection) {
+      countQuery = dataQuery
+        // Cleverness below!
+        .clone()
+        .select(knex.raw(`count(distinct concat(${selection.join(', ')})) as count`))
+        .toString();
+    } else {
       countQuery = dataQuery
         .clone()
         .countDistinct(`${tableAlias}.${this.primaryKey} as count`)
-        .toString();
-    } else {
-      // Cleverness below!
-      countQuery = dataQuery
-        .clone()
-        .select(knex.raw(`count(distinct concat(${selection.join(', ')})))`))
         .toString();
     }
 
