@@ -58,7 +58,7 @@ kubectl set image deployments/fhir app=gcr.io/${PROJECT_ID}/broad/fhir:$(git log
 ## Deploy the K8 Spec file and monitor the deployment
 
 ```
-kubectl apply -f kube/broad-fhir.yml && kubectl rollout status deployment/fhir
+kubectl apply -f deployment.yml && kubectl rollout status deployment/broad-fhir-deployment
 ```
 
 ## Common issues
@@ -70,6 +70,8 @@ Reconfigure kubectl with gcloud
 ```
 gcloud container clusters get-credentials ${CLUSTER_NAME} --zone=${CLUSER_ZONE}
 ```
+
+ex: `gcloud container clusters get-credentials broad-fhir-cluster --region=us-east1-b`
 
 ## Up Next
 
