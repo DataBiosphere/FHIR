@@ -186,7 +186,7 @@ describe('BigQuery client tests', () => {
 
     expect(querySpy.mock.calls).toEqual([
       ['select `select-1`, `select-2` from `test-table` as `table_0`'],
-      ['select count(distinct concat(select-1, select-2))) from `test-table` as `table_0`'],
+      ['select count(distinct concat(select-1, select-2)) as count from `test-table` as `table_0`'],
     ]);
   });
 });
