@@ -1,43 +1,54 @@
-import json
-from anvil.util.reconciler import DEFAULT_NAMESPACE
-from anvil.transformers.fhir.transformer import FhirTransformer
-from anvil.terra.sample import Sample
-from anvil.terra.workspace import Workspace
-from anvil.terra.reconciler import Reconciler
-from anvil.gen3.entities import Entities
-import logging
 import os
+import logging
+import json
 
-import pprint
-from anvil.terra.api import get_projects
 from dotenv import load_dotenv
+
+from anvil.gen3.entities import Entities
+from anvil.terra.reconciler import Reconciler
+from anvil.terra.workspace import Workspace
+from anvil.terra.sample import Sample
+from anvil.transformers.fhir.transformer import FhirTransformer
+from anvil.util.reconciler import DEFAULT_NAMESPACE
+
 load_dotenv()
 
-
-p = pprint.PrettyPrinter(indent=4)
-
-"""Extract all workspaces."""
-
+AVRO_PATH = os.getenv('AVRO_PATH', './export_2020-11-04T17_48_47.avron')
+OUTPUT_DIR = os.getenv('OUTPUT_PATH', './data')
 
 logging.basicConfig(level=logging.WARN,
                     format='%(asctime)s %(levelname)-8s %(message)s')
 
-DASHBOARD_OUTPUT_PATH = "/tmp"
-TERRA_SUMMARY = f"{DASHBOARD_OUTPUT_PATH}/terra_summary.json"
+gen3_entities = Entities(AVRO_PATH)
 
 
-def reconcile_all(user_project, consortiums, namespace=DEFAULT_NAMESPACE, output_path=DASHBOARD_OUTPUT_PATH):
+TERRA_SUMMARY = f"{OUTPUT_DIR}/terra_summary.json"
+
+
+def reconcile_all(user_project, consortiums, namespace=DEFAULT_NAMESPACE, output_path=OUTPUT_DIR):
     """Reconcile and aggregate results.
 
     e.g. bin/reconciler --user_project <your-billing-project>  --consortium CMG AnVIL_CMG.* --consortium CCDG AnVIL_CCDG.* --consortium GTEx ^AnVIL_GTEx_V8_hg38$ --consortium ThousandGenomes ^1000G-high-coverage-2019$
     """
     for (name, workspace_regex) in consortiums:
         reconciler = Reconciler(
-            name, user_project, namespace, workspace_regex, 'test')
+            name, user_project, namespace, workspace_regex, AVRO_PATH)
         for workspace in reconciler.workspaces:
             transformer = FhirTransformer(workspace=workspace)
             for item in transformer.transform():
                 yield item
+
+
+def append_drs(sample):
+    """Add ga4gh_drs_uri to blob."""
+    try:
+        for key in sample.blobs.keys():
+            filename = key.split('/')[-1]
+            gen3_file = gen3_entities.get(submitter_id=filename)
+            # f"https://gen3.theanvil.io/ga4gh/drs/v1/objects/{gen3_file['object']['object_id']}"
+            sample.blobs[key]['ga4gh_drs_uri'] = gen3_file['object']['ga4gh_drs_uri']
+    except Exception as e:
+        logging.info(f"Error sample: {sample.id} {e}")
 
 
 def all_instances(clazz):
@@ -52,8 +63,9 @@ def all_instances(clazz):
         ('ThousandGenomes', '^1000G-high-coverage-2019$')
     )
     for item in reconcile_all(user_project=os.environ['GOOGLE_PROJECT'], consortiums=consortiums):
+        if isinstance(item, Sample):
+            append_drs(item)
         if clazz is None or isinstance(item, clazz):
-            print(item)
             yield item
 
 
@@ -82,7 +94,7 @@ def save_all(workspaces):
 
     workspace_exceptions = {}
     current_workspace = None
-    summary_emitter = open(f"{DASHBOARD_OUTPUT_PATH}/terra_summary.json", "w")
+    summary_emitter = open(f"{OUTPUT_DIR}/terra_summary.json", "w")
 
     for workspace in workspaces:
         current_workspace = workspace.name
@@ -95,7 +107,7 @@ def save_all(workspaces):
                     emitter = emitters.get(resourceType, None)
                     if emitter is None:
                         emitter = open(
-                            f"{DASHBOARD_OUTPUT_PATH}/{resourceType}.json", "w")
+                            f"{OUTPUT_DIR}/{resourceType}.json", "w")
                         emitters[resourceType] = emitter
                     json.dump(entity, emitter, separators=(',', ':'))
                     emitter.write('\n')
@@ -110,7 +122,7 @@ def save_all(workspaces):
 
 def validate():
     """Ensure expected extracts exist."""
-    FHIR_OUTPUT_PATHS = [f"{DASHBOARD_OUTPUT_PATH}/{p}" for p in """
+    FHIR_OUTPUT_PATHS = [f"{OUTPUT_DIR}/{p}" for p in """
     DocumentReference.json
     Organization.json
     Patient.json
@@ -131,6 +143,9 @@ def validate():
     assert os.path.isfile(TERRA_SUMMARY), f"{TERRA_SUMMARY} should exist."
 
 
-workspaces = list(all_instances(Workspace))
+gen3_entities.load()
 
+workspaces = list(all_instances(Workspace))
 save_all(workspaces)
+
+validate()
