@@ -80,7 +80,7 @@ class BigQuery {
 
     // Only now do we clone the count query before adding possible limits and offsets
     let countQuery;
-    if (distinct && selection.length > 1) {
+    if (distinct) {
       countQuery = dataQuery
         // Cleverness below!
         .clone()
