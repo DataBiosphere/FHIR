@@ -47,15 +47,7 @@ class BigQuery {
    * @param {number} pageSize
    * @param {string} where
    */
-  async get({
-    selection = ['*'],
-    concatSelection = false,
-    page,
-    pageSize,
-    where = {},
-    whereIn = [],
-    distinct,
-  } = {}) {
+  async get({ selection = ['*'], page, pageSize, where = {}, whereIn = [], distinct } = {}) {
     let counter = 0;
     const tableAlias = `table_${counter}`;
     let dataQuery = knex.from(`${this.table} AS table_${counter}`);
@@ -88,7 +80,7 @@ class BigQuery {
 
     // Only now do we clone the count query before adding possible limits and offsets
     let countQuery;
-    if (concatSelection) {
+    if (distinct && selection.length > 1) {
       countQuery = dataQuery
         // Cleverness below!
         .clone()
