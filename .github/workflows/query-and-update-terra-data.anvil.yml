@@ -18,7 +18,12 @@ jobs:
     working-directory: anvil
 
     steps:
+      - name: Checkout
       - uses: actions/checkout@v2
+
+      - name: Setup Node
+      - uses: actions/setup-node@v1
+
       - name: Setup Python 3.8.2
         uses: actions/setup-Python@v2
         with:
@@ -30,8 +35,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Generate AnVIL Credentials
+        run: node ../scripts/create-anvil-cred-file.js
+
       - name: Generate env
-          run: python ../scripts/create-anvil-env-file.py
+          run: node ../scripts/create-env-file.js GOOGLE_APPLICATION_CREDENTIALS=./creds.json GOOGLE_PROJECT=broad-fhir-dev AVRO_PATH=./export_2020-11-04T17_48_47.avro
       
       - name: Run script
           run: python main.py
