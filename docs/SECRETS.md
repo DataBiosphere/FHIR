@@ -4,6 +4,12 @@ This repository takes advantage of several secrets in Github. Make sure the
 following are defined in the repository secure secrets manager:
 
 ```
+ANVIL_CLIENT_ID
+ANVIL_CLIENT_SECRET
+ANVIL_QUOTA_PROJECT_ID
+ANVIL_REFRESH_TOKEN
+ANVIL_TYPE
+
 AUTH_PROVIDER_X509_CERT_URL
 AUTH_URI
 CLIENT_EMAIL
