@@ -1,0 +1,37 @@
+name: ANVIL - Query and Update Terra Data
+
+on:
+  push:
+    branches:
+      - testing
+
+env:
+  CLIENT_ID: ${{ secrets.ANVIL_CLIENT_ID }}
+  CLIENT_SECRET: ${{ secrets.ANVIL_CLIENT_SECRET }}
+  QUOTA_PROJECT_ID: ${{ secrets.ANVIL_QUOTA_PROJECT_ID }}
+  REFRESH_TOKEN: ${{ secrets.ANVIL_REFRESH_TOKEN }}
+  TYPE: ${{ secrets.ANVIL_TYPE }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    working-directory: anvil
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python 3.8.2
+        uses: actions/setup-Python@v2
+        with:
+          python-version: '3.8.2'
+          architecture: 'x64'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate env
+          run: python ../scripts/create-anvil-env-file.py
+      
+      - name: Run script
+          run: python main.py
