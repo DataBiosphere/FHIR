@@ -39,7 +39,7 @@ jobs:
         run: node ../scripts/create-anvil-cred-file.js
 
       - name: Generate env
-          run: node ../scripts/create-env-file.js GOOGLE_APPLICATION_CREDENTIALS=./creds.json GOOGLE_PROJECT=broad-fhir-dev AVRO_PATH=./export_2020-11-04T17_48_47.avro
-      
+        run: node ../scripts/create-env-file.js GOOGLE_APPLICATION_CREDENTIALS=./creds.json GOOGLE_PROJECT=broad-fhir-dev AVRO_PATH=./export_2020-11-04T17_48_47.avro
+
       - name: Run script
-          run: python main.py
+        run: python main.py
