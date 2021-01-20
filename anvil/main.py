@@ -13,7 +13,7 @@ from anvil.util.reconciler import DEFAULT_NAMESPACE
 
 load_dotenv()
 
-AVRO_PATH = os.getenv('AVRO_PATH', './export_2020-11-04T17_48_47.avron')
+AVRO_PATH = os.getenv('AVRO_PATH', './export_2020-11-04T17_48_47.avro')
 OUTPUT_DIR = os.getenv('OUTPUT_PATH', './data')
 
 logging.basicConfig(level=logging.WARN,
