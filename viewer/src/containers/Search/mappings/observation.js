@@ -1,11 +1,12 @@
 import React from 'react';
 import { TableCell, Typography, Chip } from '@material-ui/core';
+import { OBSERVATION_CODE, OBSERVATION_ID } from '../constants';
 
 export const columns = ['ID', 'Code'];
 export const renderers = [
-  'id',
+  OBSERVATION_ID,
   [
-    'code',
+    OBSERVATION_CODE,
     (code) => {
       const { coding, text } = code;
       return (
