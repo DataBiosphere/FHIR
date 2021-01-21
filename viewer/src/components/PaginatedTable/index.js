@@ -25,6 +25,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const rowLabel = ({ from, to, count }) => `Displaying ${from}-${to} of ${count} results`;
+
 function PaginatedTable({ count, rows, renderers, columns, onView, page, onChangePage, itemKey }) {
   const classes = useStyles();
 
@@ -34,9 +36,12 @@ function PaginatedTable({ count, rows, renderers, columns, onView, page, onChang
         <TablePagination
           className={classes.pagination}
           count={count}
+          labelDisplayedRows={rowLabel}
           onChangePage={onChangePage}
           page={page}
           rowsPerPage={25}
+          // due to how the FHIR code is written, we can only parse 25 entires at a time
+          rowsPerPageOptions={[]}
         />
       </div>
 
