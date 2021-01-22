@@ -72,13 +72,23 @@ export function Search(props) {
   const classes = useStyles();
 
   const onChangePage = (event, newPage) => {
-    getResources(selectedResource, newPage + 1);
+    getResources(selectedResource, newPage + 1, bundle.entry.length);
+  };
+
+  const onChangeRowsPerPage = (event) => {
+    console.log(event.target.value);
+    getResources(selectedResource, page, event.target.value);
   };
 
   const closeViewingEntry = () => setOpen(false);
 
   useEffect(() => {
-    getResources(selectedResource, page);
+    // we need to add a case for the inital load
+    if (bundle) {
+      getResources(selectedResource, page, bundle.entry.length);
+    } else {
+      getResources(selectedResource, page, 25);
+    }
   }, []);
 
   const itemKey = 'id';
@@ -97,7 +107,7 @@ export function Search(props) {
         <Select
           defaultValue="DiagnosticReport"
           onChange={(event) => {
-            getResources(event.target.value, 1);
+            getResources(event.target.value, 1, 25);
           }}
         >
           <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
@@ -120,6 +130,8 @@ export function Search(props) {
             }}
             onChangePage={onChangePage}
             itemKey={itemKey}
+            rowsPerPage={bundle.entry.length}
+            onChangeRowsPerPage={onChangeRowsPerPage}
           />
           {viewingEntry ? (
             <Dialog open={open} onClose={closeViewingEntry} maxWidth="md">
@@ -178,8 +190,8 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return {
-    getResources: (resourceType, page) => {
-      dispatch({ type: GET_BUNDLE, page, resourceType });
+    getResources: (resourceType, page, count) => {
+      dispatch({ type: GET_BUNDLE, page, resourceType, count });
     },
 
     setViewingEntry: () => {},

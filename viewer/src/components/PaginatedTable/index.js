@@ -25,9 +25,21 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const rowLabel = ({ from, to, count }) => `Displaying ${from}-${to} of ${count} results`;
+const labelDisplayedRows = ({ from, to, count }) => `Displaying ${from}-${to} of ${count} results`;
+const rowsPerPageOptions = [10, 25, 50, 100, 500];
 
-function PaginatedTable({ count, rows, renderers, columns, onView, page, onChangePage, itemKey }) {
+function PaginatedTable({
+  count,
+  rows,
+  renderers,
+  columns,
+  onView,
+  page,
+  onChangePage,
+  itemKey,
+  onChangeRowsPerPage,
+  rowsPerPage,
+}) {
   const classes = useStyles();
 
   return (
@@ -36,12 +48,12 @@ function PaginatedTable({ count, rows, renderers, columns, onView, page, onChang
         <TablePagination
           className={classes.pagination}
           count={count}
-          labelDisplayedRows={rowLabel}
+          labelDisplayedRows={labelDisplayedRows}
           onChangePage={onChangePage}
           page={page}
-          rowsPerPage={25}
-          // due to how the FHIR code is written, we can only parse 25 entires at a time
-          rowsPerPageOptions={[]}
+          rowsPerPage={rowsPerPage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          rowsPerPageOptions={rowsPerPageOptions}
         />
       </div>
 
@@ -99,6 +111,8 @@ PaginatedTable.propTypes = {
   page: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
   itemKey: PropTypes.string.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  onChangeRowsPerPage: PropTypes.func.isRequired,
 };
 
 export default PaginatedTable;

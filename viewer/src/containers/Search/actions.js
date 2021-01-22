@@ -11,9 +11,9 @@ import {
   GET_BUNDLE_ERROR,
 } from './constants';
 
-export const loadBundleRequestAction = (resourceType, page) => ({
+export const loadBundleRequestAction = (resourceType, page, count) => ({
   type: GET_BUNDLE_REQUEST,
-  payload: { page, resourceType },
+  payload: { count, page, resourceType },
 });
 
 export const loadBundleSuccessAction = (bundle) => ({ type: GET_BUNDLE_SUCCESS, payload: bundle });
