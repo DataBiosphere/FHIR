@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const labelDisplayedRows = ({ from, to, count }) => `Displaying ${from}-${to} of ${count} results`;
-const rowsPerPageOptions = [10, 25, 50, 100, 500];
+const rowsPerPageOptions = [25, 50, 100, 250];
 
 function PaginatedTable({
   count,

@@ -32,7 +32,7 @@ import { selectBundle, selectLoading, selectSelectedResource, selectPage } from 
 import reducer from './reducer';
 import saga from './saga';
 import mappings from './mappings';
-import { GET_BUNDLE } from './constants';
+import { DEFAULT_ROWS_PER_PAGE, GET_BUNDLE } from './constants';
 import PaginatedTable from '../../components/PaginatedTable';
 
 const useStyles = makeStyles((theme) => {
@@ -86,7 +86,7 @@ export function Search(props) {
     if (bundle) {
       getResources(selectedResource, page, bundle.entry.length);
     } else {
-      getResources(selectedResource, page, 25);
+      getResources(selectedResource, page, DEFAULT_ROWS_PER_PAGE);
     }
   }, []);
 
@@ -106,7 +106,7 @@ export function Search(props) {
         <Select
           defaultValue="DiagnosticReport"
           onChange={(event) => {
-            getResources(event.target.value, 1, 25);
+            getResources(event.target.value, 1, bundle.entry.length);
           }}
         >
           <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
