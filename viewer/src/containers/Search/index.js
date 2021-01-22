@@ -76,7 +76,6 @@ export function Search(props) {
   };
 
   const onChangeRowsPerPage = (event) => {
-    console.log(event.target.value);
     getResources(selectedResource, page, event.target.value);
   };
 
