@@ -23,6 +23,7 @@ import {
   DialogContentText,
   DialogActions,
 } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
 import { compose } from 'redux';
 
 import { useInjectSaga } from '../../utils/injectSaga';
@@ -79,6 +80,10 @@ export function Search(props) {
     getResources(selectedResource, page, event.target.value);
   };
 
+  const onExportClicked = (event) => {
+    console.log(bundle);
+  };
+
   const closeViewingEntry = () => setOpen(false);
 
   useEffect(() => {
@@ -115,6 +120,15 @@ export function Search(props) {
           <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
         </Select>
       </FormControl>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<SaveIcon />}
+        href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(bundle))}`}
+        download="file.json"
+      >
+        Export
+      </Button>
       {bundle && !loading ? (
         <div className={classes.table}>
           <PaginatedTable
