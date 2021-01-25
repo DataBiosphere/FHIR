@@ -26,6 +26,8 @@ import {
 import SaveIcon from '@material-ui/icons/Save';
 import { compose } from 'redux';
 
+import { saveAs } from 'file-saver';
+
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
 
@@ -80,8 +82,18 @@ export function Search(props) {
     getResources(selectedResource, page, event.target.value);
   };
 
+  // creates a json for export
   const onExportClicked = (event) => {
     console.log(bundle);
+    // build the json string
+    const entries = [];
+    bundle.entry.forEach((entry) => {
+      entries.push(JSON.stringify(entry));
+    });
+    console.log(entries.join('\n'));
+
+    const blob = new Blob([entries.join('\n')], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, 'file.json');
   };
 
   const closeViewingEntry = () => setOpen(false);
@@ -124,8 +136,7 @@ export function Search(props) {
         variant="contained"
         color="primary"
         startIcon={<SaveIcon />}
-        href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(bundle))}`}
-        download="file.json"
+        onClick={onExportClicked}
       >
         Export
       </Button>
