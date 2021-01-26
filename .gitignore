@@ -67,3 +67,4 @@ coverage
 
 # Anvil
 *.avro
+anvil/data/*
