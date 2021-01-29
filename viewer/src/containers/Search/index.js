@@ -25,8 +25,6 @@ import {
 } from '@material-ui/core';
 import { compose } from 'redux';
 
-// import { saveAs } from 'file-saver';
-
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
 
@@ -82,20 +80,6 @@ export function Search(props) {
     getResources(selectedResource, page, event.target.value);
   };
 
-  // // creates a json for export
-  // const onExportClicked = (event) => {
-  //   console.log(bundle);
-  //   // build the json string
-  //   const entries = [];
-  //   bundle.entry.forEach((entry) => {
-  //     entries.push(JSON.stringify(entry));
-  //   });
-  //   console.log(entries.join('\n'));
-
-  //   const blob = new Blob([entries.join('\n')], { type: 'text/plain;charset=utf-8' });
-  //   saveAs(blob, 'file.json');
-  // };
-
   const closeViewingEntry = () => setOpen(false);
 
   useEffect(() => {
@@ -132,7 +116,7 @@ export function Search(props) {
           <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
         </Select>
       </FormControl>
-      <ExportButton />
+      <ExportButton resourceType={selectedResource} bundle={bundle} />
       {bundle && !loading ? (
         <div className={classes.table}>
           <PaginatedTable
@@ -150,7 +134,6 @@ export function Search(props) {
             rowsPerPage={bundle.entry.length}
             onChangeRowsPerPage={onChangeRowsPerPage}
           />
-          <ExportButton />
           {viewingEntry ? (
             <Dialog open={open} onClose={closeViewingEntry} maxWidth="md">
               <DialogTitle>
