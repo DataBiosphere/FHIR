@@ -12,7 +12,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function ExportButton({ resourceType, bundle, fileType }) {
+// need to add support for filters and filetype
+function ExportButton({ bundle }) {
   const classes = useStyles();
 
   const onClick = () => {
@@ -36,18 +37,15 @@ function ExportButton({ resourceType, bundle, fileType }) {
 }
 
 ExportButton.propTypes = {
-  resourceType: PropTypes.string.isRequired,
   bundle: PropTypes.shape({
     entry: PropTypes.array.isRequired,
     total: PropTypes.number,
   }),
-  fileType: PropTypes.string,
 };
 
 // default to print JSON
 ExportButton.defaultProps = {
   bundle: undefined,
-  fileType: '.json',
 };
 
 export default ExportButton;
