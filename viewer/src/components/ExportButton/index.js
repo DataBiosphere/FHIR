@@ -16,8 +16,6 @@ function ExportButton({ resourceType, bundle, fileType }) {
   const classes = useStyles();
 
   const onClick = () => {
-    console.log(resourceType);
-
     const entries = [];
 
     bundle.entry.forEach((entry) => {
