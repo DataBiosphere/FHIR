@@ -68,3 +68,7 @@ coverage
 # Anvil
 *.avro
 anvil/data/*
+
+#sqlite
+*.sqlite
+*.sqlite3
