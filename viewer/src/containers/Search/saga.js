@@ -30,13 +30,12 @@ function* getDownloadType({ resourceType, params }) {
   const requester = makeRequester(client);
   try {
     yield put(downloadBundleRequestAction(resourceType, params));
-    // janky way of getting initial count
-    const count = (yield call(requester, `${resourceType}?_count=${1}`)).total;
-
+    let count = 0;
     let page = 1;
+
     const entries = [];
     // parse through and get all entries into bundle
-    while (entries.length < count) {
+    do {
       const bundle = yield call(
         requester,
         `${resourceType}?_page=${page}&_count=${PARSING_ROWS_PER_PAGE}&${params}`
@@ -46,11 +45,17 @@ function* getDownloadType({ resourceType, params }) {
         entries.push(JSON.stringify(entry));
       });
 
+      // get the initial count, if needed
+      if (count === 0) {
+        count = bundle.total;
+      }
+
+      // update the counter
       yield put(downloadBundleUpdateAction(entries.length / count));
       page += 1;
-    }
+    } while (entries.length < count);
 
-    // write to disk
+    // put into package
     const download = '['.concat(entries.join(',\n'), ']');
     yield put(downloadBundleSuccessAction(download));
   } catch (e) {

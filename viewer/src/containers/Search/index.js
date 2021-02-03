@@ -115,6 +115,7 @@ export function Search(props) {
 
   // runs when download is completed
   useEffect(() => {
+    // write to file
     if (download) {
       const blob = new Blob([download], { type: 'application/json' });
       saveAs(blob, 'results.json');
