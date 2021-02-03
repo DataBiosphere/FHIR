@@ -24,16 +24,25 @@ import {
   DialogActions,
 } from '@material-ui/core';
 import { compose } from 'redux';
+import saveAs from 'file-saver';
 
 import { useInjectSaga } from '../../utils/injectSaga';
 import { useInjectReducer } from '../../utils/injectReducer';
 
-import { selectBundle, selectLoading, selectSelectedResource, selectPage } from './selectors';
+import {
+  selectBundle,
+  selectLoading,
+  selectDownloadProgress,
+  selectSelectedResource,
+  selectPage,
+  selectDownload,
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import mappings from './mappings';
-import { DEFAULT_ROWS_PER_PAGE, GET_BUNDLE } from './constants';
+import { DEFAULT_ROWS_PER_PAGE, GET_BUNDLE, GET_DOWNLOAD } from './constants';
 import PaginatedTable from '../../components/PaginatedTable';
+import ExportButton from '../../components/ExportButton';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -50,7 +59,10 @@ const useStyles = makeStyles((theme) => {
       margin: theme.spacing(1),
       minWidth: 120,
     },
-
+    flexCenter: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
     viewingEntry: {
       color: theme.palette.text.primary,
     },
@@ -62,7 +74,16 @@ const getColumnsAndRenderers = (resource) => {
 };
 
 export function Search(props) {
-  const { getResources, bundle, loading, selectedResource, page } = props;
+  const {
+    getResources,
+    getDownload,
+    bundle,
+    loading,
+    selectedResource,
+    page,
+    download,
+    downloadProgress,
+  } = props;
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
 
@@ -81,16 +102,24 @@ export function Search(props) {
     getResources(selectedResource, page, rowsPerPage);
   };
 
+  const onExportClicked = () => {
+    getDownload(selectedResource, '');
+  };
+
   const closeViewingEntry = () => setOpen(false);
 
+  // runs on inital launch
   useEffect(() => {
-    // we need to add a case for the inital load
-    if (bundle) {
-      getResources(selectedResource, page, rowsPerPage);
-    } else {
-      getResources(selectedResource, page, rowsPerPage);
-    }
+    getResources(selectedResource, page, rowsPerPage);
   }, []);
+
+  // runs when download is completed
+  useEffect(() => {
+    if (download) {
+      const blob = new Blob([download], { type: 'application/json' });
+      saveAs(blob, 'results.json');
+    }
+  }, [download]);
 
   const itemKey = 'id';
 
@@ -117,6 +146,11 @@ export function Search(props) {
           <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
         </Select>
       </FormControl>
+
+      <div className={classes.flexCenter}>
+        <ExportButton downloadProgress={downloadProgress} onClick={onExportClicked} />
+      </div>
+
       {bundle && !loading ? (
         <div className={classes.table}>
           <PaginatedTable
@@ -164,26 +198,33 @@ export function Search(props) {
 
 Search.propTypes = {
   getResources: PropTypes.func.isRequired,
+  getDownload: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   selectedResource: PropTypes.string,
   page: PropTypes.number,
+  downloadProgress: PropTypes.number,
   bundle: PropTypes.shape({
     entry: PropTypes.array.isRequired,
     total: PropTypes.number,
   }),
+  download: PropTypes.string,
 };
 
 Search.defaultProps = {
   bundle: undefined,
+  download: undefined,
   loading: true,
   page: 1,
+  downloadProgress: 0,
   selectedResource: 'DiagnosticReport',
 };
 
 const mapStateToProps = (state) => {
   return {
     bundle: selectBundle(state),
+    download: selectDownload(state),
     loading: selectLoading(state),
+    downloadProgress: selectDownloadProgress(state),
     selectedResource: selectSelectedResource(state),
     page: selectPage(state),
   };
@@ -192,7 +233,11 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps(dispatch) {
   return {
     getResources: (resourceType, page, count) => {
-      dispatch({ type: GET_BUNDLE, page, resourceType, count });
+      dispatch({ type: GET_BUNDLE, resourceType, page, count });
+    },
+
+    getDownload: (resourceType, params) => {
+      dispatch({ type: GET_DOWNLOAD, resourceType, params });
     },
 
     setViewingEntry: () => {},
