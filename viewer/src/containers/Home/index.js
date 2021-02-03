@@ -195,7 +195,7 @@ Home.propTypes = {
   summaryInfo: PropTypes.arrayOf(
     PropTypes.shape({
       resourceType: PropTypes.string.isRequired,
-      total: PropTypes.string.isRequired,
+      total: PropTypes.number.isRequired,
     })
   ),
   loading: PropTypes.bool,

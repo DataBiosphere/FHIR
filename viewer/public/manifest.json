@@ -8,7 +8,7 @@
       "type": "image/x-icon"
     },
     {
-      "src": "apple-touch-icon.png",
+      "src": "https://raw.githubusercontent.com/DataBiosphere/FHIR/master/viewer/public/apple-touch-icon.png",
       "type": "image/png",
       "sizes": "180x180"
     },
