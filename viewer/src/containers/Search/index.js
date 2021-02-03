@@ -66,17 +66,19 @@ export function Search(props) {
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
 
+  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
   const [open, setOpen] = useState(false);
   const [viewingEntry, setviewingEntry] = useState();
 
   const classes = useStyles();
 
   const onChangePage = (event, newPage) => {
-    getResources(selectedResource, newPage + 1, bundle.entry.length);
+    getResources(selectedResource, newPage + 1, rowsPerPage);
   };
 
   const onChangeRowsPerPage = (event) => {
-    getResources(selectedResource, page, event.target.value);
+    setRowsPerPage(event.target.value);
+    getResources(selectedResource, page, rowsPerPage);
   };
 
   const closeViewingEntry = () => setOpen(false);
@@ -84,9 +86,9 @@ export function Search(props) {
   useEffect(() => {
     // we need to add a case for the inital load
     if (bundle) {
-      getResources(selectedResource, page, bundle.entry.length);
+      getResources(selectedResource, page, rowsPerPage);
     } else {
-      getResources(selectedResource, page, DEFAULT_ROWS_PER_PAGE);
+      getResources(selectedResource, page, rowsPerPage);
     }
   }, []);
 
@@ -95,7 +97,7 @@ export function Search(props) {
   const { columns, renderers } = getColumnsAndRenderers(selectedResource);
 
   return (
-    <div>
+    <>
       <Helmet>
         <title>Search</title>
         <meta name="description" content="Description of Search" />
@@ -106,7 +108,7 @@ export function Search(props) {
         <Select
           defaultValue="DiagnosticReport"
           onChange={(event) => {
-            getResources(event.target.value, 1, bundle.entry.length);
+            getResources(event.target.value, 1, rowsPerPage);
           }}
         >
           <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
@@ -129,7 +131,7 @@ export function Search(props) {
             }}
             onChangePage={onChangePage}
             itemKey={itemKey}
-            rowsPerPage={bundle.entry.length}
+            rowsPerPage={rowsPerPage}
             onChangeRowsPerPage={onChangeRowsPerPage}
           />
           {viewingEntry ? (
@@ -156,7 +158,7 @@ export function Search(props) {
           <CircularProgress size={80} />
         </div>
       ) : null}
-    </div>
+    </>
   );
 }
 
@@ -164,7 +166,7 @@ Search.propTypes = {
   getResources: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   selectedResource: PropTypes.string,
-  page: PropTypes.string,
+  page: PropTypes.number,
   bundle: PropTypes.shape({
     entry: PropTypes.array.isRequired,
     total: PropTypes.number,
