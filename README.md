@@ -10,7 +10,7 @@
 Clone.
 
 ```
-git clone https://github.com/DataBiosphere/FHIR-Implementation
+git clone https://github.com/DataBiosphere/FHIR
 ```
 
 Install.
