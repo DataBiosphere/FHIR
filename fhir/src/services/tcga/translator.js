@@ -107,8 +107,24 @@ class Translator {
   }
 
   toSpecimen(biospecimen) {
+    const sample_id = `${biospecimen.project_short_name}-${biospecimen.sample_gdc_id}`;
+    const subject_id = `${biospecimen.project_short_name}-${biospecimen.case_gdc_id}`;
+
     return new Specimen({
       id: biospecimen.sample_gdc_id,
+      meta: {
+        profile: ['http://hl7.org/fhir/StructureDefinition/Specimen'],
+      },
+      identifier: [
+        { system: 'urn:tcga:sample-id', value: sample_id },
+        {
+          system: 'urn:tcga:subject-id',
+          value: subject_id,
+        },
+      ],
+      subject: {
+        reference: biospecimen.case_gdc_id,
+      },
     });
   }
 
