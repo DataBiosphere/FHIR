@@ -10,8 +10,15 @@ export const GET_BUNDLE_REQUEST = 'app/Search/GET_BUNDLE_REQUEST';
 export const GET_BUNDLE_SUCCESS = 'app/Search/GET_BUNDLE_SUCCESS';
 export const GET_BUNDLE_ERROR = 'app/Search/GET_BUNDLE_ERROR';
 
+export const GET_DOWNLOAD = 'app/Search/GET_DOWNLOAD';
+export const GET_DOWNLOAD_REQUEST = 'app/Search/GET_DOWNLOAD_REQUEST';
+export const GET_DOWNLOAD_UPDATE = 'app/Search/GET_DOWNLOAD_UPDATE';
+export const GET_DOWNLOAD_SUCCESS = 'app/Search/GET_DOWNLOAD_SUCCESS';
+export const GET_DOWNLOAD_ERROR = 'app/Search/GET_DOWNLOAD_ERROR';
+
 // paginated table constants
 export const DEFAULT_ROWS_PER_PAGE = 25;
+export const PARSING_ROWS_PER_PAGE = 250;
 
 // diagnostic report renderer constants
 export const DIAGNOSTIC_REPORT_CASE_ID = 'id';

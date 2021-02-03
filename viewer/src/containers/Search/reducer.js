@@ -4,7 +4,14 @@
  *
  */
 import produce from 'immer';
-import { DEFAULT_ACTION, GET_BUNDLE_REQUEST, GET_BUNDLE_SUCCESS } from './constants';
+import {
+  DEFAULT_ACTION,
+  GET_BUNDLE_REQUEST,
+  GET_BUNDLE_SUCCESS,
+  GET_DOWNLOAD_REQUEST,
+  GET_DOWNLOAD_UPDATE,
+  GET_DOWNLOAD_SUCCESS,
+} from './constants';
 
 export const initialState = {
   container: 'Search',
@@ -23,6 +30,18 @@ const searchReducer = (state = initialState, action) =>
         draft.bundle = action.payload;
         draft.loading = false;
         break;
+
+      case GET_DOWNLOAD_REQUEST:
+        draft.downloadProgress = 0;
+        break;
+      case GET_DOWNLOAD_UPDATE:
+        draft.downloadProgress = action.payload;
+        break;
+      case GET_DOWNLOAD_SUCCESS:
+        draft.downloadProgress = 0;
+        draft.download = action.payload;
+        break;
+
       case DEFAULT_ACTION:
         break;
     }
