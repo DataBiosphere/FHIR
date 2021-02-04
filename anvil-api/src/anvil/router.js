@@ -3,6 +3,6 @@ const controller = require('./controller');
 
 const router = express.Router();
 
-// TODO: define the endpoints here
+router.get('/workspace', controller.getAllWorkspaces);
 
 module.exports = router;

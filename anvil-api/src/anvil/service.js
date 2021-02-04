@@ -1,5 +1,23 @@
-const { dedupeObjects, transformAnvilResults } = require('../utils');
+const { AnvilMongo } = require('../services');
 
-const PROJECT_IDENTIFIER_COLUMN = '';
+const WorkspaceService = new AnvilMongo({ collectionName: 'Workspace' });
 
-// TODO: get the data using Mongo calls
+/**
+ * getAll Workspace data by page and pageSize
+ *
+ * @param {string} page
+ * @param {string} pageSize
+ */
+const getAllWorkspaces = async ({ page, pageSize } = { page: 1, pageSize: 20 }) => {
+  const [results, count] = await WorkspaceService.find({ 
+      page: page, 
+      pageSize: pageSize, 
+      query: {}
+    });
+
+  return [results, count];
+};
+
+module.exports = {
+    getAllWorkspaces
+}
