@@ -24,3 +24,15 @@ services:
       - 3001:3001
     environment:
       - PORT=3001
+
+  anvil:
+    image: anvil
+    build:
+      context: ./anvil-api
+      dockerfile: Dockerfile-dev
+    volumes:
+      - ./anvil-api/src:/usr/src/app/src
+    ports:
+      - 3002:3002
+    environment:
+      - PORT=3002
