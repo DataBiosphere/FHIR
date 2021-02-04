@@ -1,8 +1,13 @@
 # 🔥 Broad FHIR
 
-![FHIR - Tests](https://github.com/DataBiosphere/FHIR/workflows/FHIR%20-%20Tests/badge.svg)
-![TCGA - Tests](https://github.com/DataBiosphere/FHIR/workflows/TCGA%20-%20Tests/badge.svg)
-![ANVIL - Tests](https://github.com/DataBiosphere/FHIR/workflows/ANVIL%20-%20Tests/badge.svg)
+<p align="center">
+  <a href="https://github.com/DataBiosphere/FHIR/workflows/FHIR%20-%20Tests/badge.svg" alt="FHIR - Tests">
+    <img src="https://github.com/DataBiosphere/FHIR/workflows/FHIR%20-%20Tests/badge.svg" /></a>
+  <a href="https://github.com/DataBiosphere/FHIR/workflows/TCGA%20-%20Tests/badge.svg" alt="TCGA - Tests">
+    <img src="https://github.com/DataBiosphere/FHIR/workflows/TCGA%20-%20Tests/badge.svg" /></a>
+  <a href="https://github.com/DataBiosphere/FHIR/workflows/ANVIL%20-%20Tests/badge.svg" alt="ANVIL - Tests">
+    <img src="https://github.com/DataBiosphere/FHIR/workflows/ANVIL%20-%20Tests/badge.svg" /></a>
+</p>
 
 > FHIR is an interoperability standard intended to facilitate the exchange of healthcare information between healthcare providers, patients, caregivers, payers, researchers, and any one else involved in the healthcare ecosystem. It consists of 2 main parts – a content model in the form of ‘resources’, and a specification for the exchange of these resources in the form of real-time RESTful interfaces as well as messaging and Documents.
 
