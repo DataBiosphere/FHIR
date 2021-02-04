@@ -111,12 +111,8 @@ describe('TCGA service tests', () => {
             meta: { profile: ['http://hl7.org/fhir/StructureDefinition/Specimen'] },
             identifier: [
               {
-                system: 'urn:tcga:sample-id',
-                value: 'TCGA-HNSC-591e99ec-46f9-442d-ac20-745dccc8a52b',
-              },
-              {
-                system: 'urn:tcga:subject-id',
-                value: 'TCGA-HNSC-291b069c-9dde-4e1e-8430-85146bc94338',
+                system: 'urn:ncpi:unique-string',
+                value: 'Specimen|TCGA-HNSC|TCGA-HNSC-591e99ec-46f9-442d-ac20-745dccc8a52b',
               },
             ],
             subject: {
@@ -129,12 +125,8 @@ describe('TCGA service tests', () => {
             meta: { profile: ['http://hl7.org/fhir/StructureDefinition/Specimen'] },
             identifier: [
               {
-                system: 'urn:tcga:sample-id',
-                value: 'TCGA-HNSC-5e4e1e21-8016-4e27-8f72-2411714203e8',
-              },
-              {
-                system: 'urn:tcga:subject-id',
-                value: 'TCGA-HNSC-291b069c-9dde-4e1e-8430-85146bc94338',
+                system: 'urn:ncpi:unique-string',
+                value: 'Specimen|TCGA-HNSC|TCGA-HNSC-5e4e1e21-8016-4e27-8f72-2411714203e8',
               },
             ],
             subject: {
@@ -253,12 +245,8 @@ describe('TCGA service tests', () => {
           meta: { profile: ['http://hl7.org/fhir/StructureDefinition/Specimen'] },
           identifier: [
             {
-              system: 'urn:tcga:sample-id',
-              value: 'TCGA-HNSC-591e99ec-46f9-442d-ac20-745dccc8a52b',
-            },
-            {
-              system: 'urn:tcga:subject-id',
-              value: 'TCGA-HNSC-291b069c-9dde-4e1e-8430-85146bc94338',
+              system: 'urn:ncpi:unique-string',
+              value: 'Specimen|TCGA-HNSC|TCGA-HNSC-591e99ec-46f9-442d-ac20-745dccc8a52b',
             },
           ],
           subject: {
@@ -271,12 +259,8 @@ describe('TCGA service tests', () => {
           meta: { profile: ['http://hl7.org/fhir/StructureDefinition/Specimen'] },
           identifier: [
             {
-              system: 'urn:tcga:sample-id',
-              value: 'TCGA-HNSC-5e4e1e21-8016-4e27-8f72-2411714203e8',
-            },
-            {
-              system: 'urn:tcga:subject-id',
-              value: 'TCGA-HNSC-291b069c-9dde-4e1e-8430-85146bc94338',
+              system: 'urn:ncpi:unique-string',
+              value: 'Specimen|TCGA-HNSC|TCGA-HNSC-5e4e1e21-8016-4e27-8f72-2411714203e8',
             },
           ],
           subject: {
