@@ -1,0 +1,37 @@
+{
+  "name": "anvil-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest src",
+    "test:coverage": "jest src --collectCoverage",
+    "test:watch": "jest src --watch",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "prettier-check": "prettier --check \"**/*.{js,mjs,cjs,jsx,json,ts,tsx,md,mdx,css,html,yml,yaml,scss,less,graphql,graphqls,gql}\"",
+    "prettier-fix": "prettier --write \"**/*.{js,mjs,cjs,jsx,json,ts,tsx,md,mdx,css,html,yml,yaml,scss,less,graphql,graphqls,gql}\"",
+    "lint": "eslint . --ext js,jsx,ts,tsx"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/bigquery": "^5.3.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3",
+    "knex": "^0.21.6",
+    "lodash": "^4.17.20",
+    "supertest": "^5.0.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "nodemon": "^2.0.6",
+    "prettier": "^2.1.2"
+  }
+}
