@@ -3,6 +3,6 @@ const controller = require('./controller');
 
 const router = express.Router();
 
-router.get('/workspace', controller.getAllWorkspaces);
+router.get('/Workspace', controller.getAllWorkspaces);
 
 module.exports = router;

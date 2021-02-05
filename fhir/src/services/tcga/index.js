@@ -113,17 +113,15 @@ class TCGA {
   }
 
   async getAllResearchStudy({ page, pageSize } = {}) {
+    console.log(`${TCGA_URL}/api/projects`);
     const { data } = await get(`${TCGA_URL}/api/projects`, { params: { page, pageSize } });
     const { results, count } = data;
-    return [
-      results.map((diagnosis) => this.translateProjectToResearchStudy(diagnosis, diagnosis)),
-      count,
-    ];
+    return [results.map((diagnosis) => this.translateProjectToResearchStudy(diagnosis)), count];
   }
 
   async getResearchStudyById(id) {
     const { data } = await get(`${TCGA_URL}/api/projects/${id}`);
-    return this.translateProjectToResearchStudy(data, data);
+    return this.translateProjectToResearchStudy(data);
   }
 }
 

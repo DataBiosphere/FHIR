@@ -2,9 +2,10 @@ const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const { bundleSize } = require('../../config');
 const { buildSearchBundle, buildEntry } = require('../../utils');
-const { TCGA } = require('../../services');
+const { TCGA, ANVIL } = require('../../services');
 
 const tcga = new TCGA();
+const anvil = new ANVIL();
 
 const logger = loggers.get();
 
@@ -29,6 +30,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   const { query } = req;
   const { _page, _count, _id } = getStandardParameters(query);
 
+  // TODO: check for ANVIL ID
   if (_id) {
     const resource = await tcga.getResearchStudyById(_id);
     return buildSearchBundle({
@@ -40,10 +42,25 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     });
   }
 
-  const [results, count] = await tcga.getAllResearchStudy({
+  const [tcgaResults, tcgaCount] = await tcga.getAllResearchStudy({
     page: _page,
     pageSize: _count,
   });
+
+  const [anvilResults, anvilCount] = await anvil.getAllResearchStudy({
+    page: _page,
+    pageSize: _count,
+  });
+
+  var results;
+  var count;
+  if (tcgaResults && anvilResults) {
+    results = tcgaResults.concat(anvilResults);
+    count = tcgaCount + anvilCount;
+  } else {
+    results = tcgaResuls || anvilResults;
+    count = tcgaCount || anvilCount;
+  }
 
   return buildSearchBundle({
     resourceType: 'ResearchStudy',
