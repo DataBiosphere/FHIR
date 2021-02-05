@@ -1,8 +1,10 @@
 const MongoClient = require('mongodb').MongoClient;
 
+const { MONGO_CONNECTION_STRING } = process.env;
+
 class AnvilMongo {
     constructor({ collectionName }) {
-        this.url = 'mongodb://anvil-mongo:27017';
+        this.url = MONGO_CONNECTION_STRING;
         this.databaseName = 'anvil';
         this.collectionName = collectionName;
     }
@@ -25,11 +27,13 @@ class AnvilMongo {
         }
     }
 
-    async find({page, pageSize, query } = { page: 1, pageSize: 25, query: {}}) {
+    async find({page = 1, pageSize = 25, query = {}}) {
         return await this.queryWrapper(async (db) => {
             const collection = db.collection(this.collectionName);
-            const queryResult = await collection.find(query);
-            let count = await queryResult.count();
+            const queryResult = await collection.find(query)
+                .skip((parseInt(page) - 1) * parseInt(pageSize))
+                .limit(parseInt(pageSize));
+            const count = await queryResult.count();
 
             return [await queryResult.toArray(), count];
         });

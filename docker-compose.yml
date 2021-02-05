@@ -46,3 +46,4 @@ services:
       - 3002:3002
     environment:
       - PORT=3002
+      - MONGO_CONNECTION_STRING=mongodb://anvil-mongo:27017
