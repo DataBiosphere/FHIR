@@ -113,7 +113,6 @@ class TCGA {
   }
 
   async getAllResearchStudy({ page, pageSize } = {}) {
-    console.log(`${TCGA_URL}/api/projects`);
     const { data } = await get(`${TCGA_URL}/api/projects`, { params: { page, pageSize } });
     const { results, count } = data;
     return [results.map((diagnosis) => this.translateProjectToResearchStudy(diagnosis)), count];
