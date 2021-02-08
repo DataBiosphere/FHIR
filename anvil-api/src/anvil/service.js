@@ -9,16 +9,16 @@ const WorkspaceService = new AnvilMongo({ collectionName: 'Workspace' });
  * @param {string} pageSize
  */
 const getAllWorkspaces = async ({ page = 1, pageSize = 25 }) => {
-  const [results, count] = await WorkspaceService.find({ 
-      page: page, 
-      pageSize: pageSize, 
-      query: {},
-      projection: { 'subjects.samples': 0 }
-    });
+  const [results, count] = await WorkspaceService.find({
+    page: page,
+    pageSize: pageSize,
+    query: {},
+    projection: { 'subjects.samples': 0 },
+  });
 
   return [results, count];
 };
 
 module.exports = {
-    getAllWorkspaces
-}
+  getAllWorkspaces,
+};
