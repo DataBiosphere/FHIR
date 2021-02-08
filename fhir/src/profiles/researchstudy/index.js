@@ -52,14 +52,11 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     pageSize: _count,
   });
 
-  var results;
-  var count;
-  if (tcgaResults && anvilResults) {
-    results = tcgaResults.concat(anvilResults);
-    count = tcgaCount + anvilCount;
-  } else {
-    results = tcgaResuls || anvilResults;
-    count = tcgaCount || anvilCount;
+  var results = tcgaResults;
+  var count = tcgaCount;
+  if (anvilResults !== 'undefined') {
+    results = results.concat(anvilResults);
+    count += anvilCount;
   }
 
   return buildSearchBundle({

@@ -18,16 +18,17 @@ const get = memoize(axios.get, {
   cache: createCache(CACHE_TTL),
 });
 
-const WORKSPACE = 'Workspace';
 class ANVIL {
   constructor() {
     this.resourceTranslator = new ANVILResourceTranslator();
   }
 
   async getAllResearchStudy({ page, pageSize } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/${WORKSPACE}`, { params: { page, pageSize } });
+    const { data } = await get(`${ANVIL_URL}/api/Workspace`, {
+      params: { page, pageSize },
+    });
     const { results, count } = data;
-    return [results.map(), count];
+    return [results, count];
   }
 }
 
