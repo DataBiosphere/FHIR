@@ -27,10 +27,10 @@ class AnvilMongo {
         }
     }
 
-    async find({page = 1, pageSize = 25, query = {}}) {
+    async find({page = 1, pageSize = 25, query = {}, projection = {}}) {
         return await this.queryWrapper(async (db) => {
             const collection = db.collection(this.collectionName);
-            const queryResult = await collection.find(query)
+            const queryResult = await collection.find(query).project(projection)
                 .skip((parseInt(page) - 1) * parseInt(pageSize))
                 .limit(parseInt(pageSize));
             const count = await queryResult.count();

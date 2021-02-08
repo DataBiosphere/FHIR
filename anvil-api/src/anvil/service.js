@@ -12,7 +12,8 @@ const getAllWorkspaces = async ({ page = 1, pageSize = 25 }) => {
   const [results, count] = await WorkspaceService.find({ 
       page: page, 
       pageSize: pageSize, 
-      query: {}
+      query: {},
+      projection: { 'subjects.samples': 0 }
     });
 
   return [results, count];
