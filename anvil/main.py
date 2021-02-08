@@ -10,6 +10,8 @@ from anvil.terra.workspace import Workspace
 from anvil.terra.sample import Sample
 from anvil.transformers.fhir.transformer import FhirTransformer
 from anvil.util.reconciler import DEFAULT_NAMESPACE
+from anvil_mongo import AnvilDataAdapter
+from factories.workspace import WorkspaceJsonFactory
 
 load_dotenv()
 
@@ -31,12 +33,18 @@ def reconcile_all(user_project, consortiums, namespace=DEFAULT_NAMESPACE, output
     e.g. bin/reconciler --user_project <your-billing-project>  --consortium CMG AnVIL_CMG.* --consortium CCDG AnVIL_CCDG.* --consortium GTEx ^AnVIL_GTEx_V8_hg38$ --consortium ThousandGenomes ^1000G-high-coverage-2019$
     """
     for (name, workspace_regex) in consortiums:
+        print("Reconciling: " + name)
         reconciler = Reconciler(
             name, user_project, namespace, workspace_regex, AVRO_PATH)
+        num_processed = 0
         for workspace in reconciler.workspaces:
             transformer = FhirTransformer(workspace=workspace)
+            num_processed = num_processed + 1
+            print("Processed: " + str(num_processed) + "/" + str(len(reconciler.workspaces)), end='\r')
             for item in transformer.transform():
                 yield item
+        print("[DONE]")
+            
 
 
 def append_drs(sample):
@@ -55,6 +63,7 @@ def all_instances(clazz):
     """Return all subjects."""
     logging.info(
         "Starting aggregation for all AnVIL workspaces, this will take several minutes.")
+    print("Starting aggregation for all AnVIL workspaces, this will take several minutes.")
 
     consortiums = (
         ('CMG', 'AnVIL_CMG_.*'),
@@ -89,6 +98,7 @@ def save_summary(workspace, emitter):
 
 def save_all(workspaces):
     """Save all data to the file system."""
+    print("Save all data to mongodb")
     emitters = {}
     entity = None
 
@@ -97,6 +107,9 @@ def save_all(workspaces):
     summary_emitter = open(f"{OUTPUT_DIR}/terra_summary.json", "w")
 
     for workspace in workspaces:
+        print(workspace.name)
+        anvil_adapter = AnvilDataAdapter()
+        anvil_adapter.replace_one('Workspace', { 'name': workspace.name }, WorkspaceJsonFactory.workspace_json(workspace))
         current_workspace = workspace.name
         transformer = FhirTransformer(workspace=workspace)
         save_summary(workspace, summary_emitter)
@@ -142,7 +155,7 @@ def validate():
 
     assert os.path.isfile(TERRA_SUMMARY), f"{TERRA_SUMMARY} should exist."
 
-
+print("Loading entities...")
 gen3_entities.load()
 
 workspaces = list(all_instances(Workspace))
