@@ -1,4 +1,5 @@
 from anvil.terra.sample import Sample
+from factories import cleanupKeys
 
 class SampleJsonFactory():
     @staticmethod
@@ -6,5 +7,6 @@ class SampleJsonFactory():
         return {
             'id': sample.id,
             'subjectId': sample.subject_id,
-            'attributes': sample.attributes
+            'name': sample.attributes.name,
+            **cleanupKeys(sample.attributes.copy().pop('attributes', {}))
         }
