@@ -23,12 +23,17 @@ class ANVIL {
     this.resourceTranslator = new ANVILResourceTranslator();
   }
 
+  translateWorkspacetoResearchStudy(workspace) {
+    return this.resourceTranslator.toResearchStudy(workspace);
+  }
+
   async getAllResearchStudy({ page, pageSize } = {}) {
     const { data } = await get(`${ANVIL_URL}/api/Workspace`, {
       params: { page, pageSize },
     });
+
     const { results, count } = data;
-    return [results, count];
+    return [results.map((result) => this.translateWorkspacetoResearchStudy(result)), count];
   }
 }
 

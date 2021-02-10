@@ -19,18 +19,19 @@ const getStandardParameters = (query) => {
     // _profile,
     // _query,
     // _security,
-    // _source,
+    _source,
     // _tag,
   } = query;
-  return { _page, _count, _id, _include };
+  return { _page, _count, _id, _include, _source };
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('ResearchStudy >>> search');
   const { query } = req;
-  const { _page, _count, _id } = getStandardParameters(query);
+  const { _page, _count, _id, _source } = getStandardParameters(query);
 
   // TODO: check for ANVIL ID
+  // {_id: ObjectId("602148085d1432835a7ce1e5")}
   if (_id) {
     const resource = await tcga.getResearchStudyById(_id);
     return buildSearchBundle({
@@ -42,21 +43,39 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     });
   }
 
-  const [tcgaResults, tcgaCount] = await tcga.getAllResearchStudy({
-    page: _page,
-    pageSize: _count,
-  });
+  // create pomises and add both adapters
+  const params = { page: _page, pageSize: _count };
+  let results = [];
+  let count = 0;
 
-  const [anvilResults, anvilCount] = await anvil.getAllResearchStudy({
-    page: _page,
-    pageSize: _count,
-  });
+  // check for _source and filter promises
+  if (_source) {
+    if (_source == 'tcga') {
+      [results, count] = await tcga.getAllResearchStudy(params);
+    } else if (_source == 'anvil') {
+      [results, count] = await anvil.getAllResearchStudy(params);
+    } else {
+      console.log('_source not valid');
+    }
+  } else {
+    // TODO: add pagination
+    // it currently returns TWICE as many results as asked
 
-  var results = tcgaResults;
-  var count = tcgaCount;
-  if (anvilResults !== 'undefined') {
-    results = results.concat(anvilResults);
-    count += anvilCount;
+    // creates and resolves all promises
+    const promises = [];
+    promises.push(tcga.getAllResearchStudy(params));
+    promises.push(anvil.getAllResearchStudy(params));
+    await Promise.all(promises).then((promise) => {
+      // take each promise and filter it
+      promise.forEach((p) => {
+        // put each promise result into results
+        p[0].forEach((result) => {
+          results.push(result);
+        });
+        // only take the top-level count
+        count += p[1];
+      });
+    });
   }
 
   return buildSearchBundle({
