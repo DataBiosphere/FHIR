@@ -5,6 +5,9 @@ const createCache = require('./cache');
 
 const { url } = require('../config');
 
+const TCGA_REGEX = /TCGA-/;
+const ANVIL_REGEX = /AnVIL_/;
+
 const addTrailingSlash = (baseUrl) => {
   if (baseUrl[baseUrl.length - 1] !== '/') {
     return `${baseUrl}/`;
@@ -108,6 +111,8 @@ const buildIdentifier = (system, value) => {
 };
 
 module.exports = {
+  TCGA_REGEX,
+  ANVIL_REGEX,
   buildSearchBundle,
   buildLinkFromUrl,
   buildEntry,

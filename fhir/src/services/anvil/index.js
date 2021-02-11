@@ -27,6 +27,10 @@ class ANVIL {
     return this.resourceTranslator.toResearchStudy(workspace);
   }
 
+  translateSampletoObservation(sample) {
+    return this.resourceTranslator.toObservation(sample);
+  }
+
   async getAllResearchStudy({ page, pageSize } = {}) {
     const { data } = await get(`${ANVIL_URL}/api/Workspace`, {
       params: { page, pageSize },
@@ -39,6 +43,20 @@ class ANVIL {
   async getResearchStudyById(id) {
     const { data } = await get(`${ANVIL_URL}/api/Workspace/${id}`);
     return this.translateWorkspacetoResearchStudy(data);
+  }
+
+  async getAllObservations({ page, pageSize } = {}) {
+    const { data } = await get(`${ANVIL_URL}/api/Sample`, {
+      params: { page, pageSize },
+    });
+
+    const { results, count } = data;
+    return [results.map((result) => this.translateSampletoObservation(result)), count];
+  }
+
+  async getObservationById(id) {
+    const { data } = await get(`${ANVIL_URL}/api/Sample/${id}`);
+    return this.translateSampletoObservation(data);
   }
 }
 

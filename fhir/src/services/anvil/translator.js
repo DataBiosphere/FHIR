@@ -59,6 +59,12 @@ class Translator {
 
     return researchStudy;
   }
+
+  toObservation(workspace) {
+    const observation = new Observation({});
+
+    return observation;
+  }
 }
 
 module.exports = Translator;

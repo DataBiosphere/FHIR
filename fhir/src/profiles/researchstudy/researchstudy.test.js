@@ -2,7 +2,7 @@ const service = require('.');
 
 const { TCGA, ANVIL } = require('../../services');
 
-describe('Specimen service tests', () => {
+describe('Research Study service tests', () => {
   let getAllTCGASpy;
   let getAllANVILSpy;
   let getByTCGAIdSpy;

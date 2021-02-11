@@ -1,13 +1,15 @@
 const service = require('.');
 
-const { TCGA } = require('../../services');
+const { TCGA, ANVIL } = require('../../services');
 
 describe('Observation service tests', () => {
-  let getAllSpy;
-  let getByIdSpy;
+  let getAllTCGASpy;
+  let getAllANVILSpy;
+  let getByTCGAIdSpy;
+  let getByANVILIdSpy;
 
   beforeEach(() => {
-    getAllSpy = jest.spyOn(TCGA.prototype, 'getAllDiagnoses').mockImplementation(() => {
+    getAllTCGASpy = jest.spyOn(TCGA.prototype, 'getAllDiagnoses').mockImplementation(() => {
       return [
         [
           {
@@ -18,7 +20,24 @@ describe('Observation service tests', () => {
       ];
     });
 
-    getByIdSpy = jest.spyOn(TCGA.prototype, 'getDiagnosisById').mockImplementation(() => {
+    getAllANVILSpy = jest.spyOn(ANVIL.prototype, 'getAllObservations').mockImplementation(() => {
+      return [
+        [
+          {
+            id: 'foobar',
+          },
+        ],
+        25,
+      ];
+    });
+
+    getByTCGAIdSpy = jest.spyOn(TCGA.prototype, 'getDiagnosisById').mockImplementation(() => {
+      return {
+        id: 'foobar',
+      };
+    });
+
+    getByANVILIdSpy = jest.spyOn(ANVIL.prototype, 'getObservationById').mockImplementation(() => {
       return {
         id: 'foobar',
       };
@@ -31,11 +50,30 @@ describe('Observation service tests', () => {
 
   it('should search for Observation', async () => {
     await service.search({ base_version: '4_0_0' }, { req: { query: {} } });
-    expect(getAllSpy).toHaveBeenCalled();
+    expect(getAllTCGASpy).toHaveBeenCalled();
+    expect(getAllANVILSpy).toHaveBeenCalled();
   });
 
-  it('should search for Observation by ID', async () => {
-    await service.searchById({ base_version: '4_0_0' }, { req: { params: { id: 'foobar' } } });
-    expect(getByIdSpy).toHaveBeenCalled();
+  it('should search only TCGA data', async () => {
+    await service.search({ base_version: '4_0_0' }, { req: { query: { _source: 'tcga' } } });
+    expect(getAllTCGASpy).toHaveBeenCalled();
+  });
+
+  it('should search only ANVIL data', async () => {
+    await service.search({ base_version: '4_0_0' }, { req: { query: { _source: 'anvil' } } });
+    expect(getAllANVILSpy).toHaveBeenCalled();
+  });
+
+  it('should search for Observation by TCGA ID', async () => {
+    await service.searchById({ base_version: '4_0_0' }, { req: { params: { id: 'TCGA-HNSC' } } });
+    expect(getByTCGAIdSpy).toHaveBeenCalled();
+  });
+
+  it('should search for Observation by ANVIL ID', async () => {
+    await service.searchById(
+      { base_version: '4_0_0' },
+      { req: { params: { id: 'AnVIL_CMG_Broad_Blood_Gazda_WGS' } } }
+    );
+    expect(getByANVILIdSpy).toHaveBeenCalled();
   });
 });

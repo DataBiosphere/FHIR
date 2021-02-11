@@ -1,15 +1,11 @@
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const { bundleSize } = require('../../config');
-const { buildSearchBundle, buildEntry } = require('../../utils');
+const { buildSearchBundle, buildEntry, TCGA_REGEX, ANVIL_REGEX } = require('../../utils');
 const { TCGA, ANVIL } = require('../../services');
-const e = require('express');
 
 const tcga = new TCGA();
 const anvil = new ANVIL();
-
-const TCGA_REGEX = /TCGA-/;
-const ANVIL_REGEX = /AnVIL_/;
 
 const logger = loggers.get();
 
@@ -34,8 +30,6 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   const { query } = req;
   const { _page, _count, _id, _source } = getStandardParameters(query);
 
-  // TODO: check for ANVIL ID
-  // {_id: ObjectId("602148085d1432835a7ce1e5")}
   if (_id) {
     let resource;
     if (_id.match(TCGA_REGEX)) {
