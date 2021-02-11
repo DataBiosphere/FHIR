@@ -22,7 +22,30 @@ const getWorkspaceById = async (req, res) => {
   }
 };
 
+const getAllSamples = async (req, res) => {
+  logger.info('ANVIL >>> getAllSamples');
+  const { page, pageSize } = req.query;
+  const [results, count] = await service.getAllSamples({ page, pageSize });
+  res.json({
+    results,
+    count,
+  });
+};
+
+const getSampleById = async (req, res) => {
+  logger.info('ANVIL >> getSampleById');
+  const { id } = req.params;
+  const results = await service.getSampleById(id);
+  if (!results) {
+    res.sendStatus(404);
+  } else {
+    res.json(results);
+  }
+};
+
 module.exports = {
   getAllWorkspaces,
   getWorkspaceById,
+  getAllSamples,
+  getSampleById,
 };
