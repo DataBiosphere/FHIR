@@ -3,41 +3,55 @@ const MongoClient = require('mongodb').MongoClient;
 const { MONGO_CONNECTION_STRING } = process.env;
 
 class AnvilMongo {
-    constructor({ collectionName }) {
-        this.url = MONGO_CONNECTION_STRING;
-        this.databaseName = 'anvil';
-        this.collectionName = collectionName;
+  constructor({ collectionName }) {
+    this.url = MONGO_CONNECTION_STRING;
+    this.databaseName = 'anvil';
+    this.collectionName = collectionName;
+  }
+
+  async queryWrapper(callback) {
+    const client = await MongoClient.connect(this.url).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
     }
 
-    async queryWrapper(callback) {
-        const client = await MongoClient.connect(this.url)
-            .catch(err => { console.log(err); });
-
-        if (!client){
-            return;
-        }
-
-        try {
-            const db = client.db(this.databaseName);
-            return await callback(db);
-        } catch (e) {
-            throw e;
-        } finally {
-            client.close();
-        }
+    try {
+      const db = client.db(this.databaseName);
+      return await callback(db);
+    } catch (e) {
+      throw e;
+    } finally {
+      client.close();
     }
+  }
 
-    async find({page = 1, pageSize = 25, query = {}, projection = {}}) {
-        return await this.queryWrapper(async (db) => {
-            const collection = db.collection(this.collectionName);
-            const queryResult = await collection.find(query).project(projection)
-                .skip((parseInt(page) - 1) * parseInt(pageSize))
-                .limit(parseInt(pageSize));
-            const count = await queryResult.count();
+  async find({ page = 1, pageSize = 25, query = {}, projection = {} }) {
+    return await this.queryWrapper(async (db) => {
+      const collection = db.collection(this.collectionName);
+      const queryResult = await collection
+        .find(query)
+        .project(projection)
+        .skip((parseInt(page) - 1) * parseInt(pageSize))
+        .limit(parseInt(pageSize));
+      const count = await queryResult.count();
 
-            return [await queryResult.toArray(), count];
-        });
-    }
+      return [await queryResult.toArray(), count];
+    });
+  }
+
+  // .find().limit(1) is faster than .findOne()
+  async findOne({ query = {}, projection = {} }) {
+    return await this.queryWrapper(async (db) => {
+      const collection = db.collection(this.collectionName);
+      const queryResult = await collection.find(query).project(projection).limit(1);
+      const result = await queryResult.toArray();
+
+      return result[0];
+    });
+  }
 }
 
 module.exports = AnvilMongo;

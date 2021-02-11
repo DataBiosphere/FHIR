@@ -35,6 +35,11 @@ class ANVIL {
     const { results, count } = data;
     return [results.map((result) => this.translateWorkspacetoResearchStudy(result)), count];
   }
+
+  async getResearchStudyById(id) {
+    const { data } = await get(`${ANVIL_URL}/api/Workspace/${id}`);
+    return this.translateWorkspacetoResearchStudy(data);
+  }
 }
 
 module.exports = ANVIL;

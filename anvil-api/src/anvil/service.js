@@ -20,12 +20,12 @@ const getAllWorkspaces = async ({ page = 1, pageSize = 25 }) => {
 };
 
 const getWorkspaceById = async (id) => {
-  const [rows] = await WorkspaceService.find({
+  const result = await WorkspaceService.findOne({
     query: { name: id },
   });
 
-  if (rows && rows.length) {
-    return rows;
+  if (result) {
+    return result;
   }
   return null;
 };
