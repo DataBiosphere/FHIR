@@ -1,26 +1,13 @@
 const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 
+const { buildReference, buildIdentifier } = require('../../utils');
+
 const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 
 const WORKSPACE = 'Workspace';
-
-const buildReference = (reference, type, display) => {
-  return {
-    reference: reference,
-    type: type,
-    display: display,
-  };
-};
-
-const buildIdentifier = (system, value) => {
-  return {
-    system: system,
-    value: value,
-  };
-};
 
 class Translator {
   toResearchStudy(workspace) {

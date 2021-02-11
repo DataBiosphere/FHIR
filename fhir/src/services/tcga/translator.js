@@ -1,5 +1,7 @@
 const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 
+const { buildReference, buildIdentifier } = require('../../utils');
+
 const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
@@ -127,7 +129,11 @@ class Translator {
     return new ResearchStudy({
       id: project.proj__project_id,
       title: project.proj__name,
-      status: 'administratively-completed',
+      status: 'completed',
+      identifier: buildIdentifier(
+        'https://portal.gdc.cancer.gov/projects/',
+        project.proj__project_id
+      ),
       category: [
         {
           coding: [
@@ -139,9 +145,15 @@ class Translator {
           ],
         },
       ],
+      sponsor: buildReference(
+        'Organization/The Cancer Genome Atlas',
+        'Organization',
+        'The Cancer Genome Atlas'
+      ),
     });
   }
 
+  // TODO: remove this at some point
   makeNCIP(resourceType, projectName, id) {
     return `${resourceType}|${projectName}|${id}`;
   }

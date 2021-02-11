@@ -5,7 +5,7 @@ const AnvilMongo = require('../services/AnvilMongo');
 jest.mock('../services/AnvilMongo');
 
 AnvilMongo.mockImplementation(() => ({
-  get: () => [anvilresults, 10],
+  find: () => [anvilresults, 10],
 }));
 
 const service = require('./service');
@@ -15,7 +15,7 @@ describe('service tests', () => {
     expect(1).toEqual(1);
   });
 
-  // TODO: not sure why this isn't working
+  // TODO: make tests for each getfunction after tables are sorted out
   // it('should getByID', async () => {
   //   const rows = await service.getWorkspaceById('foobar');
   //   expect(rows).toEqual({});

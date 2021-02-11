@@ -92,10 +92,27 @@ const buildEntry = (resource, searchMode = 'match') => {
   };
 };
 
+const buildReference = (reference, type, display) => {
+  return {
+    reference: reference,
+    type: type,
+    display: display,
+  };
+};
+
+const buildIdentifier = (system, value) => {
+  return {
+    system: system,
+    value: value,
+  };
+};
+
 module.exports = {
   buildSearchBundle,
   buildLinkFromUrl,
   buildEntry,
   getLinks,
   createCache,
+  buildReference,
+  buildIdentifier,
 };
