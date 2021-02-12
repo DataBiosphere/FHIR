@@ -2,10 +2,11 @@ const service = require('.');
 
 const { TCGA, ANVIL } = require('../../services');
 
-describe('Specimen service tests', () => {
+describe('Research Study service tests', () => {
   let getAllTCGASpy;
   let getAllANVILSpy;
-  let getByIdSpy;
+  let getByTCGAIdSpy;
+  let getByANVILIdSpy;
 
   beforeEach(() => {
     getAllTCGASpy = jest.spyOn(TCGA.prototype, 'getAllResearchStudy').mockImplementation(() => {
@@ -30,7 +31,13 @@ describe('Specimen service tests', () => {
       ];
     });
 
-    getByIdSpy = jest.spyOn(TCGA.prototype, 'getResearchStudyById').mockImplementation(() => {
+    getByTCGAIdSpy = jest.spyOn(TCGA.prototype, 'getResearchStudyById').mockImplementation(() => {
+      return {
+        id: 'foobar',
+      };
+    });
+
+    getByANVILIdSpy = jest.spyOn(ANVIL.prototype, 'getResearchStudyById').mockImplementation(() => {
       return {
         id: 'foobar',
       };
@@ -57,8 +64,16 @@ describe('Specimen service tests', () => {
     expect(getAllANVILSpy).toHaveBeenCalled();
   });
 
-  it('should search for ResearchStudy by ID', async () => {
-    await service.searchById({ base_version: '4_0_0' }, { req: { params: { id: 'foobar' } } });
-    expect(getByIdSpy).toHaveBeenCalled();
+  it('should search for ResearchStudy by TCGA ID', async () => {
+    await service.searchById({ base_version: '4_0_0' }, { req: { params: { id: 'TCGA-HNSC' } } });
+    expect(getByTCGAIdSpy).toHaveBeenCalled();
+  });
+
+  it('should search for ResearchStudy by ANVIL ID', async () => {
+    await service.searchById(
+      { base_version: '4_0_0' },
+      { req: { params: { id: 'AnVIL_CMG_Broad_Blood_Gazda_WGS' } } }
+    );
+    expect(getByANVILIdSpy).toHaveBeenCalled();
   });
 });

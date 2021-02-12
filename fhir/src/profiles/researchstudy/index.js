@@ -1,7 +1,7 @@
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const { bundleSize } = require('../../config');
-const { buildSearchBundle, buildEntry } = require('../../utils');
+const { buildSearchBundle, buildEntry, TCGA_REGEX, ANVIL_REGEX } = require('../../utils');
 const { TCGA, ANVIL } = require('../../services');
 
 const tcga = new TCGA();
@@ -30,10 +30,14 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   const { query } = req;
   const { _page, _count, _id, _source } = getStandardParameters(query);
 
-  // TODO: check for ANVIL ID
-  // {_id: ObjectId("602148085d1432835a7ce1e5")}
   if (_id) {
-    const resource = await tcga.getResearchStudyById(_id);
+    let resource;
+    if (_id.match(TCGA_REGEX)) {
+      resource = await tcga.getResearchStudyById(_id);
+    } else if (_id.match(ANVIL_REGEX)) {
+      resource = await anvil.getResearchStudyById(_id);
+    }
+
     return buildSearchBundle({
       resourceType: 'ResearchStudy',
       resources: [resource],
@@ -92,7 +96,13 @@ const searchById = async (args, { req }) => {
   logger.info('ResearchStudy >>> searchById');
   const { params } = req;
   const { id } = params;
-  const researchStudy = await tcga.getResearchStudyById(id);
+
+  let researchStudy;
+  if (id.match(TCGA_REGEX)) {
+    researchStudy = await tcga.getResearchStudyById(id);
+  } else if (id.match(ANVIL_REGEX)) {
+    researchStudy = await anvil.getResearchStudyById(id);
+  }
 
   return researchStudy;
 };

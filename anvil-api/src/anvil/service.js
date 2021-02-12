@@ -1,6 +1,7 @@
 const { AnvilMongo } = require('../services');
 
 const WorkspaceService = new AnvilMongo({ collectionName: 'workspace' });
+const SampleService = new AnvilMongo({ collectionName: 'Sample' });
 
 /**
  * getAll Workspace data by page and pageSize
@@ -20,12 +21,34 @@ const getAllWorkspaces = async ({ page = 1, pageSize = 25 }) => {
 };
 
 const getWorkspaceById = async (id) => {
-  const [rows] = await WorkspaceService.find({
+  const result = await WorkspaceService.findOne({
     query: { name: id },
   });
 
-  if (rows && rows.length) {
-    return rows;
+  if (result) {
+    return result;
+  }
+  return null;
+};
+
+const getAllSamples = async ({ page = 1, pageSize = 25 }) => {
+  const [results, count] = await SampleService.find({
+    page: page,
+    pageSize: pageSize,
+    query: {},
+    projection: {},
+  });
+
+  return [results, count];
+};
+
+const getSampleById = async (id) => {
+  const result = await SampleService.findOne({
+    query: { name: id },
+  });
+
+  if (result) {
+    return result;
   }
   return null;
 };
@@ -33,4 +56,6 @@ const getWorkspaceById = async (id) => {
 module.exports = {
   getAllWorkspaces,
   getWorkspaceById,
+  getAllSamples,
+  getSampleById,
 };

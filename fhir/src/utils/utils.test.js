@@ -1,4 +1,10 @@
-const { buildLinkFromUrl, getLinks, buildSearchBundle } = require('.');
+const {
+  buildLinkFromUrl,
+  getLinks,
+  buildSearchBundle,
+  buildReference,
+  buildIdentifier,
+} = require('.');
 
 describe('Utils tests', () => {
   it('should build links from URL', () => {
@@ -7,6 +13,7 @@ describe('Utils tests', () => {
       url: 'https://example.com/',
     });
   });
+
   it('should get FHIR links from a url, page, and page size', () => {
     const baseUrl = 'https://example.com';
     const page = 2;
@@ -29,5 +36,27 @@ describe('Utils tests', () => {
         pageSize,
       })
     );
+  });
+
+  it('should build a reference', () => {
+    const reference = 'ref';
+    const type = 'type';
+    const display = 'text';
+
+    expect(buildReference(reference, type, display)).toEqual({
+      reference: 'ref',
+      type: 'type',
+      display: 'text',
+    });
+  });
+
+  it('should build a identifier', () => {
+    const system = 'sys';
+    const value = 'val';
+
+    expect(buildIdentifier(system, value)).toEqual({
+      system: 'sys',
+      value: 'val',
+    });
   });
 });
