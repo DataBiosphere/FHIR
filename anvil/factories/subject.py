@@ -1,13 +1,10 @@
 from anvil.terra.subject import Subject
-from factories.sample import SampleJsonFactory
 from factories import cleanupKeys
+from pymongo import ReplaceOne
 
 class SubjectJsonFactory():
     @staticmethod
-    def subject_json(subject, samples):
-        def find_samples(name):
-            return samples[name]
-
+    def subject_json(subject, workspace_name):
         return {
             'id': subject.id,
             'gender': subject.gender,
@@ -15,6 +12,10 @@ class SubjectJsonFactory():
             'phenotypes': subject.phenotypes,
             'diseases': subject.diseases,
             'name': subject.attributes.name,
-            **cleanupKeys(subject.attributes.copy().pop('attributes', {})),
-            'samples': [SampleJsonFactory.sample_json(s) for s in find_samples(subject.attributes.name)]
+            'workspaceName': workspace_name,
+            **cleanupKeys(subject.attributes.copy().pop('attributes', {}))
         }
+    
+    @staticmethod
+    def bulk_replace_obj(subject, workspace_name):
+        return ReplaceOne({ 'id': subject.id }, SubjectJsonFactory.subject_json(subject, workspace_name), upsert=True)

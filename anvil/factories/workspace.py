@@ -1,7 +1,6 @@
 from anvil.terra.workspace import Workspace
-from factories.sample import SampleJsonFactory
-from factories.subject import SubjectJsonFactory
 from factories import cleanupKeys
+from pymongo import ReplaceOne
 
 class WorkspaceJsonFactory():
     @staticmethod
@@ -29,7 +28,10 @@ class WorkspaceJsonFactory():
 
         workspace_dict = {
             'name': workspace.name,
-            **cleanupKeys(remove_unwanted(workspace.attributes.workspace.attributes, remove_attr_value)),
-            'subjects': [SubjectJsonFactory.subject_json(s, workspace.samples) for s in workspace.subjects]
+            **cleanupKeys(remove_unwanted(workspace.attributes.workspace.attributes, remove_attr_value))
         }
         return workspace_dict
+    
+    @staticmethod
+    def bulk_replace_obj(workspace):
+        return ReplaceOne({ 'name': workspace.name }, WorkspaceJsonFactory.workspace_json(workspace), upsert=True)

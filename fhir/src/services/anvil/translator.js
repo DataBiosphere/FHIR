@@ -5,7 +5,7 @@ const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 
-const WORKSPACE = 'Workspace';
+const WORKSPACE = 'workspace';
 
 const buildReference = (reference, type, display) => {
   return {

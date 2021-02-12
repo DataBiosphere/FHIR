@@ -1,6 +1,6 @@
 const { AnvilMongo } = require('../services');
 
-const WorkspaceService = new AnvilMongo({ collectionName: 'Workspace' });
+const WorkspaceService = new AnvilMongo({ collectionName: 'workspace' });
 
 /**
  * getAll Workspace data by page and pageSize
