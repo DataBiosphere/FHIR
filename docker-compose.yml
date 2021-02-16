@@ -28,6 +28,7 @@ services:
   anvil-mongo:
     image: mongo
     environment:
+      - MONGO_INITDB_DATABASE=anvil
       - PUID=1000
       - PGID=1000
     volumes:
