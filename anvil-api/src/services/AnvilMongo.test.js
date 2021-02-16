@@ -4,9 +4,13 @@ describe('AnvilMongo client tests', () => {
   it('should call AnvilMongo', async () => {
     const anvilMongoClient = new AnvilMongo({ collectionName: 'Test' });
 
-    const querySpy = jest.spyOn(anvilMongoClient, 'findOne').mockImplementation(() => {});
+    const findSpy = jest.spyOn(anvilMongoClient, 'find').mockImplementation(() => {});
+    const findOneSpy = jest.spyOn(anvilMongoClient, 'findOne').mockImplementation(() => {});
 
-    await anvilMongoClient.find({ query: {}, projection: {} });
-    expect(querySpy).toHaveBeenCalled();
+    await anvilMongoClient.find();
+    expect(findSpy).toHaveBeenCalled();
+
+    await anvilMongoClient.findOne();
+    expect(findOneSpy).toHaveBeenCalled();
   });
 });

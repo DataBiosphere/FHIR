@@ -3,6 +3,8 @@ jest.mock('./controller', () => ({
   getWorkspaceById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getAllSamples: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getSampleById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getAllSubjects: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getSubjectById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
 }));
 
 const express = require('express');
@@ -48,12 +50,46 @@ describe('router tests', () => {
         done();
       });
   });
+  it('should route Sample Requests with a Workspace to getAllSamples controller', (done) => {
+    supertest(app)
+      .get('/Workspace/foobar/Sample')
+      .end(() => {
+        expect(controller.getAllSamples.mock.calls.length).toEqual(2);
+        done();
+      });
+  });
 
   it('should route Sample ID Requests to getSampleById controller', (done) => {
     supertest(app)
-      .get('/Sample/foobar')
+      .get('/Workspace/foo/Sample/bar')
       .end(() => {
         expect(controller.getSampleById.mock.calls.length).toEqual(1);
+        done();
+      });
+  });
+
+  it('should route Subject Requests to getAllSubjects controller', (done) => {
+    supertest(app)
+      .get('/Subject')
+      .end(() => {
+        expect(controller.getAllSubjects.mock.calls.length).toEqual(1);
+        done();
+      });
+  });
+  it('should route Subject Requests with a Workspace to getAllSubjects controller', (done) => {
+    supertest(app)
+      .get('/Workspace/foobar/Subject')
+      .end(() => {
+        expect(controller.getAllSubjects.mock.calls.length).toEqual(2);
+        done();
+      });
+  });
+
+  it('should route Subject ID Requests to getSubjectById controller', (done) => {
+    supertest(app)
+      .get('/Workspace/foo/Subject/bar')
+      .end(() => {
+        expect(controller.getSubjectById.mock.calls.length).toEqual(1);
         done();
       });
   });

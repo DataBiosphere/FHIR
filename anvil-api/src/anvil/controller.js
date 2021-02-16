@@ -24,8 +24,13 @@ const getWorkspaceById = async (req, res) => {
 
 const getAllSamples = async (req, res) => {
   logger.info('ANVIL >>> getAllSamples');
+  let workspace;
+  if (req.params) {
+    workspace = req.params.workspace;
+  }
+
   const { page, pageSize } = req.query;
-  const [results, count] = await service.getAllSamples({ page, pageSize });
+  const [results, count] = await service.getAllSamples({ workspace, page, pageSize });
   res.json({
     results,
     count,
@@ -33,9 +38,37 @@ const getAllSamples = async (req, res) => {
 };
 
 const getSampleById = async (req, res) => {
-  logger.info('ANVIL >> getSampleById');
-  const { id } = req.params;
-  const results = await service.getSampleById(id);
+  logger.info('ANVIL >>> getSampleById');
+  const { workspace, id } = req.params;
+  const sampleId = `${workspace}/Sa/${id}`;
+  const results = await service.getSampleById(sampleId);
+  if (!results) {
+    res.sendStatus(404);
+  } else {
+    res.json(results);
+  }
+};
+
+const getAllSubjects = async (req, res) => {
+  logger.info('ANVIL >>> getAllSubjects');
+  let workspace;
+  if (req.params) {
+    workspace = req.params.workspace;
+  }
+
+  const { page, pageSize } = req.query;
+  const [results, count] = await service.getAllSubjects({ workspace, page, pageSize });
+  res.json({
+    results,
+    count,
+  });
+};
+
+const getSubjectById = async (req, res) => {
+  logger.info('ANVIL >>> getSubjectById');
+  const { workspace, id } = req.params;
+  const subjectId = `${workspace}/Su/${id}`;
+  const results = await service.getSubjectById(subjectId);
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -48,4 +81,6 @@ module.exports = {
   getWorkspaceById,
   getAllSamples,
   getSampleById,
+  getAllSubjects,
+  getSubjectById,
 };

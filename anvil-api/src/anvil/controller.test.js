@@ -3,9 +3,10 @@ jest.mock('./service', () => ({
   getWorkspaceById: jest.fn().mockImplementation(() => ({ id: 'test' })),
   getAllSamples: jest.fn().mockImplementation(() => [[{ id: 'test' }], 100]),
   getSampleById: jest.fn().mockImplementation(() => ({ id: 'test' })),
+  getAllSubjects: jest.fn().mockImplementation(() => [[{ id: 'test' }], 100]),
+  getSubjectById: jest.fn().mockImplementation(() => ({ id: 'test' })),
 }));
 
-const { exceptions } = require('../logger');
 const controller = require('./controller');
 
 describe('ANVIL controller tests', () => {
@@ -68,6 +69,37 @@ describe('ANVIL controller tests', () => {
     };
 
     await controller.getSampleById(mockReq, mockRes);
+    expect(mockRes.json.mock.calls[0][0]).toEqual({ id: 'test' });
+  });
+
+  it('should get all Subject data', async () => {
+    const mockRes = {
+      json: jest.fn(),
+    };
+
+    const mockReq = {
+      query: {
+        page: 1,
+        pageSize: 10,
+      },
+    };
+
+    await controller.getAllSubjects(mockReq, mockRes);
+    expect(mockRes.json.mock.calls[0][0]).toEqual({ count: 100, results: [{ id: 'test' }] });
+  });
+
+  it('should get Subject data by ID', async () => {
+    const mockRes = {
+      json: jest.fn(),
+    };
+
+    const mockReq = {
+      params: {
+        id: 'foobar',
+      },
+    };
+
+    await controller.getSubjectById(mockReq, mockRes);
     expect(mockRes.json.mock.calls[0][0]).toEqual({ id: 'test' });
   });
 });

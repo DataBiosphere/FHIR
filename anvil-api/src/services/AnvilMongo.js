@@ -10,9 +10,11 @@ class AnvilMongo {
   }
 
   async queryWrapper(callback) {
-    const client = await MongoClient.connect(this.url).catch((err) => {
-      console.log(err);
-    });
+    const client = await MongoClient.connect(this.url, { useUnifiedTopology: true }).catch(
+      (err) => {
+        console.log(err);
+      }
+    );
 
     if (!client) {
       return;

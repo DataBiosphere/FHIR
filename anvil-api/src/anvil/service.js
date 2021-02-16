@@ -1,7 +1,9 @@
+const e = require('express');
 const { AnvilMongo } = require('../services');
 
 const WorkspaceService = new AnvilMongo({ collectionName: 'workspace' });
-const SampleService = new AnvilMongo({ collectionName: 'Sample' });
+const SampleService = new AnvilMongo({ collectionName: 'sample' });
+const SubjectService = new AnvilMongo({ collectionName: 'subject' });
 
 /**
  * getAll Workspace data by page and pageSize
@@ -14,7 +16,7 @@ const getAllWorkspaces = async ({ page = 1, pageSize = 25 }) => {
     page: page,
     pageSize: pageSize,
     query: {},
-    projection: { 'subjects.samples': 0 },
+    projection: {},
   });
 
   return [results, count];
@@ -31,20 +33,50 @@ const getWorkspaceById = async (id) => {
   return null;
 };
 
-const getAllSamples = async ({ page = 1, pageSize = 25 }) => {
-  const [results, count] = await SampleService.find({
+const getAllSamples = async ({ workspace = '', page = 1, pageSize = 25 }) => {
+  let [results, count] = await SampleService.find({
     page: page,
     pageSize: pageSize,
-    query: {},
+    query: { id: { $regex: workspace } },
     projection: {},
   });
+
+  // TODO: remember to add some form of pagination in FHIR
+  //        currently, if workspace is included
+  //        it will only return 25 results
 
   return [results, count];
 };
 
 const getSampleById = async (id) => {
   const result = await SampleService.findOne({
-    query: { name: id },
+    query: { id: id },
+  });
+
+  if (result) {
+    return result;
+  }
+  return null;
+};
+
+const getAllSubjects = async ({ workspace = '', page = 1, pageSize = 25 }) => {
+  let [results, count] = await SubjectService.find({
+    page: page,
+    pageSize: pageSize,
+    query: { id: { $regex: workspace } },
+    projection: {},
+  });
+
+  // TODO: remember to add some form of pagination in FHIR
+  //        currently, if workspace is included
+  //        it will only return 25 results
+
+  return [results, count];
+};
+
+const getSubjectById = async (id) => {
+  const result = await SubjectService.findOne({
+    query: { id: id },
   });
 
   if (result) {
@@ -58,4 +90,6 @@ module.exports = {
   getWorkspaceById,
   getAllSamples,
   getSampleById,
+  getAllSubjects,
+  getSubjectById,
 };
