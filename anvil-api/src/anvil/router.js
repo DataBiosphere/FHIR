@@ -7,14 +7,16 @@ router.get('/workspace', controller.getAllWorkspaces);
 
 router.get('/workspace/:id', controller.getWorkspaceById);
 
-router.get('/sample/:workspace*?', controller.getAllSamples);
+router.get('/sample', controller.getAllSamples);
 router.get('/workspace/:workspace/sample', controller.getAllSamples);
 
-router.get('/workspace/:workspace/sample/:id', controller.getSampleById);
+router.get('/sample/:id', controller.getSampleById);
+router.get('/workspace/:workspace/sample/:id', controller.getSampleByWorkspaceId);
 
-router.get('/subject/:workspace*?', controller.getAllSubjects);
+router.get('/subject', controller.getAllSubjects);
 router.get('/workspace/:workspace/subject', controller.getAllSubjects);
 
-router.get('/workspace/:workspace/subject/:id', controller.getSubjectById);
+router.get('/subject/:id', controller.getSubjectById);
+router.get('/workspace/:workspace/subject/:id', controller.getSubjectByWorkspaceId);
 
 module.exports = router;

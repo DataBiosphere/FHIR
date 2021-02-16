@@ -1,4 +1,5 @@
 const e = require('express');
+const logger = require('../logger');
 const { AnvilMongo } = require('../services');
 
 const WorkspaceService = new AnvilMongo({ collectionName: 'workspace' });
@@ -41,14 +42,21 @@ const getAllSamples = async ({ workspace = '', page = 1, pageSize = 25 }) => {
     projection: {},
   });
 
-  // TODO: remember to add some form of pagination in FHIR
-  //        currently, if workspace is included
-  //        it will only return 25 results
-
   return [results, count];
 };
 
 const getSampleById = async (id) => {
+  const result = await SampleService.findOne({
+    query: { name: id },
+  });
+
+  if (result) {
+    return result;
+  }
+  return null;
+};
+
+const getSampleByWorkspaceId = async (id) => {
   const result = await SampleService.findOne({
     query: { id: id },
   });
@@ -67,14 +75,21 @@ const getAllSubjects = async ({ workspace = '', page = 1, pageSize = 25 }) => {
     projection: {},
   });
 
-  // TODO: remember to add some form of pagination in FHIR
-  //        currently, if workspace is included
-  //        it will only return 25 results
-
   return [results, count];
 };
 
 const getSubjectById = async (id) => {
+  const result = await SubjectService.findOne({
+    query: { name: id },
+  });
+
+  if (result) {
+    return result;
+  }
+  return null;
+};
+
+const getSubjectByWorkspaceId = async (id) => {
   const result = await SubjectService.findOne({
     query: { id: id },
   });
@@ -90,6 +105,8 @@ module.exports = {
   getWorkspaceById,
   getAllSamples,
   getSampleById,
+  getSampleByWorkspaceId,
   getAllSubjects,
   getSubjectById,
+  getSubjectByWorkspaceId,
 };
