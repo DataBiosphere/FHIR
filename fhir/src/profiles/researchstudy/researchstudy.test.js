@@ -1,5 +1,6 @@
 const service = require('.');
 
+const { TCGA_SOURCE, ANVIL_SOURCE } = require('../../utils');
 const { TCGA, ANVIL } = require('../../services');
 
 describe('Research Study service tests', () => {
@@ -55,12 +56,12 @@ describe('Research Study service tests', () => {
   });
 
   it('should search only TCGA data', async () => {
-    await service.search({ base_version: '4_0_0' }, { req: { query: { _source: 'tcga' } } });
+    await service.search({ base_version: '4_0_0' }, { req: { query: { _source: TCGA_SOURCE } } });
     expect(getAllTCGASpy).toHaveBeenCalled();
   });
 
   it('should search only ANVIL data', async () => {
-    await service.search({ base_version: '4_0_0' }, { req: { query: { _source: 'anvil' } } });
+    await service.search({ base_version: '4_0_0' }, { req: { query: { _source: ANVIL_SOURCE } } });
     expect(getAllANVILSpy).toHaveBeenCalled();
   });
 
