@@ -6,8 +6,8 @@ const createCache = require('./cache');
 const { url } = require('../config');
 
 const TCGA_REGEX = /TCGA-/;
-const TCGA_SOURCE = 'https://portal.gdc.cancer.gov/projects/';
-const ANVIL_SOURCE = 'https://anvil.terra.bio/#workspaces/anvil-datastorage/';
+const TCGA_SOURCE = 'https://portal.gdc.cancer.gov/';
+const ANVIL_SOURCE = 'https://anvil.terra.bio/';
 
 const addTrailingSlash = (baseUrl) => {
   if (baseUrl[baseUrl.length - 1] !== '/') {
@@ -88,7 +88,7 @@ const buildSearchBundle = ({
 
 const buildEntry = (resource, searchMode = 'match', queryParams = {}) => {
   let extension = '';
-  if (queryParams) {
+  if (queryParams && Object.keys(queryParams).length !== 0) {
     const query = Object.keys(queryParams).map((key) => `${key}=${queryParams[key]}`);
     extension = '?' + query.join('&');
   }
