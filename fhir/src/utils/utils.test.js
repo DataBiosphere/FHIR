@@ -49,13 +49,12 @@ describe('Utils tests', () => {
     });
   });
 
-  it('should build an entry with a source', () => {
+  it('should build an entry with a params', () => {
     const resource = { resourceType: 'ResearchStudy' };
     const searchMode = 'match';
-    const queryParams = { _source: TCGA_SOURCE };
+    const queryParams = { _source: TCGA_SOURCE, test: 'test', foo: 'bar' };
     expect(buildEntry(resource, searchMode, queryParams)).toEqual({
-      fullUrl:
-        'http://localhost:3000/4_0_0/ResearchStudy/undefined?_source=https://portal.gdc.cancer.gov/',
+      fullUrl: `http://localhost:3000/4_0_0/ResearchStudy/undefined?_source=${TCGA_SOURCE}&test=test&foo=bar`,
       resource: { resourceType: 'ResearchStudy' },
       search: { mode: 'match' },
     });

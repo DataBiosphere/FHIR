@@ -114,7 +114,7 @@ const getAllDiagnosis = async ({ page, pageSize } = { page: 1, pageSize: 20 }) =
  * @param {string} id
  */
 const getDiagnosisById = async (id) => {
-  const [rows] = await DiagnosisService.get({ where: { diag__diagnosis_id: id } });
+  const [rows] = await DiagnosisService.get({ where: { diag__treat__treatment_id: id } });
 
   if (rows && rows.length) {
     return rows[0];

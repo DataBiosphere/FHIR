@@ -48,7 +48,7 @@ const getAllSamples = async ({ workspace = '', page = 1, pageSize = 25 }) => {
 
 const getSampleById = async (id) => {
   const result = await SampleService.findOne({
-    query: { _id: ObjectID(id) },
+    query: { id: id },
   });
 
   if (result) {
@@ -81,7 +81,7 @@ const getAllSubjects = async ({ workspace = '', page = 1, pageSize = 25 }) => {
 
 const getSubjectById = async (id) => {
   const result = await SubjectService.findOne({
-    query: { _id: ObjectID(id) },
+    query: { id: id },
   });
 
   if (result) {

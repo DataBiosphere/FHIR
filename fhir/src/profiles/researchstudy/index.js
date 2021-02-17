@@ -36,8 +36,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   const { query } = req;
   const { _page, _count, _id, _source } = getStandardParameters(query);
 
-  // TODO: this only works because we have two datasets
-  //        we may need to take a second look at this later
+  // WARN: this only works because we have two datasets
+  //        needs changing for more datasets
   if (_id) {
     const resource = _id.match(TCGA_REGEX)
       ? await tcga.getResearchStudyById(_id)
@@ -45,7 +45,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
 
     return buildSearchBundle({
       resourceType: 'ResearchStudy',
-      resources: [resource],
+      entries: [buildEntry(resource)],
       page: _page,
       pageSize: _count,
       fhirVersion: baseVersion,
@@ -102,8 +102,8 @@ const searchById = async (args, { req }) => {
   const { params } = req;
   const { id } = params;
 
-  // TODO: this only works because we have two datasets
-  //        we may need to take a second look at this later
+  // WARN: this only works because we have two datasets
+  //        needs changing for more datasets
   const researchStudy = id.match(TCGA_REGEX)
     ? tcga.getResearchStudyById(id)
     : anvil.getResearchStudyById(id);
