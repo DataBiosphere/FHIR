@@ -6,7 +6,7 @@ class SampleJsonFactory():
     @staticmethod
     def sample_json(sample, workspace_name):
         return {
-            'id': sample.id,
+            'id': sample.id.replace('/', '|'),
             'subjectName': sample.subject_id,
             'name': sample.attributes.name,
             'workspaceName': workspace_name,

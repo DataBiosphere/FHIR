@@ -1,7 +1,11 @@
+const e = require('express');
+const { ObjectID } = require('mongodb');
+const logger = require('../logger');
 const { AnvilMongo } = require('../services');
 
 const WorkspaceService = new AnvilMongo({ collectionName: 'workspace' });
-const SampleService = new AnvilMongo({ collectionName: 'Sample' });
+const SampleService = new AnvilMongo({ collectionName: 'sample' });
+const SubjectService = new AnvilMongo({ collectionName: 'subject' });
 
 /**
  * getAll Workspace data by page and pageSize
@@ -14,7 +18,7 @@ const getAllWorkspaces = async ({ page = 1, pageSize = 25 }) => {
     page: page,
     pageSize: pageSize,
     query: {},
-    projection: { 'subjects.samples': 0 },
+    projection: {},
   });
 
   return [results, count];
@@ -31,11 +35,11 @@ const getWorkspaceById = async (id) => {
   return null;
 };
 
-const getAllSamples = async ({ page = 1, pageSize = 25 }) => {
-  const [results, count] = await SampleService.find({
+const getAllSamples = async ({ workspace = '', page = 1, pageSize = 25 }) => {
+  let [results, count] = await SampleService.find({
     page: page,
     pageSize: pageSize,
-    query: {},
+    query: { id: { $regex: workspace } },
     projection: {},
   });
 
@@ -44,7 +48,51 @@ const getAllSamples = async ({ page = 1, pageSize = 25 }) => {
 
 const getSampleById = async (id) => {
   const result = await SampleService.findOne({
-    query: { name: id },
+    query: { _id: ObjectID(id) },
+  });
+
+  if (result) {
+    return result;
+  }
+  return null;
+};
+
+const getSampleByWorkspaceId = async (id) => {
+  const result = await SampleService.findOne({
+    query: { id: id },
+  });
+
+  if (result) {
+    return result;
+  }
+  return null;
+};
+
+const getAllSubjects = async ({ workspace = '', page = 1, pageSize = 25 }) => {
+  let [results, count] = await SubjectService.find({
+    page: page,
+    pageSize: pageSize,
+    query: { id: { $regex: workspace } },
+    projection: {},
+  });
+
+  return [results, count];
+};
+
+const getSubjectById = async (id) => {
+  const result = await SubjectService.findOne({
+    query: { _id: ObjectID(id) },
+  });
+
+  if (result) {
+    return result;
+  }
+  return null;
+};
+
+const getSubjectByWorkspaceId = async (id) => {
+  const result = await SubjectService.findOne({
+    query: { id: id },
   });
 
   if (result) {
@@ -58,4 +106,8 @@ module.exports = {
   getWorkspaceById,
   getAllSamples,
   getSampleById,
+  getSampleByWorkspaceId,
+  getAllSubjects,
+  getSubjectById,
+  getSubjectByWorkspaceId,
 };

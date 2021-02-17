@@ -3,12 +3,20 @@ const controller = require('./controller');
 
 const router = express.Router();
 
-router.get('/Workspace', controller.getAllWorkspaces);
+router.get('/workspace', controller.getAllWorkspaces);
 
-router.get('/Workspace/:id', controller.getWorkspaceById);
+router.get('/workspace/:id', controller.getWorkspaceById);
 
-router.get('/Sample', controller.getAllSamples);
+router.get('/sample', controller.getAllSamples);
+router.get('/workspace/:workspace/sample', controller.getAllSamples);
 
-router.get('/Sample/:id', controller.getSampleById);
+router.get('/sample/:id', controller.getSampleById);
+router.get('/workspace/:workspace/sample/:id', controller.getSampleByWorkspaceId);
+
+router.get('/subject', controller.getAllSubjects);
+router.get('/workspace/:workspace/subject', controller.getAllSubjects);
+
+router.get('/subject/:id', controller.getSubjectById);
+router.get('/workspace/:workspace/subject/:id', controller.getSubjectByWorkspaceId);
 
 module.exports = router;
