@@ -18,4 +18,4 @@ class SubjectJsonFactory():
     
     @staticmethod
     def bulk_replace_obj(subject, workspace_name):
-        return ReplaceOne({ 'id': subject.id }, SubjectJsonFactory.subject_json(subject, workspace_name), upsert=True)
+        return ReplaceOne({ 'id': subject.id.replace('/', '|') }, SubjectJsonFactory.subject_json(subject, workspace_name), upsert=True)
