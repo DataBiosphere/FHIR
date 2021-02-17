@@ -155,7 +155,7 @@ def save_workspace(workspace):
             subject_replaces.append(SubjectJsonFactory.bulk_replace_obj(subject, workspace.name))
             
             for sample in subject.samples:
-                sample_replaces.append(SampleJsonFactory.bulk_replace_obj(sample))
+                sample_replaces.append(SampleJsonFactory.bulk_replace_obj(sample, workspace.name))
     except:
         print("failed to load subjects and samples for " + workspace.name)
 
