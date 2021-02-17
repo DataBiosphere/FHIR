@@ -2,8 +2,10 @@ const {
   buildLinkFromUrl,
   getLinks,
   buildSearchBundle,
+  buildEntry,
   buildReference,
   buildIdentifier,
+  TCGA_SOURCE,
 } = require('.');
 
 describe('Utils tests', () => {
@@ -36,6 +38,27 @@ describe('Utils tests', () => {
         pageSize,
       })
     );
+  });
+
+  it('should build an entry without a source', () => {
+    const resource = { resourceType: 'ResearchStudy' };
+    expect(buildEntry(resource)).toEqual({
+      fullUrl: 'http://localhost:3000/4_0_0/ResearchStudy/undefined',
+      resource: { resourceType: 'ResearchStudy' },
+      search: { mode: 'match' },
+    });
+  });
+
+  it('should build an entry with a source', () => {
+    const resource = { resourceType: 'ResearchStudy' };
+    const searchMode = 'match';
+    const queryParams = { _source: TCGA_SOURCE };
+    expect(buildEntry(resource, searchMode, queryParams)).toEqual({
+      fullUrl:
+        'http://localhost:3000/4_0_0/ResearchStudy/undefined?_source=https://portal.gdc.cancer.gov/',
+      resource: { resourceType: 'ResearchStudy' },
+      search: { mode: 'match' },
+    });
   });
 
   it('should build a reference', () => {
