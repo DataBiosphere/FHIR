@@ -1,7 +1,13 @@
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const { bundleSize } = require('../../config');
-const { buildSearchBundle, buildEntry, TCGA_REGEX, ANVIL_REGEX } = require('../../utils');
+const {
+  buildSearchBundle,
+  buildEntry,
+  TCGA_REGEX,
+  TCGA_SOURCE,
+  ANVIL_SOURCE,
+} = require('../../utils');
 const { TCGA, ANVIL } = require('../../services');
 
 const tcga = new TCGA();
@@ -30,13 +36,12 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   const { query } = req;
   const { _page, _count, _id, _source } = getStandardParameters(query);
 
+  // TODO: this only works because we have two datasets
+  //        we may need to take a second look at this later
   if (_id) {
-    let resource;
-    if (_id.match(TCGA_REGEX)) {
-      resource = await tcga.getResearchStudyById(_id);
-    } else if (_id.match(ANVIL_REGEX)) {
-      resource = await anvil.getResearchStudyById(_id);
-    }
+    const resource = _id.match(TCGA_REGEX)
+      ? await tcga.getResearchStudyById(_id)
+      : await anvil.getResearchStudyById(_id);
 
     return buildSearchBundle({
       resourceType: 'ResearchStudy',
@@ -54,12 +59,12 @@ const search = async ({ base_version: baseVersion }, { req }) => {
 
   // check for _source and filter promises
   if (_source) {
-    if (_source == 'tcga') {
+    if (_source == TCGA_SOURCE) {
       [results, count] = await tcga.getAllResearchStudy(params);
-    } else if (_source == 'anvil') {
+    } else if (_source == ANVIL_SOURCE) {
       [results, count] = await anvil.getAllResearchStudy(params);
     } else {
-      console.log('_source not valid');
+      logger.error('_source is not valid');
     }
   } else {
     // TODO: add pagination
@@ -97,12 +102,11 @@ const searchById = async (args, { req }) => {
   const { params } = req;
   const { id } = params;
 
-  let researchStudy;
-  if (id.match(TCGA_REGEX)) {
-    researchStudy = await tcga.getResearchStudyById(id);
-  } else if (id.match(ANVIL_REGEX)) {
-    researchStudy = await anvil.getResearchStudyById(id);
-  }
+  // TODO: this only works because we have two datasets
+  //        we may need to take a second look at this later
+  const researchStudy = id.match(TCGA_REGEX)
+    ? tcga.getResearchStudyById(id)
+    : anvil.getResearchStudyById(id);
 
   return researchStudy;
 };
