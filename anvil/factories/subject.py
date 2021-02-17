@@ -6,7 +6,7 @@ class SubjectJsonFactory():
     @staticmethod
     def subject_json(subject, workspace_name):
         return {
-            'id': subject.id,
+            'id': subject.id.replace('/', '|'),
             'gender': subject.gender,
             'ethnicity': subject.ethnicity,
             'phenotypes': subject.phenotypes,
