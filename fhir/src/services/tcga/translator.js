@@ -45,27 +45,28 @@ class Translator {
   toObservation(diagnosis, gdcResult) {
     const { codes, text } = findCodes(diagnosis.diag__treat__treatment_type);
     return new Observation({
-      resourceType: 'Observation',
       id: diagnosis.diag__treat__treatment_id,
+      identifier: buildIdentifier(
+        'https://portal.gdc.cancer.gov/projects/',
+        diagnosis.proj__project_id
+      ),
+      meta: {
+        profile: ['https://www.hl7.org/fhir/observation.html'],
+        versionId: diagnosis.diag__treat__treatment_id,
+      },
+      status: 'final',
       text: {
         status: 'generated',
         div: `<div xmlns="http://www.w3.org/1999/xhtml">${diagnosis.diag__treat__treatment_type}</div>`,
       },
-      meta: {
-        versionId: diagnosis.diag__treat__treatment_id,
-        source: gdcResult.proj__project_id,
-        profile: ['https://www.hl7.org/fhir/observation.html'],
-      },
       code: buildCodeableConcept(codes, text),
       issued: gdcResult.diag__treat__updated_datetime,
       effectiveDateTime: gdcResult.diag__treat__updated_datetime,
-      status: 'final',
     });
   }
 
   toDiagnosticReport(tcgaResult) {
     return new DiagnosticReport({
-      resourceType: 'DiagnosticReport',
       id: tcgaResult.case_id,
       meta: {
         versionId: tcgaResult.case_id,
@@ -128,12 +129,15 @@ class Translator {
   toResearchStudy(project) {
     return new ResearchStudy({
       id: project.proj__project_id,
-      title: project.proj__name,
-      status: 'completed',
       identifier: buildIdentifier(
         'https://portal.gdc.cancer.gov/projects/',
         project.proj__project_id
       ),
+      meta: {
+        profile: ['https://www.hl7.org/fhir/researchstudy.html'],
+      },
+      title: project.proj__name,
+      status: 'completed',
       category: [
         {
           coding: [

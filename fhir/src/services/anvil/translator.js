@@ -13,12 +13,15 @@ class Translator {
   toResearchStudy(workspace) {
     const researchStudy = new ResearchStudy({
       id: workspace.name,
-      title: workspace.datasetName,
-      status: 'completed',
       identifier: buildIdentifier(
         'https://anvil.terra.bio/#workspaces/anvil-datastorage/',
         workspace.name
       ),
+      meta: {
+        profile: ['https://www.hl7.org/fhir/researchstudy.html'],
+      },
+      title: workspace.datasetName,
+      status: 'completed',
       category: [
         {
           coding: [
@@ -60,8 +63,19 @@ class Translator {
     return researchStudy;
   }
 
-  toObservation(workspace) {
-    const observation = new Observation({});
+  toObservation(subject) {
+    const observation = new Observation({
+      id: subject.id,
+      identifier: buildIdentifier(
+        'https://anvil.terra.bio/#workspaces/anvil-datastorage/',
+        subject.workspaceName
+      ),
+      meta: {
+        profile: ['https://www.hl7.org/fhir/observation.html'],
+        versionId: subject.id,
+      },
+      status: 'final',
+    });
 
     return observation;
   }
