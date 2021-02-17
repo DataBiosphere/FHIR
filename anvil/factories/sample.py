@@ -15,4 +15,4 @@ class SampleJsonFactory():
     
     @staticmethod
     def bulk_replace_obj(sample, workspace_name):
-        return ReplaceOne({ 'id': sample.id }, SampleJsonFactory.sample_json(sample, workspace_name), upsert=True)
+        return ReplaceOne({ 'id': sample.id.replace('/', '|') }, SampleJsonFactory.sample_json(sample, workspace_name), upsert=True)

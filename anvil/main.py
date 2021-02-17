@@ -15,6 +15,7 @@ from factories.workspace import WorkspaceJsonFactory
 from factories.subject import SubjectJsonFactory
 from factories.sample import SampleJsonFactory
 import concurrent.futures
+from pymongo.errors import BulkWriteError
 
 load_dotenv()
 
@@ -175,8 +176,9 @@ def write_to_database(collection, array):
         try:
             print("Writing " + str(len(array)) + " " + collection + " to database")
             anvil_adapter.bulk_write(collection, array)
-        except Exception as e:
-            print(e)
+        except BulkWriteError as bwe:
+            #print(bwe.details)
+            print(bwe.details['writeErrors'])
 
 
 def chunked_array(lst, n):
