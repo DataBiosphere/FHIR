@@ -11,26 +11,31 @@ import {
   GET_SUMMARY_INFO_ERROR,
 } from './constants';
 
-export function getSummaryInfoAction() {
+export interface Action {
+  type: string;
+  [key: string]: any;
+}
+
+export function getSummaryInfoAction(): Action {
   return {
     type: GET_SUMMARY_INFO,
   };
 }
 
-export function getSummaryInfoRequestAction() {
+export function getSummaryInfoRequestAction(): Action {
   return {
     type: GET_SUMMARY_INFO_REQUEST,
   };
 }
 
-export function getSummaryInfoSuccessAction(info: any) {
+export function getSummaryInfoSuccessAction(info: any): Action {
   return {
     type: GET_SUMMARY_INFO_SUCCESS,
     payload: info,
   };
 }
 
-export function getSummaryInfoErrorAction() {
+export function getSummaryInfoErrorAction(): Action {
   return {
     type: GET_SUMMARY_INFO_ERROR,
   };

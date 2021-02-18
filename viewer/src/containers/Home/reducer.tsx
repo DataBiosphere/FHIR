@@ -9,11 +9,12 @@ import {
   GET_SUMMARY_INFO_SUCCESS,
   GET_SUMMARY_INFO_ERROR,
 } from './constants';
+import { Action } from './actions';
 
 export const initialState = {};
 
 /* eslint-disable default-case, no-param-reassign */
-const homeReducer = (state = initialState, action: any) =>
+const homeReducer = (state = initialState, action: Action) =>
   produce(state, (draft: any) => {
     switch (action.type) {
       case GET_SUMMARY_INFO_REQUEST:
