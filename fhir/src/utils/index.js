@@ -106,9 +106,9 @@ const buildEntry = (resource, searchMode = 'match', queryParams = {}) => {
   };
 };
 
-const buildIdentifier = (system, value) => {
+const buildIdentifier = (system, value, use = 'temp') => {
   return {
-    use: 'temp',
+    use: use,
     system: system,
     value: value,
   };
@@ -121,6 +121,11 @@ const buildCodeableConcept = (codes, text = '') => {
   }
 
   return codeableConcept;
+};
+
+// TODO: write unit tests
+const buildCoding = (system, code, display) => {
+  return { system: system, code: code, display: display };
 };
 
 const buildReference = (reference, type, display) => {
@@ -191,6 +196,7 @@ module.exports = {
   buildEntry,
   buildIdentifier,
   buildCodeableConcept,
+  buildCoding,
   buildReference,
   findDiseaseCodes,
   findDiseaseSystem,

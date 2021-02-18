@@ -70,6 +70,7 @@ describe('Utils tests', () => {
     const value = 'val';
 
     expect(buildIdentifier(system, value)).toEqual({
+      use: 'temp',
       system: 'sys',
       value: 'val',
     });

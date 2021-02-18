@@ -9,7 +9,7 @@ const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 
 const { observationCodeMappings } = require('../../utils/tcgamappings');
 
-const findCodes = (testString) => {
+const findTCGACodes = (testString) => {
   const found = observationCodeMappings.find(({ regex }) => regex.test(testString));
 
   if (found) {
@@ -21,15 +21,17 @@ const findCodes = (testString) => {
 
 class Translator {
   toObservation(diagnosis, gdcResult) {
-    const { codes, text } = findCodes(diagnosis.diag__treat__treatment_type);
+    const { codes, text } = findTCGACodes(diagnosis.diag__treat__treatment_type);
     return new Observation({
       id: diagnosis.diag__treat__treatment_id,
       identifier: buildIdentifier(
         'https://portal.gdc.cancer.gov/projects/',
-        diagnosis.proj__project_id
+        gdcResult.proj__project_id,
+        'official'
       ),
       meta: {
         profile: ['https://www.hl7.org/fhir/observation.html'],
+        source: gdcResult.proj__project_id,
         versionId: diagnosis.diag__treat__treatment_id,
       },
       status: 'final',

@@ -64,6 +64,13 @@ describe('TCGA service tests', () => {
         observations: [
           {
             id: 'e62a815e-6907-5bc7-acbc-932bc0a05b75',
+            identifier: [
+              {
+                system: 'https://portal.gdc.cancer.gov/projects/',
+                value: 'TCGA-HNSC',
+                use: 'official',
+              },
+            ],
             meta: {
               profile: ['https://www.hl7.org/fhir/observation.html'],
               source: 'TCGA-HNSC',
@@ -81,6 +88,13 @@ describe('TCGA service tests', () => {
           },
           {
             id: 'f46facb0-9a93-5077-a9b5-b8f907404520',
+            identifier: [
+              {
+                system: 'https://portal.gdc.cancer.gov/projects/',
+                value: 'TCGA-HNSC',
+                use: 'official',
+              },
+            ],
             meta: {
               profile: ['https://www.hl7.org/fhir/observation.html'],
               source: 'TCGA-HNSC',
@@ -198,6 +212,13 @@ describe('TCGA service tests', () => {
       observations: [
         {
           id: 'e62a815e-6907-5bc7-acbc-932bc0a05b75',
+          identifier: [
+            {
+              system: 'https://portal.gdc.cancer.gov/projects/',
+              value: 'TCGA-HNSC',
+              use: 'official',
+            },
+          ],
           meta: {
             profile: ['https://www.hl7.org/fhir/observation.html'],
             source: 'TCGA-HNSC',
@@ -215,6 +236,13 @@ describe('TCGA service tests', () => {
         },
         {
           id: 'f46facb0-9a93-5077-a9b5-b8f907404520',
+          identifier: [
+            {
+              system: 'https://portal.gdc.cancer.gov/projects/',
+              value: 'TCGA-HNSC',
+              use: 'official',
+            },
+          ],
           meta: {
             profile: ['https://www.hl7.org/fhir/observation.html'],
             source: 'TCGA-HNSC',
