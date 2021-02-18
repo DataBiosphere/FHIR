@@ -1,35 +1,13 @@
 const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 
-const { buildReference, buildIdentifier } = require('../../utils');
+const { buildReference, buildIdentifier, buildCodeableConcept } = require('../../utils');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 
-const observationCodeMappings = [
-  {
-    regex: /Radiation Therapy/,
-    codes: [
-      {
-        system: 'http://loinc.org/',
-        code: '21880-0',
-        display: 'Radiation treatment therapy Cancer',
-      },
-    ],
-  },
-  {
-    regex: /Pharmaceutical Therapy, NOS/,
-    text: 'Pharmaceutical Therapy, NOS',
-  },
-];
-
-const buildCodeableConcept = (codes, text) => {
-  return {
-    coding: codes,
-    text,
-  };
-};
+const { observationCodeMappings } = require('../../utils/tcgamappings');
 
 const findCodes = (testString) => {
   const found = observationCodeMappings.find(({ regex }) => regex.test(testString));

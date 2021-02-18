@@ -32,17 +32,19 @@ describe('Observation service tests', () => {
       ];
     });
 
-    getByTCGAIdSpy = jest.spyOn(TCGA.prototype, 'getDiagnosisById').mockImplementation(() => {
+    getByTCGAIdSpy = jest.spyOn(TCGA.prototype, 'getDiagnosisById').mockImplementation(async () => {
       return {
         id: 'foobar',
       };
     });
 
-    getByANVILIdSpy = jest.spyOn(ANVIL.prototype, 'getObservationById').mockImplementation(() => {
-      return {
-        id: 'foobar',
-      };
-    });
+    getByANVILIdSpy = jest
+      .spyOn(ANVIL.prototype, 'getObservationById')
+      .mockImplementation(async () => {
+        return {
+          id: 'foobar',
+        };
+      });
   });
 
   afterEach(() => {

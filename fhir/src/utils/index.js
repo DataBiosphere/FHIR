@@ -5,6 +5,8 @@ const createCache = require('./cache');
 
 const { url } = require('../config');
 
+const { diseaseDisplayMapping, diseaseSystemMapping } = require('./anvilmappings');
+
 const TCGA_REGEX = /TCGA-/;
 const TCGA_SOURCE = 'https://portal.gdc.cancer.gov/';
 const ANVIL_SOURCE = 'https://anvil.terra.bio/';
@@ -64,8 +66,8 @@ const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion }) => {
 };
 
 /**
- *
- * @param {string} resources
+ * Build search bundle
+ * @param {string[]} entries - list of already built resources
  * @param {string} fhirVersion
  */
 const buildSearchBundle = ({
@@ -89,7 +91,9 @@ const buildSearchBundle = ({
 const buildEntry = (resource, searchMode = 'match', queryParams = {}) => {
   let extension = '';
   if (queryParams && Object.keys(queryParams).length !== 0) {
-    const query = Object.keys(queryParams).map((key) => `${key}=${queryParams[key]}`);
+    const query = Object.keys(queryParams).map(
+      (key) => `${key}=${encodeURIComponent(queryParams[key])}`
+    );
     extension = '?' + query.join('&');
   }
 
@@ -102,6 +106,23 @@ const buildEntry = (resource, searchMode = 'match', queryParams = {}) => {
   };
 };
 
+const buildIdentifier = (system, value) => {
+  return {
+    use: 'temp',
+    system: system,
+    value: value,
+  };
+};
+
+const buildCodeableConcept = (codes, text = '') => {
+  const codeableConcept = { coding: codes };
+  if (text) {
+    codeableConcept.text = text;
+  }
+
+  return codeableConcept;
+};
+
 const buildReference = (reference, type, display) => {
   return {
     reference: reference,
@@ -110,22 +131,69 @@ const buildReference = (reference, type, display) => {
   };
 };
 
-const buildIdentifier = (system, value) => {
-  return {
-    system: system,
-    value: value,
-  };
+const findDiseaseCodes = (code) => {
+  // edge case for no code
+  if (!code || code.length <= 1) {
+    return null;
+  }
+
+  const coding = { code: code };
+  const system = findDiseaseSystem(code);
+  const display = findDiseaseDisplay(code);
+
+  if (system) {
+    coding.system = system;
+  }
+
+  if (display) {
+    coding.display = display;
+  }
+
+  return coding;
+};
+
+const findDiseaseSystem = (code) => {
+  const system = diseaseSystemMapping.find(({ regex }) => regex.test(code));
+  return system ? system.system : null;
+};
+
+const findDiseaseDisplay = (code) => {
+  const display = diseaseDisplayMapping.find(({ regex }) => regex.test(code));
+  return display ? display.display : null;
+};
+
+// regex: [A-Za-z0-9\-\.]{1,64}
+const buildSlug = (...args) => {
+  let slug = [];
+  // filter all bad matches
+  args.forEach((arg) => {
+    arg = arg ? arg.match(/[A-Za-z0-9\-\.]/g) : null;
+
+    if (arg && arg.length >= 1) {
+      slug.push(arg.join(''));
+    }
+  });
+
+  if (slug.length < 1) {
+    throw 'Invalid slug arguments';
+  }
+  return slug.join('-').substring(0, 64);
 };
 
 module.exports = {
   TCGA_REGEX,
   TCGA_SOURCE,
   ANVIL_SOURCE,
-  buildSearchBundle,
-  buildLinkFromUrl,
-  buildEntry,
-  getLinks,
   createCache,
-  buildReference,
+  getLinks,
+  buildLinkFromUrl,
+  buildSearchBundle,
+  buildEntry,
   buildIdentifier,
+  buildCodeableConcept,
+  buildReference,
+  findDiseaseCodes,
+  findDiseaseSystem,
+  findDiseaseDisplay,
+  buildSlug,
 };
