@@ -59,12 +59,15 @@ const search = async ({ base_version: baseVersion }, { req }) => {
 
   // check for _source and filter promises
   if (_source) {
-    if (_source == TCGA_SOURCE) {
-      [results, count] = await tcga.getAllResearchStudy(params);
-    } else if (_source == ANVIL_SOURCE) {
-      [results, count] = await anvil.getAllResearchStudy(params);
-    } else {
-      logger.error('_source is not valid');
+    switch (_source) {
+      case TCGA_SOURCE:
+        [results, count] = await tcga.getAllResearchStudy(params);
+        break;
+      case ANVIL_SOURCE:
+        [results, count] = await anvil.getAllResearchStudy(params);
+        break;
+      default:
+        logger.error('_source is not valid');
     }
   } else {
     // TODO: add pagination
