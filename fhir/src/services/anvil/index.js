@@ -55,7 +55,7 @@ class ANVIL {
   }
 
   async getObservationById(id) {
-    const { data } = await get(`${ANVIL_URL}/api/Sample/${id}`);
+    const { data } = await get(`${ANVIL_URL}/api/Subject/${id}`);
     return this.translateSampletoObservation(data);
   }
 }

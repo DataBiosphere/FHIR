@@ -124,8 +124,24 @@ const buildCodeableConcept = (codes, text = '') => {
 };
 
 // TODO: write unit tests
-const buildCoding = (system, code, display) => {
-  return { system: system, code: code, display: display };
+/**
+ * Build coding
+ * @param {string} code - code for coding
+ * @param {string} system - uri for code
+ * @param {string} display - the text for the code within the system
+ */
+const buildCoding = (code, system = '', display = '') => {
+  const coding = { code: code };
+
+  if (system) {
+    coding.system = system;
+  }
+
+  if (display) {
+    coding.display = display;
+  }
+
+  return coding;
 };
 
 const buildReference = (reference, type, display) => {
@@ -142,19 +158,7 @@ const findDiseaseCodes = (code) => {
     return null;
   }
 
-  const coding = { code: code };
-  const system = findDiseaseSystem(code);
-  const display = findDiseaseDisplay(code);
-
-  if (system) {
-    coding.system = system;
-  }
-
-  if (display) {
-    coding.display = display;
-  }
-
-  return coding;
+  return buildCoding(code, findDiseaseSystem(code), findDiseaseDisplay(code));
 };
 
 const findDiseaseSystem = (code) => {

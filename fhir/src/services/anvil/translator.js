@@ -1,15 +1,78 @@
 const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 
-const { buildReference, buildIdentifier } = require('../../utils');
+const {
+  buildIdentifier,
+  buildCodeableConcept,
+  buildCoding,
+  buildReference,
+  findDiseaseCodes,
+  findDiseaseDisplay,
+  buildSlug,
+} = require('../../utils');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 
-const WORKSPACE = 'workspace';
-
+const buildSampleId = (workspace, id) => {
+  return `${workspace}-Su-${id}`;
+};
 class Translator {
+  toObservation(subject) {
+    let slug = buildSlug('Observation', subject.id, subject.diseaseId);
+
+    const observation = new Observation({
+      id: buildSampleId(subject.workspaceName, subject.name),
+      identifier: buildIdentifier('urn:temp:unique-string', slug),
+      meta: {
+        profile: ['https://www.hl7.org/fhir/observation.html'],
+      },
+      status: 'final',
+      subject: {
+        reference: `Patient/${subject.workspaceName}-Su-${subject.name}`,
+      },
+      Specimen: {
+        reference: `Specimen/${subject.workspaceName}-Sa-${subject.name}`,
+      },
+      // WARN: hard coded
+      valueCodeableConcept: buildCodeableConcept(
+        [
+          buildCoding(
+            '373573001',
+            'http://snomed.info/sct',
+            'Clinical finding present (situation)'
+          ),
+        ],
+        'Phenotype Present'
+      ),
+      // WARN: hard coded
+      interpretation: [
+        buildCodeableConcept(
+          [
+            buildCoding(
+              'POS',
+              'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation',
+              'Positive'
+            ),
+          ],
+          'Present'
+        ),
+      ],
+    });
+
+    const diseaseCoding = findDiseaseCodes(subject.diseaseId);
+    if (diseaseCoding) {
+      observation.code = buildCodeableConcept(
+        [diseaseCoding],
+        findDiseaseDisplay(subject.diseaseId)
+      );
+    }
+
+    // TODO: look into subject.age
+    return observation;
+  }
+
   toResearchStudy(workspace) {
     const researchStudy = new ResearchStudy({
       id: workspace.name,
@@ -24,13 +87,7 @@ class Translator {
       status: 'completed',
       category: [
         {
-          coding: [
-            {
-              system: 'http://terminology.hl7.org/CodeSystem/v2-0074',
-              code: 'GE',
-              display: 'Genetics',
-            },
-          ],
+          coding: [buildCoding('GE', 'http://terminology.hl7.org/CodeSystem/v2-0074', 'Genetics')],
         },
       ],
     });
@@ -61,23 +118,6 @@ class Translator {
     }
 
     return researchStudy;
-  }
-
-  toObservation(subject) {
-    const observation = new Observation({
-      id: subject.id,
-      identifier: buildIdentifier(
-        'https://anvil.terra.bio/#workspaces/anvil-datastorage/',
-        subject.workspaceName
-      ),
-      meta: {
-        profile: ['https://www.hl7.org/fhir/observation.html'],
-        versionId: subject.id,
-      },
-      status: 'final',
-    });
-
-    return observation;
   }
 }
 

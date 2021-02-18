@@ -11,6 +11,7 @@ const {
   findDiseaseSystem,
   findDiseaseDisplay,
   buildSlug,
+  buildCoding,
 } = require('.');
 
 describe('Utils tests', () => {
@@ -83,6 +84,22 @@ describe('Utils tests', () => {
     expect(buildCodeableConcept(code, text)).toEqual({
       coding: 'code',
       text: 'text',
+    });
+  });
+
+  it('should build Coding', () => {
+    const code = 'code';
+    const system = 'system';
+    const display = 'display';
+
+    expect(buildCoding(code, system, display)).toEqual({
+      system: 'system',
+      code: 'code',
+      display: 'display',
+    });
+
+    expect(buildCoding(code)).toEqual({
+      code: 'code',
     });
   });
 
