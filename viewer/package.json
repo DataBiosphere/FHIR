@@ -96,6 +96,7 @@
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.1",
+    "@types/invariant": "^2.2.34",
     "@types/lodash": "^4.14.168",
     "@types/qs": "^6.9.5",
     "@types/react-helmet": "^6.1.0",
