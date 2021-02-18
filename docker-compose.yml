@@ -28,11 +28,16 @@ services:
   anvil-mongo:
     image: mongo
     environment:
+      - MONGO_INITDB_ROOT_USERNAME=anvil-admin
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=anvil
+      - ANVIL_READ_PASSWORD=${ANVIL_READ_PASSWORD}
+      - ANVIL_RW_PASSWORD=${ANVIL_RW_PASSWORD}
       - PUID=1000
       - PGID=1000
     volumes:
       - ./anvil-mongodb/database:/data/db
+      - ./anvil-mongodb/mongo-schema/:/docker-entrypoint-initdb.d/
     ports:
       - 27017:27017
     restart: unless-stopped
@@ -48,4 +53,4 @@ services:
       - 3002:3002
     environment:
       - PORT=3002
-      - MONGO_CONNECTION_STRING=mongodb://anvil-mongo:27017
+      - MONGO_CONNECTION_STRING=${MONGO_READ_CONNECTION_STRING}

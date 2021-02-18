@@ -74,4 +74,4 @@ anvil/data/*
 *.sqlite3
 
 #
-anvil-mongodb/*
+anvil-mongodb/database/*
