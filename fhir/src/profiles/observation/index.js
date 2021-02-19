@@ -98,6 +98,8 @@ const searchById = async (args, { req }) => {
   const { params } = req;
   const { id } = params;
 
+  // TODO: look into promise.all
+  //        https://stackoverflow.com/questions/30362733/handling-errors-in-promise-all
   // queries both databases
   const tcgaResult = await tcga.getDiagnosisById(id).catch((err) => {
     logger.info('id is not an TCGA ID');
