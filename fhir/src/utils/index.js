@@ -36,6 +36,7 @@ const buildLinkFromUrl = (relation, linkUrl) => {
  * @param {string} resourceType
  * @param {string} page
  * @param {string} pageSize
+ * @param {string} fhirVersion
  */
 const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion }) => {
   const urlAndVersion = addTrailingSlash(baseUrl) + fhirVersion;
@@ -66,9 +67,9 @@ const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion }) => {
 };
 
 /**
- * Build search bundle
+ *
  * @param {string[]} entries - list of already built resources
- * @param {string} fhirVersion
+ * @param {string} [fhirVersion=4_0_0] - the current FHIR version
  */
 const buildSearchBundle = ({
   resourceType,
@@ -123,7 +124,6 @@ const buildCodeableConcept = (codes, text = '') => {
   return codeableConcept;
 };
 
-// TODO: write unit tests
 /**
  * Build coding
  * @param {string} code - code for coding
@@ -178,6 +178,7 @@ const buildSlug = (...args) => {
   args.forEach((arg) => {
     arg = arg ? arg.match(/[A-Za-z0-9\-\.]/g) : null;
 
+    // edge case for null and '-' diseaseId's
     if (arg && arg.length >= 1) {
       slug.push(arg.join(''));
     }

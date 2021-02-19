@@ -27,6 +27,8 @@ services:
       - PORT=3001
   anvil-mongo:
     image: mongo
+    env_file:
+      - .env
     environment:
       - MONGO_INITDB_ROOT_USERNAME=anvil-admin
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
