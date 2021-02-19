@@ -138,7 +138,7 @@ describe('Utils tests', () => {
     expect(findDiseaseDisplay('-')).toBeNull();
     expect(findDiseaseDisplay('DOID:9744')).toEqual('type 1 diabetes mellitus');
     expect(findDiseaseDisplay('OMIM:607483')).toEqual(
-      'THIAMINE METABOLISM DYSFUNCTION SYNDROME 2 {BIOTIN- OR THIAMINE-RESPONSIVE TYPE}; THMD2'
+      'THIAMINE METABOLISM DYSFUNCTION SYNDROME 2 (BIOTIN- OR THIAMINE-RESPONSIVE TYPE); THMD2'
     );
     expect(findDiseaseDisplay('OMIM:618512')).toEqual("O'DONNELL-LURIA-RODAN SYNDROME; ODLURO");
   });

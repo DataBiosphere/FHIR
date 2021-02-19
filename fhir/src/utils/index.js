@@ -167,8 +167,8 @@ const findDiseaseSystem = (code) => {
 };
 
 const findDiseaseDisplay = (code) => {
-  const display = diseaseDisplayMapping.find(({ regex }) => regex.test(code));
-  return display ? display.display : null;
+  const display = diseaseDisplayMapping[code];
+  return display ? display : null;
 };
 
 // regex: [A-Za-z0-9\-\.]{1,64}
