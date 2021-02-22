@@ -2,6 +2,7 @@ const { resolveSchema } = require('@asymmetrik/node-fhir-server-core');
 const { VERSIONS } = require('@asymmetrik/node-fhir-server-core/dist/constants');
 
 const createCache = require('./cache');
+const { buildCompareFn, mergeResults } = require('./sorting');
 
 const { url } = require('../config');
 
@@ -207,4 +208,6 @@ module.exports = {
   findDiseaseSystem,
   findDiseaseDisplay,
   buildSlug,
+  buildCompareFn,
+  mergeResults
 };

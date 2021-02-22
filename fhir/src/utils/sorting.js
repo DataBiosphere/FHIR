@@ -39,16 +39,23 @@ const mergeResults = (compareFn, limit, ...arrays) => {
 
     while (count < limit) {
         let winningIdx = 0;
+        let winningVal = arrays[winningIdx][positions[winningIdx]];
 
         for (let i = 1; i < positions.length; i++) {
-            if (compareFn(arrays[winningIdx][positions[winningIdx]], arrays[i][positions[i]]) <= 0) {
+            if (winningVal === null || winningVal === undefined
+                || compareFn(winningVal, arrays[i][positions[i]]) > 0) {
                 winningIdx = i;
+                winningVal = arrays[i][positions[i]];
             }
         }
 
-        result.push(arrays[winningIdx][positions[winningIdx]]);
-        positions[winningIdx]++;
-        count++;
+        if (winningVal !== null && winningVal !== undefined) {
+            result.push(arrays[winningIdx][positions[winningIdx]]);
+            positions[winningIdx]++;
+            count++;
+        } else {
+            break;
+        }
     }
 
     return [

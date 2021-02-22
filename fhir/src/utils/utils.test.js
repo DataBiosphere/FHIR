@@ -12,6 +12,8 @@ const {
   findDiseaseDisplay,
   buildSlug,
   buildCoding,
+  buildCompareFn,
+  mergeResults
 } = require('.');
 
 describe('Utils tests', () => {
@@ -152,4 +154,46 @@ describe('Utils tests', () => {
       '1234567890-1234567890-1234567890-1234567890-1234567890-123456789'
     );
   });
+
+  it('should build a valid compare function', () => {
+    const comparer = buildCompareFn('test');
+    expect(comparer({'test': 'a'}, {'test': 'b'})).toEqual(-1);
+
+    const comparerDesc = buildCompareFn('-test');
+    expect(comparerDesc({'test': 'a'}, {'test': 'b'})).toEqual(1);
+
+    const comparerSame = buildCompareFn('test');
+    expect(comparerSame({'test': 'a'}, {'test': 'a'})).toEqual(0);
+
+    const comparerMultiple = buildCompareFn('test,test2');
+    expect(comparerMultiple({'test':'a','test2':'b'}, {'test':'a','test2':'a'})).toEqual(1);
+
+    const comparerMultipleDesc = buildCompareFn('test,-test2');
+    expect(comparerMultipleDesc({'test':'a','test2':'b'}, {'test':'a','test2':'a'})).toEqual(-1);
+  });
+
+  it('should merge results correctly', () => {
+    const comparer = buildCompareFn('test');
+    const array1 = [{'test': 'a'}, {'test':'b'}];
+    const array2 = [{'test': 'c'}];
+    expect(mergeResults(comparer, 1, array1, array2)).toEqual([
+      [{'test':'a'}],
+      [1, 0]
+    ]);
+
+    expect(mergeResults(comparer, 3, array1, array2)).toEqual([
+      [{'test':'a'},{'test':'b'}, {'test':'c'}],
+      [2,1]
+    ]);
+
+    expect(mergeResults(comparer, 2, array1, array2)).toEqual([
+      [{'test':'a'},{'test':'b'}],
+      [2,0]
+    ]);
+
+    expect(mergeResults(comparer, 2, array2, array1)).toEqual([
+      [{'test':'a'},{'test':'b'}],
+      [0,2]
+    ]);
+  })
 });
