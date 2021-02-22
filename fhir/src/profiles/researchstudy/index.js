@@ -99,10 +99,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     pageSize: _count,
     fhirVersion: baseVersion,
     total: count,
-    entries: results.map((resource) => {
-      console.log(resource);
-      buildEntry(resource);
-    }),
+    entries: results.map((resource) => buildEntry(resource)),
   });
 };
 

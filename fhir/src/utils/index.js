@@ -100,7 +100,7 @@ const buildEntry = (resource, searchMode = 'match', queryParams = {}) => {
 
   return {
     resource,
-    fullUrl: `${url}/${resource?.resourceType}/${resource?.id}${extension}`,
+    fullUrl: `${url}/${resource.resourceType}/${resource.id}${extension}`,
     search: {
       mode: searchMode,
     },
