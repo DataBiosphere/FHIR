@@ -34,6 +34,7 @@ npm run test
 Configure your projects. This project uses [dotenv](https://github.com/motdotla/dotenv) extensively to make configuration easy. See [Configuration](./docs/CONFIGURATION.md)
 
 ```
+touch .env
 touch fhir/.env
 touch tcga/.env
 touch viewer/.env
