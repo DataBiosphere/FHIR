@@ -1,10 +1,14 @@
-const buildCompareFn = (sort) => {
-    const sortByArray = sort.split(',').filter((str) => str).map((str) => {
+const buildSortArray = (sort) => {
+    return sort.split(',').filter((str) => str).map((str) => {
         return {
             field: str[0] === '-' ? str.substring(1) : str,
             multiplier: str[0] === '-' ? -1 : 1
-        };
+        }
     });
+};
+
+const buildCompareFn = (sort) => {
+    const sortByArray = buildSortArray(sort);
 
     return (a1, a2) => {
         if (!a1) {
@@ -65,6 +69,7 @@ const mergeResults = (compareFn, limit, ...arrays) => {
 };
 
 module.exports = {
+    buildSortArray,
     buildCompareFn,
     mergeResults
 };

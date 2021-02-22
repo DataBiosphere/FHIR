@@ -15,4 +15,8 @@ const observationCodeMappings = [
   },
 ];
 
-module.exports = { observationCodeMappings };
+const fieldMappings = {
+  'RESEARCHSTUDY': { 'title': 'proj__name' }
+};
+
+module.exports = { observationCodeMappings, fieldMappings };

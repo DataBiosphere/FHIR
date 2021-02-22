@@ -56,7 +56,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   }
 
   // create pomises and add both adapters
-  const params = { page: _page, pageSize: _count };
+  const params = { page: _page, pageSize: _count, sort: _sort };
   let results = [];
   let count = 0;
 
@@ -88,7 +88,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     const [merged, positions] = mergeResults(
       compareFn,
       _count,
-      ...allResults.map((r) => r[0].sort(compareFn))
+      ...allResults
     );
     results = merged;
   }

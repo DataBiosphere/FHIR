@@ -47,7 +47,7 @@ class BigQuery {
    * @param {number} pageSize
    * @param {string} where
    */
-  async get({ selection = ['*'], page, pageSize, where = {}, whereIn = [], distinct } = {}) {
+  async get({ selection = ['*'], page, pageSize, where = {}, whereIn = [], distinct, orderBy = [] } = {}) {
     let counter = 0;
     const tableAlias = `table_${counter}`;
     let dataQuery = knex.from(`${this.table} AS table_${counter}`);
@@ -101,6 +101,10 @@ class BigQuery {
     if (page || pageSize) {
       const [offset, limit] = this.paginate(page, pageSize);
       dataQuery = dataQuery.offset(offset).limit(limit);
+    }
+
+    if (orderBy && orderBy.length > 0) {
+      dataQuery = dataQuery.orderBy(orderBy);
     }
 
     if (distinct) {
