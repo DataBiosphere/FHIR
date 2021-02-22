@@ -164,7 +164,7 @@ function buildOrderBy(sort) {
         return {
             column: str[0] === '-' ? str.substring(1) : str,
             order: str[0] === '-' ? 'desc' : 'asc'
-        }
+        };
     });
 }
 

@@ -2,6 +2,7 @@ const e = require('express');
 const { ObjectID } = require('mongodb');
 const logger = require('../logger');
 const { AnvilMongo } = require('../services');
+const { buildSortObject } = require('../utils');
 
 const WorkspaceService = new AnvilMongo({ collectionName: 'workspace' });
 const SampleService = new AnvilMongo({ collectionName: 'sample' });
@@ -13,12 +14,15 @@ const SubjectService = new AnvilMongo({ collectionName: 'subject' });
  * @param {string} page
  * @param {string} pageSize
  */
-const getAllWorkspaces = async ({ page = 1, pageSize = 25 }) => {
+const getAllWorkspaces = async ({ page = 1, pageSize = 25, sort = '' }) => {
+  const [sortObj, existsObj] = buildSortObject(sort);
+
   const [results, count] = await WorkspaceService.find({
     page: page,
     pageSize: pageSize,
-    query: {},
+    query: {...existsObj},
     projection: {},
+    sort: sortObj
   });
 
   return [results, count];

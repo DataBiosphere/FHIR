@@ -35,6 +35,27 @@ function dedupeObjects(list) {
   });
 }
 
+const buildSortObject = (sort) => {
+  let sortObj = {};
+  let existsObj = {};
+
+  sort.split(',').filter((str) => str).forEach((str) => {
+      const field = str[0] === '-' ? str.substring(1) : str;
+      sortObj[field] = str[0] === '-' ? -1 : 1;
+
+      existsObj[field] = buildExistsProp(field);
+  });
+
+  return [sortObj, existsObj];
+};
+
+const buildExistsProp = (prop) => {
+  return {
+    $exists: true
+  };
+};
+
 module.exports = {
   dedupeObjects,
+  buildSortObject
 };

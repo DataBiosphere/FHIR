@@ -15,8 +15,8 @@ const observationCodeMappings = [
   },
 ];
 
-const fieldMappings = {
+const tcgaFieldMappings = {
   'RESEARCHSTUDY': { 'title': 'proj__name' }
 };
 
-module.exports = { observationCodeMappings, fieldMappings };
+module.exports = { observationCodeMappings, tcgaFieldMappings };

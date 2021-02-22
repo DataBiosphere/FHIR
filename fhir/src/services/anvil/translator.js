@@ -8,12 +8,15 @@ const {
   findDiseaseCodes,
   findDiseaseDisplay,
   buildSlug,
+  buildSortArray,
 } = require('../../utils');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
+
+const { anvilFieldMappings } = require('../../utils/anvilmappings');
 
 const buildSampleId = (workspace, id) => {
   return `${workspace}-Su-${id}`;
@@ -118,6 +121,15 @@ class Translator {
     }
 
     return researchStudy;
+  }
+
+  toResearchStudySortParams(sortFields) {
+    const sortArray = buildSortArray(sortFields);
+    const researchStudyMappings = anvilFieldMappings.RESEARCHSTUDY;
+
+    return sortArray.filter(sf => researchStudyMappings[sf.field])
+                    .map(sf => `${(sf.multiplier === -1 ? '-' : '')}${researchStudyMappings[sf.field]}`)
+                    .join(',');
   }
 }
 
