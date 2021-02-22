@@ -5,6 +5,7 @@ const {
   buildIdentifier,
   buildCodeableConcept,
   buildCoding,
+  buildSortArray,
 } = require('../../utils');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
@@ -12,7 +13,7 @@ const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 
-const { observationCodeMappings } = require('../../utils/tcgamappings');
+const { observationCodeMappings, fieldMappings } = require('../../utils/tcgamappings');
 
 const findTCGACodes = (testString) => {
   const found = observationCodeMappings.find(({ regex }) => regex.test(testString));
@@ -128,6 +129,16 @@ class Translator {
         'The Cancer Genome Atlas'
       ),
     });
+  }
+
+  toResearchStudySortParams(sortFields) {
+    console.log(sortFields);
+    const sortArray = buildSortArray(sortFields);
+    const researchStudyMappings = fieldMappings.RESEARCHSTUDY;
+
+    return sortArray.filter(sf => researchStudyMappings[sf.field])
+                    .map(sf => `${(sf.multiplier === -1 ? '-' : '')}${researchStudyMappings[sf.field]}`)
+                    .join(',');
   }
 
   // TODO: remove this at some point

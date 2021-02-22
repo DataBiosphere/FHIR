@@ -66,8 +66,8 @@ const getBiospecimenById = async (req, res) => {
 
 const getAllProjects = async (req, res) => {
   logger.info('TCGA >>> getAllProjects');
-  const { page, pageSize } = req.query;
-  const [results, count] = await service.getAllProjects({ page, pageSize });
+  const { page, pageSize, sort } = req.query;
+  const [results, count] = await service.getAllProjects({ page, pageSize, sort });
   res.json({
     results,
     count,

@@ -31,9 +31,9 @@ class ANVIL {
     return this.resourceTranslator.toObservation(sample);
   }
 
-  async getAllResearchStudy({ page, pageSize } = {}) {
+  async getAllResearchStudy({ page, pageSize, sort } = {}) {
     const { data } = await get(`${ANVIL_URL}/api/Workspace`, {
-      params: { page, pageSize },
+      params: { page, pageSize, sort },
     });
 
     const { results, count } = data;
