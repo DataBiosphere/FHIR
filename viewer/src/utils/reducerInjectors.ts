@@ -5,7 +5,7 @@ import checkStore from './checkStore';
 import createReducer from '../reducers';
 
 export function injectReducerFactory(store: any, isValid: boolean) {
-  return function injectReducer(key: string, reducer: Function) {
+  return function injectReducer(key: string, reducer: any) {
     if (!isValid) checkStore(store);
 
     invariant(
