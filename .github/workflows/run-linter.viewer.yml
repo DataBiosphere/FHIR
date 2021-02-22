@@ -8,11 +8,8 @@ env:
 
 jobs:
   test:
-    name: Run Viewer linting Tests
+    name: Run Jest tests
     runs-on: ubuntu-latest
-    defaults:
-      run: bash
-      working-directory: viewer
 
     strategy:
       matrix:
@@ -21,12 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
       - name: Install
+        working-directory: ./viewer
         run: npm install
-
-      - name: Run lint
+      - name: Test
+        working-directory: ./viewer
         run: npm run lint

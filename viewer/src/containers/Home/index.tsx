@@ -69,7 +69,7 @@ export function Home(props: any) {
 
   useEffect(() => {
     getSummaryInfo();
-  }, []);
+  }, [getSummaryInfo]);
 
   return (
     <div>

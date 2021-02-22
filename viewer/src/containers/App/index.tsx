@@ -32,7 +32,7 @@ function App(props: any) {
 
   useEffect(() => {
     dispatch(loadSmartInfoAction());
-  }, []);
+  }, [dispatch]);
 
   const top = [
     {
