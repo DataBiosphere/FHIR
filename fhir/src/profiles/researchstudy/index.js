@@ -88,7 +88,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     const [merged, positions] = mergeResults(
       compareFn,
       _count,
-      ...allResults
+      ...allResults.map(r => r[0])
     );
     results = merged;
   }

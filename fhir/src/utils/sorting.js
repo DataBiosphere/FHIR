@@ -3,7 +3,7 @@ const buildSortArray = (sort) => {
         return {
             field: str[0] === '-' ? str.substring(1) : str,
             multiplier: str[0] === '-' ? -1 : 1
-        }
+        };
     });
 };
 

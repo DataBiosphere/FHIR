@@ -31,9 +31,13 @@ class ANVIL {
     return this.resourceTranslator.toObservation(sample);
   }
 
+  translateSortParamstoResearchStudyParams(sortFields) {
+    return this.resourceTranslator.toResearchStudySortParams(sortFields);
+  }
+
   async getAllResearchStudy({ page, pageSize, sort } = {}) {
     const { data } = await get(`${ANVIL_URL}/api/Workspace`, {
-      params: { page, pageSize, sort },
+      params: { page, pageSize, sort: this.translateSortParamstoResearchStudyParams(sort) },
     });
 
     const { results, count } = data;

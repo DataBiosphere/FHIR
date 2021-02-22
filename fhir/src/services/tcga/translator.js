@@ -13,7 +13,7 @@ const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 
-const { observationCodeMappings, fieldMappings } = require('../../utils/tcgamappings');
+const { observationCodeMappings, tcgaFieldMappings } = require('../../utils/tcgamappings');
 
 const findTCGACodes = (testString) => {
   const found = observationCodeMappings.find(({ regex }) => regex.test(testString));
@@ -132,9 +132,8 @@ class Translator {
   }
 
   toResearchStudySortParams(sortFields) {
-    console.log(sortFields);
     const sortArray = buildSortArray(sortFields);
-    const researchStudyMappings = fieldMappings.RESEARCHSTUDY;
+    const researchStudyMappings = tcgaFieldMappings.RESEARCHSTUDY;
 
     return sortArray.filter(sf => researchStudyMappings[sf.field])
                     .map(sf => `${(sf.multiplier === -1 ? '-' : '')}${researchStudyMappings[sf.field]}`)
