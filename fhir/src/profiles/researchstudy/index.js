@@ -29,7 +29,7 @@ const getStandardParameters = (query) => {
     // _security,
     _source,
     // _tag,
-    _sort = DEFAULT_SORT
+    _sort = DEFAULT_SORT,
   } = query;
   return { _page, _count, _id, _include, _source, _sort };
 };
@@ -82,10 +82,14 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     promises.push(anvil.getAllResearchStudy(params));
 
     const allResults = await Promise.all(promises);
-    
+
     count = allResults.map((r) => r[1]).reduce((acc, val) => acc + val);
     const compareFn = buildCompareFn(_sort);
-    const [merged, positions] = mergeResults(compareFn, _count, ...allResults.map((r) => r[0].sort(compareFn)));
+    const [merged, positions] = mergeResults(
+      compareFn,
+      _count,
+      ...allResults.map((r) => r[0].sort(compareFn))
+    );
     results = merged;
   }
 
@@ -95,7 +99,10 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     pageSize: _count,
     fhirVersion: baseVersion,
     total: count,
-    entries: results.map((resource) => buildEntry(resource)),
+    entries: results.map((resource) => {
+      console.log(resource);
+      buildEntry(resource);
+    }),
   });
 };
 
