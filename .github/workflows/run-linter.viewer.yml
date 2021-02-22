@@ -7,7 +7,7 @@ env:
   NODE_ENV: TEST
 
 jobs:
-  run-tests:
+  test:
     name: Run Viewer linting Tests
     runs-on: ubuntu-latest
     defaults:
