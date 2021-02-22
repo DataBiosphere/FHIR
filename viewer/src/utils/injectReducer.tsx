@@ -11,6 +11,7 @@ import getInjectors from './reducerInjectors';
  * @param {function} reducer A reducer that will be injected
  *
  */
+/*eslint-disable */
 export default ({ key, reducer }: any) => (WrappedComponent: any) => {
   class ReducerInjector extends React.Component {
     static WrappedComponent = WrappedComponent;
@@ -34,12 +35,13 @@ export default ({ key, reducer }: any) => (WrappedComponent: any) => {
 
   return hoistNonReactStatics(ReducerInjector, WrappedComponent);
 };
+/*eslint-enable */
 
 const useInjectReducer = ({ key, reducer }: any) => {
   const context = React.useContext(ReactReduxContext);
   React.useEffect(() => {
     getInjectors(context.store).injectReducer(key, reducer);
-  }, []);
+  }, [context.store, key, reducer]);
 };
 
 export { useInjectReducer };
