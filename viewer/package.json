@@ -75,7 +75,7 @@
     "build:launch": "node ./internals/build.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint  --ext .js --ext .jsx src",
+    "lint": "eslint  --ext .ts --ext .tsx src",
     "format": "prettier \"**/*.{js,jsx}\" --write",
     "changelog": "conventional-changelog -p angular -s -i CHANGELOG.md"
   },
