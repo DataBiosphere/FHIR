@@ -8,7 +8,8 @@ export const renderers = [
   [
     OBSERVATION_CODE,
     (code) => {
-      const { coding, text } = code;
+      const { coding, text } = code || { coding: '',  text: '' };
+      
       return (
         <TableCell>
           {coding ? (
