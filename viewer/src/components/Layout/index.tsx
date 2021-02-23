@@ -131,7 +131,6 @@ const useStyles = makeStyles((theme) => ({
 function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }: any) {
   const classes = useStyles();
   const [open, setOpen] = useState<boolean>(false);
-  const [, setAnchorEl] = useState();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<any>();
 
   const handleDrawerOpen = () => {
