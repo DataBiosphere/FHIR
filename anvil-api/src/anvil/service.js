@@ -14,7 +14,7 @@ const SubjectService = new AnvilMongo({ collectionName: 'subject' });
  * @param {string} page
  * @param {string} pageSize
  */
-const getAllWorkspaces = async ({ page = 1, pageSize = 25, sort = '' }) => {
+const getAllWorkspaces = async ({ page = 1, pageSize = 25, sort = '', offset = 0 }) => {
   const [sortObj, existsObj] = buildSortObject(sort);
 
   const [results, count] = await WorkspaceService.find({
@@ -22,6 +22,7 @@ const getAllWorkspaces = async ({ page = 1, pageSize = 25, sort = '' }) => {
     pageSize: pageSize,
     query: {...existsObj},
     projection: {},
+    offset: offset,
     sort: sortObj
   });
 

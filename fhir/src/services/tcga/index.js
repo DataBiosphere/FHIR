@@ -116,8 +116,8 @@ class TCGA {
     return this.translateBiospecimentoSpecimen(data, data);
   }
 
-  async getAllResearchStudy({ page, pageSize, sort } = {}) {
-    const { data } = await get(`${TCGA_URL}/api/projects`, { params: { page, pageSize, sort: this.translateSortParamstoResearchStudyParams(sort) } });
+  async getAllResearchStudy({ pageSize, sort, offset } = {}) {
+    const { data } = await get(`${TCGA_URL}/api/projects`, { params: { offset, pageSize, sort: this.translateSortParamstoResearchStudyParams(sort) } });
     const { results, count } = data;
     return [results.map((diagnosis) => this.translateProjectToResearchStudy(diagnosis)), count];
   }
