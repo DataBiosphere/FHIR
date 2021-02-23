@@ -13,7 +13,7 @@ const {
   buildSlug,
   buildCoding,
   buildCompareFn,
-  mergeResults
+  mergeResults,
 } = require('.');
 
 describe('Utils tests', () => {
@@ -26,12 +26,31 @@ describe('Utils tests', () => {
 
   it('should get FHIR links from a url, page, and page size', () => {
     const baseUrl = 'https://example.com';
+    const resourceType = 'Patient';
     const page = 2;
     const pageSize = 20;
-    expect(getLinks({ baseUrl, resourceType: 'Patient', page, pageSize })).toEqual([
-      { relation: 'previous', url: 'https://example.com/Patient' },
+    const hashes = {
+      prev: '1234',
+      next: 'e12e540bc07c21be8a51b017d2cd5796',
+    };
+    expect(getLinks({ baseUrl, resourceType, page, pageSize })).toEqual([
+      { relation: 'previous', url: 'https://example.com/Patient?_page=1&_count=20' },
       { relation: 'self', url: 'https://example.com/Patient?_page=2&_count=20' },
       { relation: 'next', url: 'https://example.com/Patient?_page=3&_count=20' },
+    ]);
+
+    expect(getLinks({ baseUrl, resourceType, page, pageSize, hashes })).toEqual([
+      { relation: 'previous', url: 'https://example.com/Patient?_page=1&_hash=1234&_count=20' },
+      { relation: 'self', url: 'https://example.com/Patient?_page=2&_count=20' },
+      {
+        relation: 'next',
+        url: 'https://example.com/Patient?_page=3&_hash=e12e540bc07c21be8a51b017d2cd5796&_count=20',
+      },
+    ]);
+
+    expect(getLinks({ baseUrl, resourceType, page: 1, pageSize })).toEqual([
+      { relation: 'self', url: 'https://example.com/Patient?_page=1&_count=20' },
+      { relation: 'next', url: 'https://example.com/Patient?_page=2&_count=20' },
     ]);
   });
 
@@ -157,43 +176,40 @@ describe('Utils tests', () => {
 
   it('should build a valid compare function', () => {
     const comparer = buildCompareFn('test');
-    expect(comparer({'test': 'a'}, {'test': 'b'})).toEqual(-1);
+    expect(comparer({ test: 'a' }, { test: 'b' })).toEqual(-1);
 
     const comparerDesc = buildCompareFn('-test');
-    expect(comparerDesc({'test': 'a'}, {'test': 'b'})).toEqual(1);
+    expect(comparerDesc({ test: 'a' }, { test: 'b' })).toEqual(1);
 
     const comparerSame = buildCompareFn('test');
-    expect(comparerSame({'test': 'a'}, {'test': 'a'})).toEqual(0);
+    expect(comparerSame({ test: 'a' }, { test: 'a' })).toEqual(0);
 
     const comparerMultiple = buildCompareFn('test,test2');
-    expect(comparerMultiple({'test':'a','test2':'b'}, {'test':'a','test2':'a'})).toEqual(1);
+    expect(comparerMultiple({ test: 'a', test2: 'b' }, { test: 'a', test2: 'a' })).toEqual(1);
 
     const comparerMultipleDesc = buildCompareFn('test,-test2');
-    expect(comparerMultipleDesc({'test':'a','test2':'b'}, {'test':'a','test2':'a'})).toEqual(-1);
+    expect(comparerMultipleDesc({ test: 'a', test2: 'b' }, { test: 'a', test2: 'a' })).toEqual(-1);
   });
 
   it('should merge results correctly', () => {
     const comparer = buildCompareFn('test');
-    const array1 = [{'test': 'a'}, {'test':'b'}];
-    const array2 = [{'test': 'c'}];
-    expect(mergeResults(comparer, 1, array1, array2)).toEqual([
-      [{'test':'a'}],
-      [1, 0]
-    ]);
+    const array1 = [{ test: 'a' }, { test: 'b' }];
+    const array2 = [{ test: 'c' }];
+    expect(mergeResults(comparer, 1, array1, array2)).toEqual([[{ test: 'a' }], [1, 0]]);
 
     expect(mergeResults(comparer, 3, array1, array2)).toEqual([
-      [{'test':'a'},{'test':'b'}, {'test':'c'}],
-      [2,1]
+      [{ test: 'a' }, { test: 'b' }, { test: 'c' }],
+      [2, 1],
     ]);
 
     expect(mergeResults(comparer, 2, array1, array2)).toEqual([
-      [{'test':'a'},{'test':'b'}],
-      [2,0]
+      [{ test: 'a' }, { test: 'b' }],
+      [2, 0],
     ]);
 
     expect(mergeResults(comparer, 2, array2, array1)).toEqual([
-      [{'test':'a'},{'test':'b'}],
-      [0,2]
+      [{ test: 'a' }, { test: 'b' }],
+      [0, 2],
     ]);
-  })
+  });
 });
