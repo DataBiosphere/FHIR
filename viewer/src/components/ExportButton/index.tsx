@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, makeStyles } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -12,14 +12,29 @@ const useStyles = makeStyles(() => ({
 
 function ExportButton({ onClick, downloadProgress }: any) {
   const classes = useStyles();
+  const [downloading, setDownloading] = useState(false);
+
+  const processClick = () => {
+    onClick();
+    setDownloading(true);
+  };
+
+  // allow the button to be pressed when download is done
+  useEffect(() => {
+    if (downloadProgress >= 1) {
+      console.log('done');
+      setDownloading(false);
+    }
+  }, [downloadProgress]);
+
   return (
     <div>
       <Button
         color="primary"
         variant="contained"
         startIcon={<SaveIcon />}
-        onClick={onClick}
-        disabled={downloadProgress !== 0 || downloadProgress >= 1}
+        onClick={processClick}
+        disabled={downloading}
       >
         Export Page
         <div className={classes.divider} />
