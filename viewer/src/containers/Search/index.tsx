@@ -113,7 +113,7 @@ export function Search(props: any) {
   // runs on inital launch
   useEffect(() => {
     getResources(selectedResource, page, rowsPerPage, pageLinks);
-  }, [getResources, selectedResource, page, rowsPerPage, pageLinks]);
+  }, [getResources, selectedResource, page, rowsPerPage]);
 
   // runs when download is completed
   useEffect(() => {
