@@ -13,24 +13,30 @@ import {
 } from './actions';
 import { GET_BUNDLE, GET_DOWNLOAD, PARSING_ROWS_PER_PAGE } from './constants';
 
+// TODO: explore memoizing this for pageLinks
 function* getResourceType({ resourceType, page, count, pageLinks }: any) {
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
-    yield put(loadBundleRequestAction(resourceType, page, count, pageLinks));
-    console.log('PAGE LINKS: ', JSON.stringify(pageLinks, null, 4));
-    const requestUrl: string = pageLinks && pageLinks[page] ? pageLinks[page] : `${resourceType}?_page=${page}&_count=${count}`;
+    yield put(loadBundleRequestAction(resourceType, page, count));
+
+    // create API call
+    const requestUrl: string =
+      pageLinks && pageLinks[page]
+        ? pageLinks[page]
+        : `${resourceType}?_page=${page}&_count=${count}`;
     const bundle = yield call(requester, requestUrl);
 
+    // create paging array
     const pageArray = [];
-    if (page > 1)
-      pageArray.push(page - 1);
+    if (page > 1) pageArray.push(page - 1);
     pageArray.push(page);
     pageArray.push(page + 1);
 
+    // parse bundle and build links
     const links: any = {};
     pageArray.forEach((p: number) => {
-      if (p < page){
+      if (p < page) {
         links[p] = bundle.link.filter((l: any) => l.relation === 'previous')[0].url;
       } else if (p === page) {
         links[p] = bundle.link.filter((l: any) => l.relation === 'self')[0].url;

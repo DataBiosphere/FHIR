@@ -16,9 +16,9 @@ import {
 } from './constants';
 
 // load bundle actions
-export const loadBundleRequestAction = (resourceType: string, page: number, count: number, pageLinks: any) => ({
+export const loadBundleRequestAction = (resourceType: string, page: number, count: number) => ({
   type: GET_BUNDLE_REQUEST,
-  payload: { resourceType, page, count, pageLinks },
+  payload: { resourceType, page, count },
 });
 
 export const loadBundleSuccessAction = (bundle: any, links: any) => ({

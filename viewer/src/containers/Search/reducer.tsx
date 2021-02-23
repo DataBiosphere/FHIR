@@ -25,7 +25,6 @@ const searchReducer = (state = initialState, action: any) =>
         draft.loading = true;
         draft.selectedResource = action.payload.resourceType;
         draft.page = action.payload.page;
-        draft.pageLinks = action.payload.pageLinks;
         break;
       case GET_BUNDLE_SUCCESS:
         draft.bundle = action.payload.bundle;

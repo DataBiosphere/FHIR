@@ -105,6 +105,7 @@ export function Search(props: any) {
   };
 
   const onExportClicked = () => {
+    // TODO: add params for exports
     getDownload(selectedResource, '');
   };
 
