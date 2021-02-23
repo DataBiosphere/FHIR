@@ -113,10 +113,10 @@ export function Search(props: any) {
   // runs on inital launch
   useEffect(() => {
     getResources(selectedResource, page, rowsPerPage, pageLinks);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // runs when download is completed
+  // runs when download changes
+  // not too sure if this is the best implementation though
   useEffect(() => {
     // write to file
     if (download) {
@@ -226,7 +226,6 @@ Search.defaultProps = {
 };
 
 const mapStateToProps = (state: any) => {
-  console.log(state);
   return {
     bundle: selectBundle(state),
     download: selectDownload(state),
@@ -248,7 +247,9 @@ function mapDispatchToProps(dispatch: any) {
       dispatch({ type: GET_DOWNLOAD, resourceType, params });
     },
 
-    setViewingEntry: () => {},
+    setViewingEntry: () => {
+      // nothing for now
+    },
   };
 }
 

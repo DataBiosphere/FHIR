@@ -36,5 +36,9 @@ module.exports = {
     'import/no-named-as-default': 'off',
     'react/static-property-placement': 'off',
     'no-unused-vars': 'warn',
+
+    'no-console': 'error',
+    'react/display-name': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
   },
 };

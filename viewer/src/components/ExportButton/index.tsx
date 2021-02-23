@@ -22,7 +22,6 @@ function ExportButton({ onClick, downloadProgress }: any) {
   // allow the button to be pressed when download is done
   useEffect(() => {
     if (downloadProgress >= 1) {
-      console.log('done');
       setDownloading(false);
     }
   }, [downloadProgress]);
