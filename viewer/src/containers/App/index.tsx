@@ -32,7 +32,8 @@ function App(props: any) {
 
   useEffect(() => {
     dispatch(loadSmartInfoAction());
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const top = [
     {
