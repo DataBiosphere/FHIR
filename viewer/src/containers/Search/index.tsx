@@ -96,12 +96,12 @@ export function Search(props: any) {
   const classes = useStyles();
 
   const onChangePage = (_: any, newPage: number) => {
-    getResources(selectedResource, newPage + 1, rowsPerPage);
+    getResources(selectedResource, newPage + 1, rowsPerPage, pageLinks);
   };
 
   const onChangeRowsPerPage = (event: any) => {
     setRowsPerPage(event.target.value);
-    getResources(selectedResource, page, rowsPerPage);
+    getResources(selectedResource, 1, rowsPerPage, {});
   };
 
   const onExportClicked = () => {
@@ -112,7 +112,7 @@ export function Search(props: any) {
 
   // runs on inital launch
   useEffect(() => {
-    getResources(selectedResource, page, rowsPerPage);
+    getResources(selectedResource, page, rowsPerPage, pageLinks);
   }, []);
 
   // runs when download is completed
@@ -140,7 +140,7 @@ export function Search(props: any) {
         <Select
           defaultValue="DiagnosticReport"
           onChange={(event) => {
-            getResources(event.target.value, 1, rowsPerPage);
+            getResources(event.target.value, 1, rowsPerPage, {});
           }}
         >
           <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>

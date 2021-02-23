@@ -109,7 +109,11 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     );
     results = merged;
 
-    newHash = await pagingSession.insert({ positions: { tcga: positions[0], anvil: positions[1] }, previous: _hash });
+    if (currentOffsets) {
+      currentOffsets.tcga += positions[0];
+      currentOffsets.anvil += positions[1];
+    }
+    newHash = await pagingSession.insert({ positions: currentOffsets, previous: _hash });
   }
 
   return buildSearchBundle({
