@@ -16,14 +16,14 @@ import {
 } from './constants';
 
 // load bundle actions
-export const loadBundleRequestAction = (resourceType: string, page: number, count: number) => ({
+export const loadBundleRequestAction = (resourceType: string, page: number, count: number, pageLinks: any) => ({
   type: GET_BUNDLE_REQUEST,
-  payload: { resourceType, page, count },
+  payload: { resourceType, page, count, pageLinks },
 });
 
-export const loadBundleSuccessAction = (bundle: any) => ({
+export const loadBundleSuccessAction = (bundle: any, links: any) => ({
   type: GET_BUNDLE_SUCCESS,
-  payload: bundle,
+  payload: { bundle: bundle, links: links },
 });
 
 export const loadBundleErrorAction = (error: any) => ({ type: GET_BUNDLE_ERROR, payload: error });

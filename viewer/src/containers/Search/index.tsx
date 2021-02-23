@@ -35,6 +35,7 @@ import {
   selectDownloadProgress,
   selectSelectedResource,
   selectPage,
+  selectPageLinks,
   selectDownload,
 } from './selectors';
 import reducer from './reducer';
@@ -81,6 +82,7 @@ export function Search(props: any) {
     loading,
     selectedResource,
     page,
+    pageLinks,
     download,
     downloadProgress,
   } = props;
@@ -203,6 +205,7 @@ Search.propTypes = {
   loading: PropTypes.bool,
   selectedResource: PropTypes.string,
   page: PropTypes.number,
+  pageLinks: PropTypes.any,
   downloadProgress: PropTypes.number,
   bundle: PropTypes.shape({
     entry: PropTypes.array.isRequired,
@@ -216,11 +219,13 @@ Search.defaultProps = {
   download: undefined,
   loading: true,
   page: 1,
+  pageLinks: {},
   downloadProgress: 0,
   selectedResource: 'DiagnosticReport',
 };
 
 const mapStateToProps = (state: any) => {
+  console.log(state);
   return {
     bundle: selectBundle(state),
     download: selectDownload(state),
@@ -228,13 +233,14 @@ const mapStateToProps = (state: any) => {
     downloadProgress: selectDownloadProgress(state),
     selectedResource: selectSelectedResource(state),
     page: selectPage(state),
+    pageLinks: selectPageLinks(state)
   };
 };
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    getResources: (resourceType: string, page: number, count: number) => {
-      dispatch({ type: GET_BUNDLE, resourceType, page, count });
+    getResources: (resourceType: string, page: number, count: number, pageLinks: any) => {
+      dispatch({ type: GET_BUNDLE, resourceType, page, count, pageLinks });
     },
 
     getDownload: (resourceType: string, params: any) => {
