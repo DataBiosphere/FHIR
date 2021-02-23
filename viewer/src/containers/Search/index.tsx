@@ -113,7 +113,8 @@ export function Search(props: any) {
   // runs on inital launch
   useEffect(() => {
     getResources(selectedResource, page, rowsPerPage, pageLinks);
-  }, [getResources, selectedResource, page, rowsPerPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // runs when download is completed
   useEffect(() => {
@@ -233,7 +234,7 @@ const mapStateToProps = (state: any) => {
     downloadProgress: selectDownloadProgress(state),
     selectedResource: selectSelectedResource(state),
     page: selectPage(state),
-    pageLinks: selectPageLinks(state)
+    pageLinks: selectPageLinks(state),
   };
 };
 
