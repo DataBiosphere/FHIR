@@ -35,6 +35,7 @@ import {
   selectDownloadProgress,
   selectSelectedResource,
   selectPage,
+  selectPageLinks,
   selectDownload,
 } from './selectors';
 import reducer from './reducer';
@@ -81,6 +82,7 @@ export function Search(props: any) {
     loading,
     selectedResource,
     page,
+    pageLinks,
     download,
     downloadProgress,
   } = props;
@@ -94,12 +96,12 @@ export function Search(props: any) {
   const classes = useStyles();
 
   const onChangePage = (_: any, newPage: number) => {
-    getResources(selectedResource, newPage + 1, rowsPerPage);
+    getResources(selectedResource, newPage + 1, rowsPerPage, pageLinks);
   };
 
   const onChangeRowsPerPage = (event: any) => {
     setRowsPerPage(event.target.value);
-    getResources(selectedResource, page, rowsPerPage);
+    getResources(selectedResource, 1, rowsPerPage, {});
   };
 
   const onExportClicked = () => {
@@ -110,8 +112,9 @@ export function Search(props: any) {
 
   // runs on inital launch
   useEffect(() => {
-    getResources(selectedResource, page, rowsPerPage);
-  }, [getResources, selectedResource, page, rowsPerPage]);
+    getResources(selectedResource, page, rowsPerPage, pageLinks);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // runs when download is completed
   useEffect(() => {
@@ -138,7 +141,7 @@ export function Search(props: any) {
         <Select
           defaultValue="DiagnosticReport"
           onChange={(event) => {
-            getResources(event.target.value, 1, rowsPerPage);
+            getResources(event.target.value, 1, rowsPerPage, {});
           }}
         >
           <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
@@ -203,6 +206,7 @@ Search.propTypes = {
   loading: PropTypes.bool,
   selectedResource: PropTypes.string,
   page: PropTypes.number,
+  pageLinks: PropTypes.any,
   downloadProgress: PropTypes.number,
   bundle: PropTypes.shape({
     entry: PropTypes.array.isRequired,
@@ -216,11 +220,13 @@ Search.defaultProps = {
   download: undefined,
   loading: true,
   page: 1,
+  pageLinks: {},
   downloadProgress: 0,
   selectedResource: 'DiagnosticReport',
 };
 
 const mapStateToProps = (state: any) => {
+  console.log(state);
   return {
     bundle: selectBundle(state),
     download: selectDownload(state),
@@ -228,13 +234,14 @@ const mapStateToProps = (state: any) => {
     downloadProgress: selectDownloadProgress(state),
     selectedResource: selectSelectedResource(state),
     page: selectPage(state),
+    pageLinks: selectPageLinks(state),
   };
 };
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    getResources: (resourceType: string, page: number, count: number) => {
-      dispatch({ type: GET_BUNDLE, resourceType, page, count });
+    getResources: (resourceType: string, page: number, count: number, pageLinks: any) => {
+      dispatch({ type: GET_BUNDLE, resourceType, page, count, pageLinks });
     },
 
     getDownload: (resourceType: string, params: any) => {

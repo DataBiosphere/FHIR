@@ -24,6 +24,7 @@
     "@asymmetrik/node-fhir-server-core": "^2.2.2",
     "@google-cloud/bigquery": "^5.3.0",
     "axios": "^0.20.0",
+    "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "fast-memoize": "^2.5.2",
@@ -31,7 +32,9 @@
     "jest-cli": "^26.4.2",
     "knex": "^0.21.6",
     "memoizee": "^0.4.14",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "sqlite": "^4.0.19",
+    "sqlite3": "^5.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

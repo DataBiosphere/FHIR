@@ -10,6 +10,7 @@ const {
 } = require('../../utils');
 const { TCGA, ANVIL } = require('../../services');
 const { buildCompareFn, mergeResults } = require('../../utils/sorting');
+const PagingSession = require('../../utils/pagingsession');
 
 const tcga = new TCGA();
 const anvil = new ANVIL();
@@ -20,6 +21,7 @@ const logger = loggers.get();
 const getStandardParameters = (query) => {
   const {
     _page = 1,
+    _hash = '',
     _count = bundleSize,
     _id,
     _include,
@@ -31,13 +33,13 @@ const getStandardParameters = (query) => {
     // _tag,
     _sort = DEFAULT_SORT,
   } = query;
-  return { _page, _count, _id, _include, _source, _sort };
+  return { _page, _hash, _count, _id, _include, _source, _sort };
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('ResearchStudy >>> search');
   const { query } = req;
-  const { _page, _count, _id, _source, _sort } = getStandardParameters(query);
+  const { _page, _hash, _count, _id, _source, _sort } = getStandardParameters(query);
 
   // WARN: this only works because we have two datasets
   //        needs changing for more datasets
@@ -55,19 +57,34 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     });
   }
 
+  let currentOffsets = {
+    tcga: 0,
+    anvil: 0
+  };
+  let session = {};
+  const pagingSession = new PagingSession();
+
+  if (_hash) {
+    session = await pagingSession.get(_hash);
+    if (session) {
+      currentOffsets = JSON.parse(session.json);
+    }
+  }
+
   // create pomises and add both adapters
   const params = { page: _page, pageSize: _count, sort: _sort };
   let results = [];
   let count = 0;
+  let newHash = '';
 
   // check for _source and filter promises
   if (_source) {
     switch (_source) {
       case TCGA_SOURCE:
-        [results, count] = await tcga.getAllResearchStudy(params);
+        [results, count] = await tcga.getAllResearchStudy({ offset: currentOffsets.tcga, ...params });
         break;
       case ANVIL_SOURCE:
-        [results, count] = await anvil.getAllResearchStudy(params);
+        [results, count] = await anvil.getAllResearchStudy({ offset: currentOffsets.anvil, ...params });
         break;
       default:
         logger.error('_source is not valid');
@@ -78,8 +95,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
 
     // creates and resolves all promises
     const promises = [];
-    promises.push(tcga.getAllResearchStudy(params));
-    promises.push(anvil.getAllResearchStudy(params));
+    promises.push(tcga.getAllResearchStudy({ offset: currentOffsets.tcga, ...params }));
+    promises.push(anvil.getAllResearchStudy({ offset: currentOffsets.anvil, ...params }));
 
     const allResults = await Promise.all(promises);
 
@@ -91,6 +108,12 @@ const search = async ({ base_version: baseVersion }, { req }) => {
       ...allResults.map(r => r[0])
     );
     results = merged;
+
+    if (currentOffsets) {
+      currentOffsets.tcga += positions[0];
+      currentOffsets.anvil += positions[1];
+    }
+    newHash = await pagingSession.insert({ positions: currentOffsets, previous: _hash });
   }
 
   return buildSearchBundle({
@@ -100,6 +123,11 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     fhirVersion: baseVersion,
     total: count,
     entries: results.map((resource) => buildEntry(resource)),
+    hashes: {
+      prev: session ? session.previous : '',
+      self: _hash,
+      next: newHash
+    }
   });
 };
 

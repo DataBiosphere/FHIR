@@ -69,7 +69,8 @@ export function Home(props: any) {
 
   useEffect(() => {
     getSummaryInfo();
-  }, [getSummaryInfo]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>

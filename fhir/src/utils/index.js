@@ -39,17 +39,23 @@ const buildLinkFromUrl = (relation, linkUrl) => {
  * @param {string} pageSize
  * @param {string} fhirVersion
  */
-const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion }) => {
+const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion, hashes }) => {
   const urlAndVersion = addTrailingSlash(baseUrl) + fhirVersion;
   const links = [];
 
   const linkSelf = new URL(resourceType, urlAndVersion);
 
   linkSelf.searchParams.set('_page', Number(page));
+  if (hashes && hashes.self) {
+    linkSelf.searchParams.set('_hash', hashes.self);
+  }
   linkSelf.searchParams.set('_count', pageSize);
 
   const linkNext = new URL(resourceType, urlAndVersion);
   linkNext.searchParams.set('_page', Number(page) + 1);
+  if (hashes && hashes.next) {
+    linkNext.searchParams.set('_hash', hashes.next);
+  }
   linkNext.searchParams.set('_count', pageSize);
 
   const urlNext = buildLinkFromUrl('next', linkNext);
@@ -57,8 +63,11 @@ const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion }) => {
 
   if (page > 1) {
     const linkPrevious = new URL(resourceType, urlAndVersion);
-    linkNext.searchParams.set('_page', Number(page) - 1);
-    linkNext.searchParams.set('_count', pageSize);
+    linkPrevious.searchParams.set('_page', Number(page) - 1);
+    if (hashes && hashes.prev) {
+      linkPrevious.searchParams.set('_hash', hashes.prev);
+    }
+    linkPrevious.searchParams.set('_count', pageSize);
     links.push(buildLinkFromUrl('previous', linkPrevious));
   }
 
@@ -79,12 +88,13 @@ const buildSearchBundle = ({
   page,
   pageSize,
   fhirVersion = VERSIONS['4_0_0'],
+  hashes = {}
 }) => {
   const Bundle = resolveSchema(fhirVersion, 'Bundle');
   return new Bundle({
     type: 'searchset',
     timestamp: new Date(),
-    link: getLinks({ baseUrl: url, resourceType, page, pageSize, fhirVersion }),
+    link: getLinks({ baseUrl: url, resourceType, page, pageSize, fhirVersion, hashes }),
     entry: entries,
     total,
   });

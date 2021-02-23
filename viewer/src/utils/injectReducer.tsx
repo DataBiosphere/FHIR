@@ -41,7 +41,8 @@ const useInjectReducer = ({ key, reducer }: any) => {
   const context = React.useContext(ReactReduxContext);
   React.useEffect(() => {
     getInjectors(context.store).injectReducer(key, reducer);
-  }, [context.store, key, reducer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 };
 
 export { useInjectReducer };

@@ -3,8 +3,8 @@ const service = require('./service');
 
 const getAllWorkspaces = async (req, res) => {
   logger.info('ANVIL >>> getAllWorkspaces');
-  const { page, pageSize, sort } = req.query;
-  const [results, count] = await service.getAllWorkspaces({ page, pageSize, sort });
+  const { page, pageSize, sort, offset } = req.query;
+  const [results, count] = await service.getAllWorkspaces({ page, pageSize, sort, offset });
   res.json({
     results,
     count,
