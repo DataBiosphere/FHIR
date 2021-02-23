@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Broad FHIR Viewer</title>
     <script src="https://cdn.jsdelivr.net/npm/fhirclient/build/fhir-client.min.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <script>
-        clientId = "738532639593-8hg9uu5e9skh4i4thi7l76h8tdtlv2uu.apps.googleusercontent.com";
-        scope = "openid profile";
-        iss = "http://localhost:3000/4_0_0/";
-        redirectUri = "http://localhost:3003";
-        clientSecret = "AITn5oeSt2vpqTD0a3BGzz9Q";
-        FHIR.oauth2.authorize({
-            clientId: clientId,
-            scope: scope,
-            iss: iss,
-            redirectUri: redirectUri,
-            clientSecret: clientSecret
-        });
+      clientId = '738532639593-8hg9uu5e9skh4i4thi7l76h8tdtlv2uu.apps.googleusercontent.com';
+      scope = 'openid profile';
+      iss = 'https://fhir.dev.envs-terra.bio/4_0_0/';
+      iss = 'https://fhir.dev.envs-terra.bio/4_0_0/';
+      clientSecret = 'AITn5oeSt2vpqTD0a3BGzz9Q';
+      FHIR.oauth2.authorize({
+        clientId: clientId,
+        scope: scope,
+        iss: iss,
+        redirectUri: redirectUri,
+        clientSecret: clientSecret,
+      });
     </script>
-</body>
-
+  </body>
 </html>

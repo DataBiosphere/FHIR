@@ -35,10 +35,10 @@ module.exports = {
     'react/prop-types': 'warn',
     'import/no-named-as-default': 'off',
     'react/static-property-placement': 'off',
-    'no-unused-vars': 'warn',
-
-    'no-console': 'error',
     'react/display-name': 'off',
     '@typescript-eslint/no-var-requires': 'off',
+    'no-unused-vars': 'warn',
+
+    'no-console': 'error', // we don't want to ship with console logs
   },
 };
