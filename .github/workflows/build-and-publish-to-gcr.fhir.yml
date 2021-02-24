@@ -1,8 +1,9 @@
 name: FHIR - Build and Publish to GCR
 
 on:
-  branches:
-    - master
+  push:
+    branches:
+      - master
 
 env:
   GITHUB_SHA: ${{ github.sha }}
