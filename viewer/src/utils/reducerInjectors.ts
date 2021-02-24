@@ -5,6 +5,7 @@ import checkStore from './checkStore';
 import createReducer from '../reducers';
 
 export function injectReducerFactory(store: any, isValid: boolean) {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   return function injectReducer(key: string, reducer: Function) {
     if (!isValid) checkStore(store);
 
@@ -16,7 +17,7 @@ export function injectReducerFactory(store: any, isValid: boolean) {
     // Check `store.injectedReducers[key] === reducer` for hot reloading when a key is the same but a reducer is different
     if (Reflect.has(store.injectedReducers, key) && store.injectedReducers[key] === reducer) return;
 
-    store.injectedReducers[key] = reducer; // eslint-disable-line no-param-reassign
+    store.injectedReducers[key] = reducer;
     store.replaceReducer(createReducer(store.injectedReducers));
   };
 }

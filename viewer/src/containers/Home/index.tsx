@@ -69,7 +69,6 @@ export function Home(props: any) {
 
   useEffect(() => {
     getSummaryInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -123,7 +122,7 @@ export function Home(props: any) {
                     </TableHead>
                     <TableBody>
                       {summaryInfo.map((info: any) => (
-                        <TableRow>
+                        <TableRow key={info.resourceType}>
                           <TableCell>{info.resourceType}</TableCell>
                           <TableCell>{info.total}</TableCell>
                         </TableRow>
