@@ -12,9 +12,10 @@ const {
 } = require('../../utils');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
-const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
-const Specimen = resolveSchema('4_0_0', 'Specimen');
+// const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
+// const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
+const Patient = resolveSchema('4_0_0', 'Patient');
 
 const { anvilFieldMappings } = require('../../utils/anvilmappings');
 
@@ -127,9 +128,20 @@ class Translator {
     const sortArray = buildSortArray(sortFields);
     const researchStudyMappings = anvilFieldMappings.RESEARCHSTUDY;
 
-    return sortArray.filter(sf => researchStudyMappings[sf.field])
-                    .map(sf => `${(sf.multiplier === -1 ? '-' : '')}${researchStudyMappings[sf.field]}`)
-                    .join(',');
+    return sortArray
+      .filter((sf) => researchStudyMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${researchStudyMappings[sf.field]}`)
+      .join(',');
+  }
+
+  toPatient(subject) {
+    let slug = buildSlug('Patient', subject.id, subject.diseaseId);
+
+    const patient = new Patient({
+      id: buildSampleId(subject.workspaceName, subject._id),
+    });
+
+    return patient;
   }
 }
 

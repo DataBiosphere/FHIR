@@ -26,13 +26,16 @@ class ANVIL {
   translateWorkspacetoResearchStudy(workspace) {
     return this.resourceTranslator.toResearchStudy(workspace);
   }
+  translateSortParamstoResearchStudyParams(sortFields) {
+    return this.resourceTranslator.toResearchStudySortParams(sortFields);
+  }
 
   translateSampletoObservation(sample) {
     return this.resourceTranslator.toObservation(sample);
   }
 
-  translateSortParamstoResearchStudyParams(sortFields) {
-    return this.resourceTranslator.toResearchStudySortParams(sortFields);
+  translateSubjecttoPatient(subject) {
+    return this.resourceTranslator.toPatient(subject);
   }
 
   async getAllResearchStudy({ page, pageSize, sort, offset } = {}) {
@@ -59,8 +62,14 @@ class ANVIL {
   }
 
   async getObservationById(id) {
+    // you aren't crazy, this API call to /Subject/:id is right
     const { data } = await get(`${ANVIL_URL}/api/Subject/${id}`);
     return this.translateSampletoObservation(data);
+  }
+
+  async getAllPatients({ page, pageSize } = {}) {
+    const { data } = await get(`${ANVIL_URL}/api/Subject`);
+    return this.translateSubjecttoPatient(data);
   }
 }
 
