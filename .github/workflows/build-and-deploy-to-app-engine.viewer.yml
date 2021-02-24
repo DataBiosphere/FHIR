@@ -1,8 +1,8 @@
 name: Viewer - Build and Deploy to GCP App Engine
 
 on:
-  release:
-    types: [released]
+  branches:
+    - master
 
 jobs:
   run-tests:

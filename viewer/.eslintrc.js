@@ -39,6 +39,6 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     'no-unused-vars': 'warn',
 
-    'no-console': 'error', // we don't want to ship with console logs
+    'no-console': 'warn', // we don't want to ship with console logs
   },
 };

@@ -1,8 +1,8 @@
 name: TCGA - Build and Publish to GCR
 
 on:
-  release:
-    types: [released]
+  branches:
+    - master
 
 env:
   GITHUB_SHA: ${{ github.sha }}

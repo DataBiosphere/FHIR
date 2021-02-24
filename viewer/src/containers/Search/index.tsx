@@ -247,10 +247,6 @@ function mapDispatchToProps(dispatch: any) {
     getDownload: (resourceType: string, params: any) => {
       dispatch({ type: GET_DOWNLOAD, resourceType, params });
     },
-
-    setViewingEntry: () => {
-      // nothing for now
-    },
   };
 }
 
