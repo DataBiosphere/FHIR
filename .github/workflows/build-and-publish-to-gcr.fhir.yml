@@ -1,9 +1,8 @@
 name: FHIR - Build and Publish to GCR
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [released]
 
 env:
   GITHUB_SHA: ${{ github.sha }}
@@ -60,11 +59,11 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "12"
+          node-version: '12'
 
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          version: "270.0.0"
+          version: '270.0.0'
           service_account_key: ${{ secrets.GCR_KEY }}
 
       - name: Setup docker
