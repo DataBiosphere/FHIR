@@ -19,15 +19,20 @@ const Patient = resolveSchema('4_0_0', 'Patient');
 
 const { anvilFieldMappings } = require('../../utils/anvilmappings');
 
-const buildSampleId = (workspace, id) => {
+const buildSubjectId = (workspace, id) => {
   return `${workspace}-Su-${id}`;
 };
+
+const buildSampleId = (workspace, id) => {
+  return `${workspace}-Sa-${id}`;
+};
+
 class Translator {
   toObservation(subject) {
-    let slug = buildSlug('Observation', subject.id, subject.diseaseId);
+    const slug = buildSlug('Observation', subject.id, subject.diseaseId);
 
     const observation = new Observation({
-      id: buildSampleId(subject.workspaceName, subject.name),
+      id: buildSubjectId(subject.workspaceName, subject.name),
       identifier: buildIdentifier('urn:temp:unique-string', slug),
       meta: {
         profile: ['https://www.hl7.org/fhir/observation.html'],
@@ -135,12 +140,20 @@ class Translator {
   }
 
   toPatient(subject) {
-    let slug = buildSlug('Patient', subject.id, subject.diseaseId);
+    const id = buildSubjectId(subject.workspaceName, subject.name);
+    const slug = buildSlug('Patient', id);
 
     const patient = new Patient({
-      id: buildSampleId(subject.workspaceName, subject._id),
+      id: id,
+      identifier: buildIdentifier('urn:temp:unique-string', slug),
+      meta: {
+        profile: ['https://www.hl7.org/fhir/patient.html'],
+      },
     });
 
+    if (subject.gender) {
+      patient.gender = subject.gender;
+    }
     return patient;
   }
 }

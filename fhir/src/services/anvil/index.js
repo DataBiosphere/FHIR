@@ -68,7 +68,16 @@ class ANVIL {
   }
 
   async getAllPatients({ page, pageSize } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/Subject`);
+    const { data } = await get(`${ANVIL_URL}/api/Subject`, {
+      params: { page, pageSize },
+    });
+
+    const { results, count } = data;
+    return [results.map((result) => this.translateSubjecttoPatient(result)), count];
+  }
+
+  async getPatientById(id) {
+    const { data } = await get(`${ANVIL_URL}/api/Subject/${id}`);
     return this.translateSubjecttoPatient(data);
   }
 }

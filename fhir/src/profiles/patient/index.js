@@ -63,9 +63,9 @@ const searchById = async (args, { req }) => {
   logger.info('Patient >>> searchById');
   const { params } = req;
   const { id } = params;
-  const specimen = await anvil.getAllPatients(id);
 
-  return specimen;
+  const patient = await anvil.getPatientById(id);
+  return patient;
 };
 
 module.exports = {
