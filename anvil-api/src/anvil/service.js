@@ -20,10 +20,10 @@ const getAllWorkspaces = async ({ page = 1, pageSize = 25, sort = '', offset = 0
   const [results, count] = await WorkspaceService.find({
     page: page,
     pageSize: pageSize,
-    query: {...existsObj},
+    query: { ...existsObj },
     projection: {},
     offset: offset,
-    sort: sortObj
+    sort: sortObj,
   });
 
   return [results, count];

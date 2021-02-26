@@ -54,12 +54,43 @@ const workspaceFixture = {
   datasetDescription: 'CMG_Broad_Muscle_KNC_WES',
 };
 
-const sampleFixture = {};
+// const sampleFixture = {};
 
-const subjectFixture = {};
+const subjectFixture = {
+  _id: '6035291866518597ddf12ee0',
+  id: 'AnVIL_CMG_Broad_Muscle_KNC_WGS-Su-377HQ_LN_1',
+  gender: null,
+  ethnicity: '-',
+  phenotypes: ['HP:0003236', 'HP:0003391', 'HP:0001270', 'HP:0003701', 'HP:0002515'],
+  diseases: ['OMIM:310200'],
+  name: '377HQ_LN_1',
+  workspaceName: 'AnVIL_CMG_Broad_Muscle_KNC_WGS',
+  diseaseId: 'OMIM:310200',
+  dbgapSubjectId: '-',
+  dbgapSubmission: 'Yes',
+  hpoPresent: 'HP:0003236|HP:0003391|HP:0001270|HP:0003701|HP:0002515',
+  ancestryDetail: '-',
+  pmidId: '-',
+  ancestry: 'White',
+  subjectId: '377HQ_LN_1',
+  diseaseDescription: 'Duchenne muscular dystrophy',
+  phenotypeGroup: 'Neuromuscular',
+  multipleDatasets: 'No',
+  priorTesting: '-',
+  dbgapStudyId: '-',
+  hpoAbsent: '-',
+  affectedStatus: 'Affected',
+  projectId: 'INMR Neuromuscular Disease CMG Genomes',
+  phenotypeDescription: 'MUSCULAR DYSTROPHY; DUCHENNE TYPE; DMD',
+  sex: 'Male',
+  solveState: 'Tier 1',
+  ageAtLastObservation: '-',
+  onsetCategory: 'Childhood onset',
+  ageOfOnset: '-',
+};
 
 module.exports = {
   workspaceFixture,
-  sampleFixture,
+  // sampleFixture,
   subjectFixture,
 };

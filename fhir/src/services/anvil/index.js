@@ -70,7 +70,7 @@ class ANVIL {
     //   count,
     // ];
 
-    return [results.map((result) => this.translateSubjecttoObservation), count];
+    return [results.map((result) => this.translateSubjecttoObservation(result)), count];
   }
 
   async getObservationById(id) {
