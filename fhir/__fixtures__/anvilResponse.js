@@ -54,9 +54,7 @@ const workspaceFixture = {
   datasetDescription: 'CMG_Broad_Muscle_KNC_WES',
 };
 
-// const sampleFixture = {};
-
-const subjectFixture = {
+const observationFixture = {
   _id: '6035291866518597ddf12ee0',
   id: 'AnVIL_CMG_Broad_Muscle_KNC_WGS-Su-377HQ_LN_1',
   gender: null,
@@ -89,8 +87,28 @@ const subjectFixture = {
   ageOfOnset: '-',
 };
 
+const patientFixture = {
+  _id: '6035292266518597ddf16199',
+  id: 'AnVIL_CMG_UWash_GRU-Su-sub-102859',
+  gender: 'female',
+  ethnicity: 'white',
+  phenotypes: null,
+  diseases: null,
+  name: 'sub-102859',
+  workspaceName: 'AnVIL_CMG_UWash_GRU',
+  dbgapSubmission: 'Yes',
+  diseaseDescription: 'severe speech sound disorder',
+  ancestry: 'White',
+  sex: 'Female',
+  dbgapStudyId: 'phs000693',
+  affectedStatus: 'Unaffected',
+  projectId: 'L686_uwcmg_speechdis_2',
+  multipleDatasets: 'No',
+  dbgapSubjectId: '1699132',
+};
+
 module.exports = {
   workspaceFixture,
-  // sampleFixture,
-  subjectFixture,
+  observationFixture,
+  patientFixture,
 };
