@@ -16,7 +16,7 @@ const observationCodeMappings = [
 ];
 
 const tcgaFieldMappings = {
-  'RESEARCHSTUDY': { 'title': 'proj__name' }
+  RESEARCHSTUDY: { title: 'proj__name' },
 };
 
 module.exports = { observationCodeMappings, tcgaFieldMappings };
