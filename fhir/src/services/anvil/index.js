@@ -27,20 +27,20 @@ class ANVIL {
     return this.resourceTranslator.toResearchStudy(workspace);
   }
   translateSortParamstoResearchStudyParams(sortFields) {
-    return this.resourceTranslator.toResearchStudySortParams(sortFields);
+    return sortFields ? this.resourceTranslator.toResearchStudySortParams(sortFields) : undefined;
   }
 
-  translateSampletoObservation(sample) {
-    return this.resourceTranslator.toObservation(sample);
+  translateSubjecttoObservation(subject) {
+    return this.resourceTranslator.toObservation(subject);
   }
 
   translateSubjecttoPatient(subject) {
     return this.resourceTranslator.toPatient(subject);
   }
 
-  async getAllResearchStudy({ page, pageSize, sort, offset } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/Workspace`, {
-      params: { offset, pageSize, sort: this.translateSortParamstoResearchStudyParams(sort) },
+  async getAllResearchStudy({ page, pageSize, offset, sort } = {}) {
+    const { data } = await get(`${ANVIL_URL}/api/workspace`, {
+      params: { page, pageSize, offset, sort: this.translateSortParamstoResearchStudyParams(sort) },
     });
 
     const { results, count } = data;
@@ -48,27 +48,38 @@ class ANVIL {
   }
 
   async getResearchStudyById(id) {
-    const { data } = await get(`${ANVIL_URL}/api/Workspace/${id}`);
+    const { data } = await get(`${ANVIL_URL}/api/workspace/${id}`);
     return this.translateWorkspacetoResearchStudy(data);
   }
 
   async getAllObservations({ page, pageSize } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/Sample`, {
+    const { data } = await get(`${ANVIL_URL}/api/subject`, {
       params: { page, pageSize },
     });
 
     const { results, count } = data;
-    return [results.map((result) => this.translateSampletoObservation(result)), count];
+    // let count = 0;
+
+    // return [
+    //   results.map((result) => {
+    //     if (result) {
+    //       this.translateSubjecttoObservation(result);
+    //       count += 1;
+    //     }
+    //   }),
+    //   count,
+    // ];
+
+    return [results.map((result) => this.translateSubjecttoObservation), count];
   }
 
   async getObservationById(id) {
-    // you aren't crazy, this API call to /Subject/:id is right
-    const { data } = await get(`${ANVIL_URL}/api/Subject/${id}`);
-    return this.translateSampletoObservation(data);
+    const { data } = await get(`${ANVIL_URL}/api/subject/${id}`);
+    return this.translateSubjecttoObservation(data);
   }
 
   async getAllPatients({ page, pageSize } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/Subject`, {
+    const { data } = await get(`${ANVIL_URL}/api/subject`, {
       params: { page, pageSize },
     });
 
@@ -77,7 +88,7 @@ class ANVIL {
   }
 
   async getPatientById(id) {
-    const { data } = await get(`${ANVIL_URL}/api/Subject/${id}`);
+    const { data } = await get(`${ANVIL_URL}/api/subject/${id}`);
     return this.translateSubjecttoPatient(data);
   }
 }
