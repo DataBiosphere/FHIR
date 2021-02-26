@@ -547,7 +547,8 @@ const diseaseDisplayMapping = {
 };
 
 const anvilFieldMappings = {
-  'RESEARCHSTUDY': { 'title': 'datasetName' }
+  RESEARCHSTUDY: { title: 'datasetName' },
+  PATIENT: { gender: 'gender' },
 };
 
 module.exports = { diseaseSystemMapping, diseaseDisplayMapping, anvilFieldMappings };

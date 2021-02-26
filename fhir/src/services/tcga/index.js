@@ -44,9 +44,16 @@ class TCGA {
   translateProjectToResearchStudy(project) {
     return this.resourceTranslator.toResearchStudy(project);
   }
-
   translateSortParamstoResearchStudyParams(sortFields) {
-    return this.resourceTranslator.toResearchStudySortParams(sortFields);
+    return sortFields ? this.resourceTranslator.toResearchStudySortParams(sortFields) : undefined;
+  }
+
+  translateGdctoPatient(gdcResult) {
+    return this.resourceTranslator.toPatient(gdcResult);
+  }
+  // TODO: combine this with translateSortParamstoResearchStudyParams
+  translateSortParamstoPatientParams(sortFields) {
+    return sortFields ? this.resourceTranslator.toPatientSortParams(sortFields) : undefined;
   }
 
   /**
@@ -82,7 +89,6 @@ class TCGA {
     const { results, count } = data;
     return [this.translateGdcResultsToFhir(results), count];
   }
-
   async getDiagnosticReportById(id) {
     const { data } = await get(`${TCGA_URL}/api/gdc/${id}`);
     return this.translateSingleGdcResultsToFhir(data);
@@ -96,7 +102,6 @@ class TCGA {
       count,
     ];
   }
-
   async getDiagnosisById(id) {
     const { data } = await get(`${TCGA_URL}/api/diagnosis/${id}`);
     return this.translateDiagnosisToObservation(data, data);
@@ -110,7 +115,6 @@ class TCGA {
       count,
     ];
   }
-
   async getSpecimenById(id) {
     const { data } = await get(`${TCGA_URL}/api/biospecimen/${id}`);
     return this.translateBiospecimentoSpecimen(data, data);
@@ -120,13 +124,27 @@ class TCGA {
     const { data } = await get(`${TCGA_URL}/api/projects`, {
       params: { offset, pageSize, sort: this.translateSortParamstoResearchStudyParams(sort) },
     });
+
     const { results, count } = data;
     return [results.map((diagnosis) => this.translateProjectToResearchStudy(diagnosis)), count];
   }
-
   async getResearchStudyById(id) {
     const { data } = await get(`${TCGA_URL}/api/projects/${id}`);
     return this.translateProjectToResearchStudy(data);
+  }
+
+  async getAllPatients({ pageSize, sort, offset } = {}) {
+    const { data } = await get(`${TCGA_URL}/api/gdc`, {
+      params: { offset, pageSize, sort: this.translateSortParamstoPatientParams(sort) },
+    });
+
+    const { results, count } = data;
+    return [results.map((gdcResult) => this.translateGdctoPatient(gdcResult)), count];
+  }
+  async getPatientById(id) {
+    // TODO: add this endpoint
+    const { data } = await get(`${TCGA_URL}/api/patient/${id}`);
+    return this.translateGdctoPatient(data);
   }
 }
 

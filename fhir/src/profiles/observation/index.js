@@ -30,6 +30,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   const { query } = req;
   const { _page, _count, _id, _source } = getStandardParameters(query);
 
+  // WARN: this only works because we have two datasets
+  //        needs changing for more datasets
   if (_id) {
     const tcgaResult = await tcga.getDiagnosisById(_id).catch((err) => {
       logger.info('_id is not an TCGA ID');
@@ -108,6 +110,7 @@ const searchById = async (args, { req }) => {
     logger.info('id is not an ANVIL ID');
   });
 
+  // TODO: add some filter for nulls
   const observation = tcgaResult ? tcgaResult : anvilResult;
   return observation;
 };

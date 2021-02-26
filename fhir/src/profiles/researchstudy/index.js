@@ -21,7 +21,6 @@ const logger = loggers.get();
 const getStandardParameters = (query) => {
   const {
     _page = 1,
-    _hash = '',
     _count = bundleSize,
     _id,
     _include,
@@ -31,15 +30,16 @@ const getStandardParameters = (query) => {
     // _security,
     _source,
     // _tag,
+    _hash = '',
     _sort = DEFAULT_SORT,
   } = query;
-  return { _page, _hash, _count, _id, _include, _source, _sort };
+  return { _page, _count, _id, _include, _source, _hash, _sort };
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('ResearchStudy >>> search');
   const { query } = req;
-  const { _page, _hash, _count, _id, _source, _sort } = getStandardParameters(query);
+  const { _page, _count, _id, _hash, _source, _sort } = getStandardParameters(query);
 
   // WARN: this only works because we have two datasets
   //        needs changing for more datasets
@@ -59,7 +59,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
 
   let currentOffsets = {
     tcga: 0,
-    anvil: 0
+    anvil: 0,
   };
   let session = {};
   const pagingSession = new PagingSession();
@@ -81,18 +81,21 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   if (_source) {
     switch (_source) {
       case TCGA_SOURCE:
-        [results, count] = await tcga.getAllResearchStudy({ offset: currentOffsets.tcga, ...params });
+        [results, count] = await tcga.getAllResearchStudy({
+          offset: currentOffsets.tcga,
+          ...params,
+        });
         break;
       case ANVIL_SOURCE:
-        [results, count] = await anvil.getAllResearchStudy({ offset: currentOffsets.anvil, ...params });
+        [results, count] = await anvil.getAllResearchStudy({
+          offset: currentOffsets.anvil,
+          ...params,
+        });
         break;
       default:
         logger.error('_source is not valid');
     }
   } else {
-    // TODO: add pagination
-    // it currently returns TWICE as many results as asked
-
     // creates and resolves all promises
     const promises = [];
     promises.push(tcga.getAllResearchStudy({ offset: currentOffsets.tcga, ...params }));
@@ -102,11 +105,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
 
     count = allResults.map((r) => r[1]).reduce((acc, val) => acc + val);
     const compareFn = buildCompareFn(_sort);
-    const [merged, positions] = mergeResults(
-      compareFn,
-      _count,
-      ...allResults.map(r => r[0])
-    );
+    const [merged, positions] = mergeResults(compareFn, _count, ...allResults.map((r) => r[0]));
     results = merged;
 
     if (currentOffsets) {
@@ -126,8 +125,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     hashes: {
       prev: session ? session.previous : '',
       self: _hash,
-      next: newHash
-    }
+      next: newHash,
+    },
   });
 };
 

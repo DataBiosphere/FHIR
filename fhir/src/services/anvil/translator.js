@@ -128,7 +128,6 @@ class Translator {
 
     return researchStudy;
   }
-
   toResearchStudySortParams(sortFields) {
     const sortArray = buildSortArray(sortFields);
     const researchStudyMappings = anvilFieldMappings.RESEARCHSTUDY;
@@ -152,9 +151,18 @@ class Translator {
     });
 
     if (subject.gender) {
-      patient.gender = subject.gender;
+      patient.gender = subject.gender.toLowerCase();
     }
     return patient;
+  }
+  toPatientSortParams(sortFields) {
+    const sortArray = buildSortArray(sortFields);
+    const patientMappings = anvilFieldMappings.PATIENT;
+
+    return sortArray
+      .filter((sf) => researchStudyMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${researchStudyMappings[sf.field]}`)
+      .join(',');
   }
 }
 

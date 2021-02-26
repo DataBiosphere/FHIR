@@ -46,7 +46,6 @@ class ANVIL {
     const { results, count } = data;
     return [results.map((result) => this.translateWorkspacetoResearchStudy(result)), count];
   }
-
   async getResearchStudyById(id) {
     const { data } = await get(`${ANVIL_URL}/api/workspace/${id}`);
     return this.translateWorkspacetoResearchStudy(data);
@@ -72,7 +71,6 @@ class ANVIL {
 
     return [results.map((result) => this.translateSubjecttoObservation(result)), count];
   }
-
   async getObservationById(id) {
     const { data } = await get(`${ANVIL_URL}/api/subject/${id}`);
     return this.translateSubjecttoObservation(data);
@@ -86,7 +84,6 @@ class ANVIL {
     const { results, count } = data;
     return [results.map((result) => this.translateSubjecttoPatient(result)), count];
   }
-
   async getPatientById(id) {
     const { data } = await get(`${ANVIL_URL}/api/subject/${id}`);
     return this.translateSubjecttoPatient(data);

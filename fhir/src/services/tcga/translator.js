@@ -12,6 +12,7 @@ const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
+const Patient = resolveSchema('4_0_0', 'Patient');
 
 const { observationCodeMappings, tcgaFieldMappings } = require('../../utils/tcgamappings');
 
@@ -135,9 +136,34 @@ class Translator {
     const sortArray = buildSortArray(sortFields);
     const researchStudyMappings = tcgaFieldMappings.RESEARCHSTUDY;
 
-    return sortArray.filter(sf => researchStudyMappings[sf.field])
-                    .map(sf => `${(sf.multiplier === -1 ? '-' : '')}${researchStudyMappings[sf.field]}`)
-                    .join(',');
+    return sortArray
+      .filter((sf) => researchStudyMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${researchStudyMappings[sf.field]}`)
+      .join(',');
+  }
+
+  toPatient(gdcResult) {
+    return new Patient({
+      id: gdcResult.demo__demographic_id,
+      identifier: buildIdentifier(
+        'https://portal.gdc.cancer.gov/projects/',
+        gdcResult.proj__project_id
+      ),
+      meta: {
+        profile: ['https://www.hl7.org/fhir/patient.html'],
+      },
+      gender: gdcResult.demo__gender,
+    });
+  }
+  // TODO: reduce this with ResearchStudy sort params
+  toPatientSortParams(sortFields) {
+    const sortArray = buildSortArray(sortFields);
+    const patientMappings = tcgaFieldMappings.PATIENT;
+
+    return sortArray
+      .filter((sf) => patientMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${patientMappings[sf.field]}`)
+      .join(',');
   }
 
   // TODO: remove this at some point
