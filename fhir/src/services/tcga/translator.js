@@ -135,9 +135,10 @@ class Translator {
     const sortArray = buildSortArray(sortFields);
     const researchStudyMappings = tcgaFieldMappings.RESEARCHSTUDY;
 
-    return sortArray.filter(sf => researchStudyMappings[sf.field])
-                    .map(sf => `${(sf.multiplier === -1 ? '-' : '')}${researchStudyMappings[sf.field]}`)
-                    .join(',');
+    return sortArray
+      .filter((sf) => researchStudyMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${researchStudyMappings[sf.field]}`)
+      .join(',');
   }
 
   // TODO: remove this at some point

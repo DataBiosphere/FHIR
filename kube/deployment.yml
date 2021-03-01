@@ -34,9 +34,15 @@ spec:
           env:
             - name: TCGA_URL
               value: http://localhost:3001
+            - name: ANVIL_URL
+              value: http://localhost:3002
           imagePullPolicy: Always
         - name: tcga
           image: gcr.io/broad-fhir-dev/broad/tcga:422d7b3
           ports:
             - containerPort: 3001
           imagePullPolicy: Always
+        - name: anvil
+          image: gcr.io/broad-fhir-dev/broad/anvil:422d7b3
+          ports:
+            - containerPort: 3002
