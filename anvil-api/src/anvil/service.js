@@ -63,7 +63,7 @@ const getAllSubjects = async ({ workspace = '', page = 1, pageSize = 25 }) => {
 
   return [results, count];
 };
-const getSubjectById = async (id) => {
+const getSubjectById = async ({ workspace = '', id }) => {
   const result = await SubjectService.findOne({
     query: {
       $and: [{ workspaceName: { $regex: workspace } }, { id: id }],
