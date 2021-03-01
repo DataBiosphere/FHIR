@@ -150,9 +150,28 @@ class Translator {
       },
     });
 
+    // translate AnVIL's gender system to fit FHIR
+    const GENDER_SYSTEM = 'http://hl7.org/fhir/administrative-gender';
     if (subject.gender) {
-      patient.gender = subject.gender.toLowerCase();
+      let gender = subject.gender.toLowerCase();
+
+      switch (gender) {
+        case 'male':
+          gender = buildCoding('male', GENDER_SYSTEM, 'Male');
+          break;
+        case 'female':
+          gender = buildCoding('female', GENDER_SYSTEM, 'Female');
+          break;
+        default:
+          gender = buildCoding('unknown', GENDER_SYSTEM, 'Unknown');
+      }
+
+      patient.gender = gender;
+    } else {
+      patient.gender = buildCoding('unknown', GENDER_SYSTEM, 'Unknown');
     }
+
+    // TODO: we can probably put ethnicity info in here too if we want
     return patient;
   }
   toPatientSortParams(sortFields) {
