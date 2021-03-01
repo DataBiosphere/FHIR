@@ -21,7 +21,7 @@ Clone.
 git clone https://github.com/DataBiosphere/FHIR
 ```
 
-Install.
+Install. You must run these separately in these directories: `anvil-api`, `fhir`, `tcga`, `viewer`
 
 ```
 npm i
