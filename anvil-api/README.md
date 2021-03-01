@@ -26,5 +26,7 @@ npm run dev
 - **/sample/:id**
 - **/subject**
 - **/subject/:id**
+- **/observation**
+- **/observation/:id**
 
 ## [If you are having trouble, remember to configure the application correctly.](../docs/CONFIGURATION.md)

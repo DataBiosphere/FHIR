@@ -10,7 +10,6 @@ const getAllWorkspaces = async (req, res) => {
     count,
   });
 };
-
 const getWorkspaceById = async (req, res) => {
   logger.info('ANVIL >>> getWorkspaceById');
   const { id } = req.params;
@@ -36,23 +35,10 @@ const getAllSamples = async (req, res) => {
     count,
   });
 };
-
 const getSampleById = async (req, res) => {
   logger.info('ANVIL >>> getSampleById');
-  const { id } = req.params;
-  const results = await service.getSampleById(id);
-  if (!results) {
-    res.sendStatus(404);
-  } else {
-    res.json(results);
-  }
-};
-
-const getSampleByWorkspaceId = async (req, res) => {
-  logger.info('ANVIL >>> getSampleByWorkspaceId');
   const { workspace, id } = req.params;
-  const sampleId = `${workspace}/Sa/${id}`;
-  const results = await service.getSampleByWorkspaceId(sampleId);
+  const results = await service.getSampleById({ workspace, id });
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -74,11 +60,10 @@ const getAllSubjects = async (req, res) => {
     count,
   });
 };
-
 const getSubjectById = async (req, res) => {
   logger.info('ANVIL >>> getSubjectById');
-  const { id } = req.params;
-  const results = await service.getSubjectById(id);
+  const { workspace, id } = req.params;
+  const results = await service.getSubjectById({ workspace, id });
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -86,11 +71,24 @@ const getSubjectById = async (req, res) => {
   }
 };
 
-const getSubjectByWorkspaceId = async (req, res) => {
-  logger.info('ANVIL >>> getSubjectByWorkspaceId');
+const getAllObservations = async (req, res) => {
+  logger.info('ANVIL >>> getAllObservations');
+  let workspace;
+  if (req.params) {
+    workspace = req.params.workspace;
+  }
+
+  const { page, pageSize } = req.query;
+  const [results, count] = await service.getAllObservations({ workspace, page, pageSize });
+  res.json({
+    results,
+    count,
+  });
+};
+const getObservationById = async (req, res) => {
+  logger.info('ANVIL >>> getObservationById');
   const { workspace, id } = req.params;
-  const subjectId = `${workspace}/Su/${id}`;
-  const results = await service.getSubjectByWorkspaceId(subjectId);
+  const results = await service.getObservationById({ workspace, id });
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -103,8 +101,8 @@ module.exports = {
   getWorkspaceById,
   getAllSamples,
   getSampleById,
-  getSampleByWorkspaceId,
   getAllSubjects,
   getSubjectById,
-  getSubjectByWorkspaceId,
+  getAllObservations,
+  getObservationById,
 };
