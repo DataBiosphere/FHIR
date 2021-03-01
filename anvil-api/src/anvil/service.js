@@ -89,7 +89,7 @@ const getAllObservations = async ({ workspace = '', page = 1, pageSize = 25 }) =
 
   return [results, count];
 };
-const getObservationById = async (id) => {
+const getObservationById = async ({ workspace = '', id }) => {
   const result = await SubjectService.findOne({
     query: {
       $and: [
