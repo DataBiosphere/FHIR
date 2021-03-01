@@ -69,7 +69,7 @@ export function Home(props: any) {
 
   useEffect(() => {
     getSummaryInfo();
-  }, [getSummaryInfo]);
+  }, []);
 
   return (
     <div>
@@ -122,7 +122,7 @@ export function Home(props: any) {
                     </TableHead>
                     <TableBody>
                       {summaryInfo.map((info: any) => (
-                        <TableRow>
+                        <TableRow key={info.resourceType}>
                           <TableCell>{info.resourceType}</TableCell>
                           <TableCell>{info.total}</TableCell>
                         </TableRow>

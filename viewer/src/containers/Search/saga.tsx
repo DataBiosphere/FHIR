@@ -13,13 +13,39 @@ import {
 } from './actions';
 import { GET_BUNDLE, GET_DOWNLOAD, PARSING_ROWS_PER_PAGE } from './constants';
 
-function* getResourceType({ resourceType, page, count }: any) {
+// TODO: explore memoizing this for pageLinks
+function* getResourceType({ resourceType, page, count, pageLinks }: any) {
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
     yield put(loadBundleRequestAction(resourceType, page, count));
-    const bundle = yield call(requester, `${resourceType}?_page=${page}&_count=${count}`);
-    yield put(loadBundleSuccessAction(bundle));
+
+    // create API call
+    const requestUrl: string =
+      pageLinks && pageLinks[page]
+        ? pageLinks[page]
+        : `${resourceType}?_page=${page}&_count=${count}`;
+    const bundle = yield call(requester, requestUrl);
+
+    // create paging array
+    const pageArray = [];
+    if (page > 1) pageArray.push(page - 1);
+    pageArray.push(page);
+    pageArray.push(page + 1);
+
+    // parse bundle and build links
+    const links: any = {};
+    pageArray.forEach((p: number) => {
+      if (p < page) {
+        links[p] = bundle.link.filter((l: any) => l.relation === 'previous')[0].url;
+      } else if (p === page) {
+        links[p] = bundle.link.filter((l: any) => l.relation === 'self')[0].url;
+      } else {
+        links[p] = bundle.link.filter((l: any) => l.relation === 'next')[0].url;
+      }
+    });
+
+    yield put(loadBundleSuccessAction(bundle, links));
   } catch (e) {
     loadBundleErrorAction(e);
   }

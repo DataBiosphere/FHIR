@@ -17,6 +17,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import Drawer from '../Drawer';
 import Footer from '../Footer';
@@ -130,7 +131,6 @@ const useStyles = makeStyles((theme) => ({
 function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }: any) {
   const classes = useStyles();
   const [open, setOpen] = useState<boolean>(false);
-  const [, setAnchorEl] = useState();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<any>();
 
   const handleDrawerOpen = () => {
@@ -144,7 +144,10 @@ function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }: any) {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event: any) => {
-    setAnchorEl(event.currentTarget);
+    if (iss) {
+      sessionStorage.clear();
+      window.location.reload();
+    }
   };
 
   const handleMobileMenuClose = () => {
@@ -241,7 +244,7 @@ function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }: any) {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircleIcon />
+              {iss ? <ExitToAppIcon /> : <AccountCircleIcon />}
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>

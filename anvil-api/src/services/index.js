@@ -1,7 +1,6 @@
 // TODO: export the MongoDB
+const AnvilMongo = require('./AnvilMongo');
 
-// const BigQuery = require('./BigQuery');
-
-// module.exports = {
-//   BigQuery,
-// };
+module.exports = {
+    AnvilMongo,
+};

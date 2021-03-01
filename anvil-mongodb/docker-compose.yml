@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  anvil-mongo:
+    image: mongo
+    env_file:
+      - .env
+    volumes:
+      - ./anvil-mongodb/database:/data/db
+      - ./anvil-mongodb/mongo-schema/:/docker-entrypoint-initdb.d/
+    ports:
+      - 27017:27017
+    restart: unless-stopped

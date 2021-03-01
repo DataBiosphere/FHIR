@@ -1,4 +1,4 @@
-const { dedupeObjects, transformGdcResults } = require('../utils');
+const { dedupeObjects, transformGdcResults, buildOrderBy } = require('../utils');
 const { BigQuery } = require('../services');
 
 const PROJECT_IDENTIFIER_COLUMN = 'proj__project_id';
@@ -114,7 +114,7 @@ const getAllDiagnosis = async ({ page, pageSize } = { page: 1, pageSize: 20 }) =
  * @param {string} id
  */
 const getDiagnosisById = async (id) => {
-  const [rows] = await DiagnosisService.get({ where: { diag__diagnosis_id: id } });
+  const [rows] = await DiagnosisService.get({ where: { diag__treat__treatment_id: id } });
 
   if (rows && rows.length) {
     return rows[0];
@@ -155,12 +155,14 @@ const getBiospecimenById = async (id) => {
  * @param {string} page
  * @param {string} pageSize
  */
-const getAllProjects = async ({ page, pageSize } = { page: 1, pageSize: 20 }) => {
+const getAllProjects = async ({ page, pageSize, sort, offset } = { page: 1, pageSize: 20, sort: '', offset: 0 }) => {
   const [rows, count] = await ClinicalGDCRawService.get({
     selection: ['proj__name', PROJECT_IDENTIFIER_COLUMN],
+    offset,
     page,
     pageSize,
     distinct: true,
+    orderBy: buildOrderBy(sort)
   });
 
   return [rows, count];

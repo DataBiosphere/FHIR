@@ -8,7 +8,7 @@ export const renderers = [
   [
     OBSERVATION_CODE,
     (code: fhir.CodeableConcept) => {
-      const { coding = '', text = '' } = code;
+      const { coding, text } = code || { coding: '', text: '' };
       return (
         <TableCell>
           {coding ? (

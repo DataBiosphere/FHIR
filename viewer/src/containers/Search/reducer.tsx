@@ -27,7 +27,8 @@ const searchReducer = (state = initialState, action: any) =>
         draft.page = action.payload.page;
         break;
       case GET_BUNDLE_SUCCESS:
-        draft.bundle = action.payload;
+        draft.bundle = action.payload.bundle;
+        draft.pageLinks = action.payload.links;
         draft.loading = false;
         break;
 
