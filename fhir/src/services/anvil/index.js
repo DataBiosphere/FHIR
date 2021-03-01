@@ -52,7 +52,7 @@ class ANVIL {
   }
 
   async getAllObservations({ page, pageSize } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/subject`, {
+    const { data } = await get(`${ANVIL_URL}/api/observation`, {
       params: { page, pageSize },
     });
 
@@ -60,7 +60,7 @@ class ANVIL {
     return [results.map((result) => this.translateSubjecttoObservation(result)), count];
   }
   async getObservationById(id) {
-    const { data } = await get(`${ANVIL_URL}/api/subject/${id}`);
+    const { data } = await get(`${ANVIL_URL}/api/observation/${id}`);
     return this.translateSubjecttoObservation(data);
   }
 
