@@ -57,18 +57,6 @@ class ANVIL {
     });
 
     const { results, count } = data;
-    // let count = 0;
-
-    // return [
-    //   results.map((result) => {
-    //     if (result) {
-    //       this.translateSubjecttoObservation(result);
-    //       count += 1;
-    //     }
-    //   }),
-    //   count,
-    // ];
-
     return [results.map((result) => this.translateSubjecttoObservation(result)), count];
   }
   async getObservationById(id) {
