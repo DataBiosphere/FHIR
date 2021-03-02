@@ -103,7 +103,7 @@ const getAllGdc = async ({ page = 1, pageSize = 20 } = {}) => {
 const getGdcById = async (id) => {
   const [rows] = await ClinicalGDCService.get({ where: { case_id: id } });
 
-  return rows && rows.length ? rtransformGdcRows(rows)[0] : null;
+  return rows && rows.length ? transformGdcRows(rows)[0] : null;
 };
 
 /**
