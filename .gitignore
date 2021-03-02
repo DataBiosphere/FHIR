@@ -49,9 +49,9 @@ Thumbs.db
 *.wmv
 
 # Env file
-.env*
-env.local
-env.production
+*.env
+*.env.local
+*.env.production
 
 # GCP Credentials
 creds.json
