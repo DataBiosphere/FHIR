@@ -10,6 +10,7 @@ BigQuery.mockImplementation(() => ({
 
 const service = require('./service');
 
+// TODO: update tests to include Patient
 describe('service tests', () => {
   it('should getByID', async () => {
     const rows = await service.getGdcById('foobar');

@@ -10,7 +10,6 @@ const getAllGdc = async (req, res) => {
     count,
   });
 };
-
 const getGdcById = async (req, res) => {
   logger.info('TCGA >>> getGdcById');
   const { id } = req.params;
@@ -31,7 +30,6 @@ const getAllDiagnosis = async (req, res) => {
     count,
   });
 };
-
 const getDiagnosisById = async (req, res) => {
   logger.info('TCGA >>> getDiagnosisById');
   const { id } = req.params;
@@ -52,7 +50,6 @@ const getAllBiospecimen = async (req, res) => {
     count,
   });
 };
-
 const getBiospecimenById = async (req, res) => {
   logger.info('TCGA >>> getBiospecimenById');
   const { id } = req.params;
@@ -73,11 +70,30 @@ const getAllProjects = async (req, res) => {
     count,
   });
 };
-
 const getProjectById = async (req, res) => {
   logger.info('TCGA >>> getProjectById');
   const { id } = req.params;
   const results = await service.getProjectById(id);
+  if (!results) {
+    res.sendStatus(404);
+  } else {
+    res.json(results);
+  }
+};
+
+const getAllPatients = async (req, res) => {
+  logger.info('TCGA >>> getAllPatients');
+  const { page, pageSize, sort, offset } = req.query;
+  const [results, count] = await service.getAllPatients({ page, pageSize, sort, offset });
+  res.json({
+    results,
+    count,
+  });
+};
+const getPatientById = async (req, res) => {
+  logger.info('TCGA >>> getPatientById');
+  const { id } = req.params;
+  const results = await service.getPatientById(id);
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -94,4 +110,6 @@ module.exports = {
   getBiospecimenById,
   getAllProjects,
   getProjectById,
+  getAllPatients,
+  getPatientById,
 };
