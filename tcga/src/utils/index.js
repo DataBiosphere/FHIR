@@ -166,14 +166,18 @@ function dedupeObjects(list) {
  */
 function buildOrderBy(sort) {
   return sort
-    .split(',')
-    .filter((str) => str)
-    .map((str) => {
-      return {
-        column: str[0] === '-' ? str.substring(1) : str,
-        order: str[0] === '-' ? 'desc' : 'asc',
-      };
-    });
+    ? sort
+        .split(',')
+        .filter((str) => str)
+        .map((str) => {
+          str = str.trim();
+
+          return {
+            column: str[0] === '-' ? str.substring(1) : str,
+            order: str[0] === '-' ? 'desc' : 'asc',
+          };
+        })
+    : null;
 }
 
 module.exports = {

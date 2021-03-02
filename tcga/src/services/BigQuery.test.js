@@ -189,4 +189,29 @@ describe('BigQuery client tests', () => {
       ['select count(distinct concat(select-1, select-2)) as count from `test-table` as `table_0`'],
     ]);
   });
+
+  it('should build an orderBy clause', async () => {
+    const bigQueryClient = new BigQuery({
+      table: 'test-table',
+    });
+    const querySpy = jest.spyOn(bigQueryClient, 'sendQuery').mockImplementation(() => [
+      [
+        {
+          id: 'hello',
+        },
+      ],
+    ]);
+
+    await bigQueryClient.get({
+      orderBy: [
+        { column: 'foo', order: 'asc' },
+        { column: 'bar', order: 'desc' },
+      ],
+    });
+
+    expect(querySpy.mock.calls).toEqual([
+      ['select * from `test-table` as `table_0` order by `foo` asc, `bar` desc'],
+      ['select count(distinct `table_0`.`id`) as `count` from `test-table` as `table_0`'],
+    ]);
+  });
 });

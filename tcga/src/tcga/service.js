@@ -55,11 +55,6 @@ const BiospecimenService = new BigQuery({
   ],
 });
 
-const PatientService = new BigQuery({
-  table: GDC_TABLE,
-  primaryKey: PATIENT_IDENTIFIER,
-});
-
 /**
  * Convert a BigQuery results set to an organized model by caseID -> diagnoses|biospecimens
  * @param {array} rows
@@ -87,7 +82,7 @@ const transformGdcRows = (rows) => {
  * @param {string=} page
  * @param {string=} pageSize
  */
-const getAllGdc = async ({ page = 1, pageSize = 20 }) => {
+const getAllGdc = async ({ page = 1, pageSize = 20 } = {}) => {
   const [caseIds] = await ClinicalGDCRawService.get({
     selection: [CASE_IDENTIFIER],
     page,
@@ -108,10 +103,7 @@ const getAllGdc = async ({ page = 1, pageSize = 20 }) => {
 const getGdcById = async (id) => {
   const [rows] = await ClinicalGDCService.get({ where: { case_id: id } });
 
-  if (rows && rows.length) {
-    return transformGdcRows(rows)[0];
-  }
-  return null;
+  return rows && rows.length ? rtransformGdcRows(rows)[0] : null;
 };
 
 /**
@@ -119,7 +111,7 @@ const getGdcById = async (id) => {
  * @param {string=} page
  * @param {string=} pageSize
  */
-const getAllDiagnosis = async ({ page = 1, pageSize = 20 }) => {
+const getAllDiagnosis = async ({ page = 1, pageSize = 20 } = {}) => {
   const [rows, count] = await DiagnosisService.get({ page, pageSize });
 
   return [rows, count];
@@ -132,11 +124,7 @@ const getAllDiagnosis = async ({ page = 1, pageSize = 20 }) => {
 const getDiagnosisById = async (id) => {
   const [rows] = await DiagnosisService.get({ where: { diag__treat__treatment_id: id } });
 
-  if (rows && rows.length) {
-    return rows[0];
-  }
-
-  return null;
+  return rows && rows.length ? rows[0] : null;
 };
 
 /**
@@ -144,7 +132,7 @@ const getDiagnosisById = async (id) => {
  * @param {string=} page
  * @param {string=} pageSize
  */
-const getAllBiospecimen = async ({ page = 1, pageSize = 20 }) => {
+const getAllBiospecimen = async ({ page = 1, pageSize = 20 } = {}) => {
   const [rows, count] = await BiospecimenService.get({ page, pageSize });
 
   return [rows, count];
@@ -157,11 +145,7 @@ const getAllBiospecimen = async ({ page = 1, pageSize = 20 }) => {
 const getBiospecimenById = async (id) => {
   const [rows] = await BiospecimenService.get({ where: { sample_gdc_id: id } });
 
-  if (rows && rows.length) {
-    return rows[0];
-  }
-
-  return null;
+  return rows && rows.length ? rows[0] : null;
 };
 
 /**
@@ -171,7 +155,7 @@ const getBiospecimenById = async (id) => {
  * @param {string=} [sort]
  * @param {number=} [offset]
  */
-const getAllProjects = async ({ page = 1, pageSize = 20, sort = '', offset = 0 }) => {
+const getAllProjects = async ({ page = 1, pageSize = 20, sort = '', offset = 0 } = {}) => {
   const [rows, count] = await ClinicalGDCRawService.get({
     selection: ['proj__name', PROJECT_IDENTIFIER],
     distinct: true,
@@ -191,11 +175,7 @@ const getAllProjects = async ({ page = 1, pageSize = 20, sort = '', offset = 0 }
 const getProjectById = async (id) => {
   const [rows] = await ClinicalGDCRawService.get({ where: { [PROJECT_IDENTIFIER]: id } });
 
-  if (rows && rows.length) {
-    return rows[0];
-  }
-
-  return null;
+  return rows && rows.length ? rows[0] : null;
 };
 
 /**
@@ -205,8 +185,8 @@ const getProjectById = async (id) => {
  * @param {string=} [sort]
  * @param {number=} [offset]
  */
-const getAllPatients = async ({ page = 1, pageSize = 20, sort = '', offset = 0 }) => {
-  const [rows, count] = await PatientService.get({
+const getAllPatients = async ({ page = 1, pageSize = 20, sort = '', offset = 0 } = {}) => {
+  const [rows, count] = await ClinicalGDCRawService.get({
     page,
     pageSize,
     orderBy: buildOrderBy(sort),
