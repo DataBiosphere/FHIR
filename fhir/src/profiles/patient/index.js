@@ -37,8 +37,6 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   const { query } = req;
   const { _page, _count, _id, _hash, _source, _sort, _has, _text } = getStandardParameters(query);
 
-  // WARN: this only works because we have two datasets
-  //        needs changing for more datasets
   if (_id) {
     const tcgaResult = await tcga.getPatientById(_id).catch((err) => {
       logger.info('_id is not a TCGA ID');
@@ -47,6 +45,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
       logger.info('_id is not a ANVIL ID');
     });
 
+    // WARN: this only works because we have two datasets
+    //        needs changing for more datasets
     const resource = tcgaResult ? tcgaResult : anvilResult;
 
     return buildSearchBundle({

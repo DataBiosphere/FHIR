@@ -143,7 +143,7 @@ class Translator {
   }
 
   toPatient(gdcResult) {
-    return new Patient({
+    const patient = new Patient({
       id: gdcResult.demo__demographic_id,
       identifier: buildIdentifier(
         'https://portal.gdc.cancer.gov/projects/',
@@ -152,8 +152,30 @@ class Translator {
       meta: {
         profile: ['https://www.hl7.org/fhir/patient.html'],
       },
-      gender: gdcResult.demo__gender,
     });
+
+    // translate gender value to code
+    const GENDER_SYSTEM = 'http://hl7.org/fhir/administrative-gender';
+    if (gdcResult.demo__gender) {
+      let gender = gdcResult.demo__gender.toLowerCase();
+
+      switch (gender) {
+        case 'male':
+          gender = buildCoding('male', GENDER_SYSTEM, 'Male');
+          break;
+        case 'female':
+          gender = buildCoding('female', GENDER_SYSTEM, 'Female');
+          break;
+        default:
+          gender = buildCoding('unknown', GENDER_SYSTEM, 'Unknown');
+      }
+
+      patient.gender = gender;
+    } else {
+      patient.gender = buildCoding('unknown', GENDER_SYSTEM, 'Unknown');
+    }
+
+    return patient;
   }
   // TODO: reduce this with ResearchStudy sort params
   toPatientSortParams(sortFields) {

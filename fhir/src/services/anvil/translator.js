@@ -180,7 +180,7 @@ class Translator {
 
     return sortArray
       .filter((sf) => researchStudyMappings[sf.field])
-      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${researchStudyMappings[sf.field]}`)
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${patientMappings[sf.field]}`)
       .join(',');
   }
 }

@@ -134,7 +134,7 @@ class TCGA {
   }
 
   async getAllPatients({ pageSize, sort, offset } = {}) {
-    const { data } = await get(`${TCGA_URL}/api/gdc`, {
+    const { data } = await get(`${TCGA_URL}/api/patient`, {
       params: { offset, pageSize, sort: this.translateSortParamstoPatientParams(sort) },
     });
 
@@ -142,7 +142,6 @@ class TCGA {
     return [results.map((gdcResult) => this.translateGdctoPatient(gdcResult)), count];
   }
   async getPatientById(id) {
-    // TODO: add this endpoint
     const { data } = await get(`${TCGA_URL}/api/patient/${id}`);
     return this.translateGdctoPatient(data);
   }
