@@ -149,7 +149,11 @@ describe('ANVIL service tests', () => {
           value: 'Patient-AnVILCMGUWashGRU-Su-sub-102859',
         },
       ],
-      gender: 'female',
+      gender: {
+        system: 'http://hl7.org/fhir/administrative-gender',
+        code: 'female',
+        display: 'Female',
+      },
     });
 
     expect(count).toEqual(10);
