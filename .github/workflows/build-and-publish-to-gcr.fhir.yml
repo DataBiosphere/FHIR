@@ -21,6 +21,7 @@ env:
   TOKEN_URI: ${{ secrets.TOKEN_URI }}
   AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
   CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
+  URL: ${{ secrets.URL }}
 
 jobs:
   run-tests:
@@ -74,7 +75,7 @@ jobs:
         run: npm install
 
       - name: Generate env
-        run: node ../scripts/create-env-file.js TCGA_URL=http://tcga:3001 URL=http://localhost:3000/4_0_0
+        run: node ../scripts/create-env-file.js TCGA_URL=http://tcga:3001 ANVIL_URL=http://anvil:3002 URL=${{ secrets.URL }}
 
       - name: Build
         run: |
