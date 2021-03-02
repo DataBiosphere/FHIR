@@ -144,7 +144,7 @@ class Translator {
 
   toPatient(gdcResult) {
     const patient = new Patient({
-      id: gdcResult.demo__demographic_id,
+      id: gdcResult.submitter_id,
       identifier: buildIdentifier(
         'https://portal.gdc.cancer.gov/projects/',
         gdcResult.proj__project_id

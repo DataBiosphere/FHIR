@@ -11,7 +11,7 @@ const CASE_IDENTIFIER = 'case_id';
 const DIAGNOSIS_IDENTIFIER = 'diag__diagnosis_id';
 const BIOSPECIMEN_IDENTIFIER = 'sample_gdc_id';
 const PROJECT_IDENTIFIER = 'proj__project_id';
-const PATIENT_IDENTIFIER = 'demo__demographic_id';
+const PATIENT_IDENTIFIER = 'submitter_id';
 
 const ClinicalGDCRawService = new BigQuery({
   table: GDC_TABLE,
