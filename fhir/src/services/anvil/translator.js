@@ -161,8 +161,8 @@ class Translator {
 
     // translate AnVIL's gender system to fit FHIR
     const GENDER_SYSTEM = 'http://hl7.org/fhir/administrative-gender';
-    if (subject.gender) {
-      let gender = subject.gender.toLowerCase();
+    if (subject.sex) {
+      let gender = subject.sex.toLowerCase();
 
       switch (gender) {
         case 'male':

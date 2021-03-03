@@ -133,9 +133,9 @@ class TCGA {
     return this.translateProjectToResearchStudy(data);
   }
 
-  async getAllPatients({ pageSize, sort, offset } = {}) {
+  async getAllPatients({ page, pageSize, sort, offset } = {}) {
     const { data } = await get(`${TCGA_URL}/api/patient`, {
-      params: { offset, pageSize, sort: this.translateSortParamstoPatientParams(sort) },
+      params: { page, offset, pageSize, sort: this.translateSortParamstoPatientParams(sort) },
     });
 
     const { results, count } = data;
