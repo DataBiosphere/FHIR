@@ -3,10 +3,10 @@ jest.mock('./controller', () => ({
   getWorkspaceById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getAllSamples: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getSampleById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getSampleByWorkspaceId: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getAllSubjects: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getSubjectById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getSubjectByWorkspaceId: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getAllObservations: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getObservationById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
 }));
 
 const express = require('express');
@@ -69,12 +69,11 @@ describe('router tests', () => {
         done();
       });
   });
-
-  it('should route Workspace Sample ID Requests to getSampleByWorkspaceId controller', (done) => {
+  it('should route Workspace Sample ID Requests to getSampleById controller', (done) => {
     supertest(app)
       .get('/workspace/foo/Sample/bar')
       .end(() => {
-        expect(controller.getSampleByWorkspaceId.mock.calls.length).toEqual(1);
+        expect(controller.getSampleById.mock.calls.length).toEqual(2);
         done();
       });
   });
@@ -104,11 +103,45 @@ describe('router tests', () => {
         done();
       });
   });
-  it('should route Workspace Subject ID Requests to getSubjectByWorkspaceId controller', (done) => {
+  it('should route Workspace Subject ID Requests to getSubjectById controller', (done) => {
     supertest(app)
       .get('/workspace/foo/Subject/bar')
       .end(() => {
-        expect(controller.getSubjectByWorkspaceId.mock.calls.length).toEqual(1);
+        expect(controller.getSubjectById.mock.calls.length).toEqual(2);
+        done();
+      });
+  });
+
+  it('should route Observation Requests to getAllObservation controller', (done) => {
+    supertest(app)
+      .get('/Observation')
+      .end(() => {
+        expect(controller.getAllObservations.mock.calls.length).toEqual(1);
+        done();
+      });
+  });
+  it('should route Observation Requests with a Workspace to getAllObservations controller', (done) => {
+    supertest(app)
+      .get('/Workspace/foobar/Observation')
+      .end(() => {
+        expect(controller.getAllObservations.mock.calls.length).toEqual(2);
+        done();
+      });
+  });
+
+  it('should route Observation ID Requests to getObservationById controller', (done) => {
+    supertest(app)
+      .get('/Observation/foobar')
+      .end(() => {
+        expect(controller.getObservationById.mock.calls.length).toEqual(1);
+        done();
+      });
+  });
+  it('should route Workspace Observation ID Requests to getObservationById controller', (done) => {
+    supertest(app)
+      .get('/workspace/foo/Observation/bar')
+      .end(() => {
+        expect(controller.getObservationById.mock.calls.length).toEqual(2);
         done();
       });
   });

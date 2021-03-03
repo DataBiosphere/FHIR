@@ -12,21 +12,27 @@ const {
 } = require('../../utils');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
-const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
-const Specimen = resolveSchema('4_0_0', 'Specimen');
+// const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
+// const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
+const Patient = resolveSchema('4_0_0', 'Patient');
 
 const { anvilFieldMappings } = require('../../utils/anvilmappings');
 
-const buildSampleId = (workspace, id) => {
+const buildSubjectId = (workspace, id) => {
   return `${workspace}-Su-${id}`;
 };
+
+const buildSampleId = (workspace, id) => {
+  return `${workspace}-Sa-${id}`;
+};
+
 class Translator {
   toObservation(subject) {
-    let slug = buildSlug('Observation', subject.id, subject.diseaseId);
+    const slug = buildSlug('Observation', subject.id, subject.diseaseId);
 
     const observation = new Observation({
-      id: buildSampleId(subject.workspaceName, subject.name),
+      id: buildSubjectId(subject.workspaceName, subject.name),
       identifier: buildIdentifier('urn:temp:unique-string', slug),
       meta: {
         profile: ['https://www.hl7.org/fhir/observation.html'],
@@ -75,6 +81,15 @@ class Translator {
     // TODO: look into subject.age
     return observation;
   }
+  toObservationSortParams(sortFields) {
+    const sortArray = buildSortArray(sortFields);
+    const observationMappings = anvilFieldMappings.OBSERVATION;
+
+    return sortArray
+      .filter((sf) => observationMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${observationMappings[sf.field]}`)
+      .join(',');
+  }
 
   toResearchStudy(workspace) {
     const researchStudy = new ResearchStudy({
@@ -122,14 +137,60 @@ class Translator {
 
     return researchStudy;
   }
-
   toResearchStudySortParams(sortFields) {
     const sortArray = buildSortArray(sortFields);
     const researchStudyMappings = anvilFieldMappings.RESEARCHSTUDY;
 
-    return sortArray.filter(sf => researchStudyMappings[sf.field])
-                    .map(sf => `${(sf.multiplier === -1 ? '-' : '')}${researchStudyMappings[sf.field]}`)
-                    .join(',');
+    return sortArray
+      .filter((sf) => researchStudyMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${researchStudyMappings[sf.field]}`)
+      .join(',');
+  }
+
+  toPatient(subject) {
+    const id = buildSubjectId(subject.workspaceName, subject.name);
+    const slug = buildSlug('Patient', id);
+
+    const patient = new Patient({
+      id: id,
+      identifier: buildIdentifier('urn:temp:unique-string', slug),
+      meta: {
+        profile: ['https://www.hl7.org/fhir/patient.html'],
+      },
+    });
+
+    // translate AnVIL's gender system to fit FHIR
+    const GENDER_SYSTEM = 'http://hl7.org/fhir/administrative-gender';
+    if (subject.sex) {
+      let gender = subject.sex.toLowerCase();
+
+      switch (gender) {
+        case 'male':
+          gender = buildCoding('male', GENDER_SYSTEM, 'Male');
+          break;
+        case 'female':
+          gender = buildCoding('female', GENDER_SYSTEM, 'Female');
+          break;
+        default:
+          gender = buildCoding('unknown', GENDER_SYSTEM, 'Unknown');
+      }
+
+      patient.gender = gender;
+    } else {
+      patient.gender = buildCoding('unknown', GENDER_SYSTEM, 'Unknown');
+    }
+
+    // TODO: we can probably put ethnicity info in here too if we want
+    return patient;
+  }
+  toPatientSortParams(sortFields) {
+    const sortArray = buildSortArray(sortFields);
+    const patientMappings = anvilFieldMappings.PATIENT;
+
+    return sortArray
+      .filter((sf) => patientMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${patientMappings[sf.field]}`)
+      .join(',');
   }
 }
 

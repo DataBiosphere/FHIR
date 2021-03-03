@@ -3,14 +3,14 @@ const service = require('.');
 const { TCGA_SOURCE, ANVIL_SOURCE } = require('../../utils');
 const { TCGA, ANVIL } = require('../../services');
 
-describe('Observation service tests', () => {
+describe('Research Study service tests', () => {
   let getAllTCGASpy;
   let getAllANVILSpy;
   let getByTCGAIdSpy;
   let getByANVILIdSpy;
 
   beforeEach(() => {
-    getAllTCGASpy = jest.spyOn(TCGA.prototype, 'getAllDiagnoses').mockImplementation(() => {
+    getAllTCGASpy = jest.spyOn(TCGA.prototype, 'getAllPatients').mockImplementation(() => {
       return [
         [
           {
@@ -21,7 +21,7 @@ describe('Observation service tests', () => {
       ];
     });
 
-    getAllANVILSpy = jest.spyOn(ANVIL.prototype, 'getAllObservations').mockImplementation(() => {
+    getAllANVILSpy = jest.spyOn(ANVIL.prototype, 'getAllPatients').mockImplementation(() => {
       return [
         [
           {
@@ -32,26 +32,24 @@ describe('Observation service tests', () => {
       ];
     });
 
-    getByTCGAIdSpy = jest.spyOn(TCGA.prototype, 'getDiagnosisById').mockImplementation(async () => {
+    getByTCGAIdSpy = jest.spyOn(TCGA.prototype, 'getPatientById').mockImplementation(async () => {
       return {
         id: 'foobar',
       };
     });
 
-    getByANVILIdSpy = jest
-      .spyOn(ANVIL.prototype, 'getObservationById')
-      .mockImplementation(async () => {
-        return {
-          id: 'foobar',
-        };
-      });
+    getByANVILIdSpy = jest.spyOn(ANVIL.prototype, 'getPatientById').mockImplementation(async () => {
+      return {
+        id: 'foobar',
+      };
+    });
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  it('should search for Observation', async () => {
+  it('should search for Patient', async () => {
     await service.search({ base_version: '4_0_0' }, { req: { query: {} } });
     expect(getAllTCGASpy).toHaveBeenCalled();
     expect(getAllANVILSpy).toHaveBeenCalled();
@@ -67,17 +65,22 @@ describe('Observation service tests', () => {
     expect(getAllANVILSpy).toHaveBeenCalled();
   });
 
-  it('should search for Observation by TCGA ID', async () => {
-    await service.searchById({ base_version: '4_0_0' }, { req: { params: { id: 'TCGA-HNSC' } } });
+  it('should search for Patient by TCGA ID', async () => {
+    await service.searchById(
+      { base_version: '4_0_0' },
+      { req: { params: { id: '2611cb61-6d05-5286-b94a-ce6cac2ba37b' } } }
+    );
     expect(getByTCGAIdSpy).toHaveBeenCalled();
   });
 
-  it('should search for Observation by ANVIL ID', async () => {
+  it('should search for Patient by ANVIL ID', async () => {
     await service.searchById(
       { base_version: '4_0_0' },
       {
         req: {
-          params: { id: 'AnVIL_CMG_Broad_Blood_Gazda_WGS' },
+          params: {
+            id: 'AnVIL_CCDG_Broad_NP_Epilepsy_AUSAUS_EP_BA_CN_ID_MDS_WES-Su-C2021_AUSAUST26235',
+          },
         },
       }
     );

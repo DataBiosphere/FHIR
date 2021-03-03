@@ -1,19 +1,19 @@
 const { makeResource } = require('./metadata');
 
-describe('ResearchStudy metadata test', () => {
+describe('Patient metadata test', () => {
   it('should have correct metadata ', () => {
     expect(makeResource()).toEqual({
       conditionalCreate: false,
       conditionalDelete: 'not-supported',
       conditionalRead: 'not-supported',
       conditionalUpdate: false,
-      documentation: 'This server does not let clients create ResearchStudys',
-      profile: { reference: 'http://www.hl7.org/fhir/ResearchStudy.profile.json' },
+      documentation: 'This server does not let clients create Patients',
+      profile: { reference: 'http://www.hl7.org/fhir/Patient.profile.json' },
       readHistory: false,
       searchInclude: [],
       searchParam: [],
       searchRevInclude: [],
-      type: 'ResearchStudy',
+      type: 'Patient',
       updateCreate: false,
       versioning: 'no-version',
     });

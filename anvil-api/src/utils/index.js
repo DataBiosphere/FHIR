@@ -1,14 +1,4 @@
 /**
- * Transform a row from the TCGA query into sub objects of their original tables
- *
- * @param {row} row
- */
-const transformAnvilResults = (row) => ({
-  // TODO: this is where we tranform the rows into something readable
-  //       it should return the same thing as when we make calls to `/api/gdc`
-});
-
-/**
  *
  * @param list {Array} - List of objects to dedupe
  * @returns {Array}
@@ -36,26 +26,36 @@ function dedupeObjects(list) {
 }
 
 const buildSortObject = (sort) => {
+  // edge case
+  if (!sort) {
+    return [{}, {}];
+  }
+
   let sortObj = {};
   let existsObj = {};
 
-  sort.split(',').filter((str) => str).forEach((str) => {
+  sort
+    .split(',')
+    .filter((str) => str)
+    .forEach((str) => {
+      str = str.trim();
+
       const field = str[0] === '-' ? str.substring(1) : str;
       sortObj[field] = str[0] === '-' ? -1 : 1;
 
-      existsObj[field] = buildExistsProp(field);
-  });
+      existsObj[field] = buildExistsProp();
+    });
 
   return [sortObj, existsObj];
 };
 
-const buildExistsProp = (prop) => {
+const buildExistsProp = () => {
   return {
-    $exists: true
+    $exists: true,
   };
 };
 
 module.exports = {
   dedupeObjects,
-  buildSortObject
+  buildSortObject,
 };
