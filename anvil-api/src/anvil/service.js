@@ -99,7 +99,6 @@ const getAllObservations = async ({
   const [sortObj, existObj] = buildSortObject(sort);
 
   // in case no sort is provided
-  console.log(existObj);
   const query = existObj
     ? {
         $and: [
