@@ -33,9 +33,15 @@ class ANVIL {
   translateSubjecttoObservation(subject) {
     return this.resourceTranslator.toObservation(subject);
   }
+  translateSortParamstoObservationParams(sortFields) {
+    return sortFields ? this.resourceTranslator.toObservationSortParams(sortFields) : undefined;
+  }
 
   translateSubjecttoPatient(subject) {
     return this.resourceTranslator.toPatient(subject);
+  }
+  translateSortParamstoPatientParams(sortFields) {
+    return sortFields ? this.resourceTranslator.toPatientSortParams(sortFields) : undefined;
   }
 
   async getAllResearchStudy({ page, pageSize, offset, sort } = {}) {
@@ -51,9 +57,9 @@ class ANVIL {
     return this.translateWorkspacetoResearchStudy(data);
   }
 
-  async getAllObservations({ page, pageSize } = {}) {
+  async getAllObservations({ page, pageSize, offset, sort } = {}) {
     const { data } = await get(`${ANVIL_URL}/api/observation`, {
-      params: { page, pageSize },
+      params: { page, pageSize, offset, sort: this.translateSortParamstoObservationParams(sort) },
     });
 
     const { results, count } = data;
@@ -64,9 +70,9 @@ class ANVIL {
     return this.translateSubjecttoObservation(data);
   }
 
-  async getAllPatients({ page, pageSize } = {}) {
+  async getAllPatients({ page, pageSize, offset, sort } = {}) {
     const { data } = await get(`${ANVIL_URL}/api/subject`, {
-      params: { page, pageSize },
+      params: { page, pageSize, offset, sort: this.translateSortParamstoPatientParams(sort) },
     });
 
     const { results, count } = data;

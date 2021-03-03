@@ -53,8 +53,14 @@ const getAllSubjects = async (req, res) => {
     workspace = req.params.workspace;
   }
 
-  const { page, pageSize } = req.query;
-  const [results, count] = await service.getAllSubjects({ workspace, page, pageSize });
+  const { page, pageSize, sort, offset } = req.query;
+  const [results, count] = await service.getAllSubjects({
+    workspace,
+    page,
+    pageSize,
+    sort,
+    offset,
+  });
   res.json({
     results,
     count,

@@ -81,6 +81,15 @@ class Translator {
     // TODO: look into subject.age
     return observation;
   }
+  toObservationSortParams(sortFields) {
+    const sortArray = buildSortArray(sortFields);
+    const observationMappings = anvilFieldMappings.OBSERVATION;
+
+    return sortArray
+      .filter((sf) => observationMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${observationMappings[sf.field]}`)
+      .join(',');
+  }
 
   toResearchStudy(workspace) {
     const researchStudy = new ResearchStudy({
@@ -179,7 +188,7 @@ class Translator {
     const patientMappings = anvilFieldMappings.PATIENT;
 
     return sortArray
-      .filter((sf) => researchStudyMappings[sf.field])
+      .filter((sf) => patientMappings[sf.field])
       .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${patientMappings[sf.field]}`)
       .join(',');
   }

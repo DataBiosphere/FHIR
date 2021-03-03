@@ -53,12 +53,27 @@ const getSampleById = async ({ workspace = '', id }) => {
   return result || null;
 };
 
-const getAllSubjects = async ({ workspace = '', page = 1, pageSize = 25 }) => {
-  let [results, count] = await SubjectService.find({
+const getAllSubjects = async ({
+  workspace = '',
+  page = 1,
+  pageSize = 25,
+  sort = '',
+  offset = 0,
+}) => {
+  const [sortObj, existObj] = buildSortObject(sort);
+
+  // in case no sort is provided
+  const query = existObj
+    ? { $and: [{ workspaceName: { $regex: workspace }, ...existObj }] }
+    : { workspaceName: { $regex: workspace } };
+
+  const [results, count] = await SubjectService.find({
     page: page,
     pageSize: pageSize,
-    query: { workspaceName: { $regex: workspace } },
+    query: query,
     projection: {},
+    offset: offset,
+    sort: sortObj,
   });
 
   return [results, count];

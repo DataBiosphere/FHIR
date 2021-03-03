@@ -103,7 +103,6 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     promises.push(anvil.getAllPatients({ offset: currentOffsets.anvil, ...params }));
 
     const allResults = await Promise.all(promises);
-
     count = allResults.map((r) => r[1]).reduce((acc, val) => acc + val);
     const compareFn = buildCompareFn(_sort);
     const [merged, positions] = mergeResults(compareFn, _count, ...allResults.map((r) => r[0]));

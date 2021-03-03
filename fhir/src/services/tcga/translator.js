@@ -51,6 +51,15 @@ class Translator {
       effectiveDateTime: gdcResult.diag__treat__updated_datetime,
     });
   }
+  toObservationSortParams(sortFields) {
+    const sortArray = buildSortArray(sortFields);
+    const observationMappings = tcgaFieldMappings.OBSERVATION;
+
+    return sortArray
+      .filter((sf) => observationMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${observationMappings[sf.field]}`)
+      .join(',');
+  }
 
   toDiagnosticReport(tcgaResult) {
     return new DiagnosticReport({
@@ -131,7 +140,6 @@ class Translator {
       ),
     });
   }
-
   toResearchStudySortParams(sortFields) {
     const sortArray = buildSortArray(sortFields);
     const researchStudyMappings = tcgaFieldMappings.RESEARCHSTUDY;

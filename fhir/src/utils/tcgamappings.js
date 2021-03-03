@@ -16,6 +16,7 @@ const observationCodeMappings = [
 ];
 
 const tcgaFieldMappings = {
+  OBSERVATION: { disease: 'diag__treat__treatment_type' },
   RESEARCHSTUDY: { title: 'proj__name' },
   PATIENT: { gender: 'demo__gender' },
 };
