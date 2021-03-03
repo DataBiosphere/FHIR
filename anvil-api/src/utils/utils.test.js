@@ -55,7 +55,7 @@ describe('Utils tests', () => {
   });
 
   it('should CSV into Mongo sort object', () => {
-    expect(buildSortObject()).toEqual(null);
+    expect(buildSortObject()).toEqual([{}, {}]);
 
     expect(buildSortObject('foo, bar, -foobar')).toEqual([
       { foo: 1, bar: 1, foobar: -1 },
