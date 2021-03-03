@@ -95,6 +95,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
         break;
       default:
         logger.error('_source is not valid');
+        break;
     }
   } else {
     // creates and resolves all promises
@@ -146,7 +147,8 @@ const searchById = async (args, { req }) => {
   });
 
   // TODO: add some filter for nulls
-  return tcgaResult ? tcgaResult : anvilResult;
+  const patient = tcgaResult ? tcgaResult : anvilResult;
+  return patient || null;
 };
 
 module.exports = {

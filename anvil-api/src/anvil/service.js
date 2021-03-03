@@ -64,7 +64,7 @@ const getAllSubjects = async ({
 
   // in case no sort is provided
   const query = existObj
-    ? { $and: [{ workspaceName: { $regex: workspace }, ...existObj }] }
+    ? { $and: [{ workspaceName: { $regex: workspace }, ...existObj }] } // TODO: this spread is broken
     : { workspaceName: { $regex: workspace } };
 
   const [results, count] = await SubjectService.find({
@@ -88,18 +88,42 @@ const getSubjectById = async ({ workspace = '', id }) => {
   return result || null;
 };
 
-const getAllObservations = async ({ workspace = '', page = 1, pageSize = 25 }) => {
-  let [results, count] = await SubjectService.find({
+const getAllObservations = async ({
+  workspace = '',
+  page = 1,
+  pageSize = 25,
+  sort = '',
+  offset = 0,
+}) => {
+  // TODO: need to rework this existsObj
+  const [sortObj, existObj] = buildSortObject(sort);
+
+  // in case no sort is provided
+  console.log(existObj);
+  const query = existObj
+    ? {
+        $and: [
+          { workspaceName: { $regex: workspace } },
+          { diseases: { $exists: true } },
+          { diseases: { $size: 1 } },
+          existObj,
+        ],
+      }
+    : {
+        $and: [
+          { workspaceName: { $regex: workspace } },
+          { diseases: { $exists: true } },
+          { diseases: { $size: 1 } },
+        ],
+      };
+
+  const [results, count] = await SubjectService.find({
     page: page,
     pageSize: pageSize,
-    query: {
-      $and: [
-        { workspaceName: { $regex: workspace } },
-        { diseases: { $exists: true } },
-        { diseases: { $size: 1 } },
-      ],
-    },
+    query: query,
     projection: {},
+    offset: offset,
+    sort: sortObj,
   });
 
   return [results, count];
