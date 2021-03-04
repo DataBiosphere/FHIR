@@ -64,7 +64,7 @@ const getAllSubjects = async ({
 
   // in case no sort is provided
   const query = existObj
-    ? { $and: [{ workspaceName: { $regex: workspace }, ...existObj }] } // TODO: this spread is broken
+    ? { $and: [{ workspaceName: { $regex: workspace } }, existObj] }
     : { workspaceName: { $regex: workspace } };
 
   const [results, count] = await SubjectService.find({
@@ -103,16 +103,16 @@ const getAllObservations = async ({
     ? {
         $and: [
           { workspaceName: { $regex: workspace } },
-          { diseases: { $exists: true } },
-          { diseases: { $size: 1 } },
+          { diseases: { $ne: null } },
+          { $where: 'this.diseases.length > 0 && this.diseases[0] != null' },
           existObj,
         ],
       }
     : {
         $and: [
           { workspaceName: { $regex: workspace } },
-          { diseases: { $exists: true } },
-          { diseases: { $size: 1 } },
+          { diseases: { $ne: null } },
+          { $where: 'this.diseases.length > 0 && this.diseases[0] != null' },
         ],
       };
 
@@ -133,8 +133,8 @@ const getObservationById = async ({ workspace = '', id }) => {
       $and: [
         { workspaceName: { $regex: workspace } },
         { id: id },
-        { diseases: { $exists: true } },
-        { diseases: { $size: 1 } },
+        { diseases: { $ne: null } },
+        { $where: 'this.diseases.length > 0 && this.diseases[0] != null' },
       ],
     },
   });

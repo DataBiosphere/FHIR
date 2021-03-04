@@ -1,15 +1,9 @@
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
 const { bundleSize } = require('../../config');
-const {
-  buildSearchBundle,
-  buildEntry,
-  TCGA_SOURCE,
-  ANVIL_SOURCE,
-  buildCompareFn,
-  mergeResults,
-} = require('../../utils');
+const { buildSearchBundle, buildEntry, TCGA_SOURCE, ANVIL_SOURCE } = require('../../utils');
 const { TCGA, ANVIL } = require('../../services');
+const { buildCompareFn, mergeResults } = require('../../utils/sorting');
 const PagingSession = require('../../utils/pagingsession');
 
 const tcga = new TCGA();

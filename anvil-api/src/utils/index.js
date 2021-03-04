@@ -28,7 +28,7 @@ function dedupeObjects(list) {
 const buildSortObject = (sort) => {
   // edge case
   if (!sort) {
-    return [{}, null];
+    return [{}, {}];
   }
 
   let sortObj = {};

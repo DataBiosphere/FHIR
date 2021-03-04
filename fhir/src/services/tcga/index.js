@@ -97,9 +97,9 @@ class TCGA {
     return tcgaResults.map((tcgaResult) => this.translateSingleGdcResultsToFhir(tcgaResult));
   }
 
-  async getAllDiagnosticReports({ page, pageSize, sort, offset } = {}) {
+  async getAllDiagnosticReports({ page, pageSize } = {}) {
     const { data } = await get(`${TCGA_URL}/api/gdc`, {
-      params: { page, pageSize, offset, sort: this.translateSortParamstoObservationParams(sort) },
+      params: { page, pageSize },
     });
     const { results, count } = data;
     return [this.translateGdcResultsToFhir(results), count];
@@ -109,8 +109,10 @@ class TCGA {
     return this.translateSingleGdcResultsToFhir(data);
   }
 
-  async getAllDiagnoses({ page, pageSize } = {}) {
-    const { data } = await get(`${TCGA_URL}/api/diagnosis`, { params: { page, pageSize } });
+  async getAllDiagnoses({ page, pageSize, sort, offset } = {}) {
+    const { data } = await get(`${TCGA_URL}/api/diagnosis`, {
+      params: { page, pageSize, offset, sort: this.translateSortParamstoObservationParams(sort) },
+    });
     const { results, count } = data;
     return [
       results.map((diagnosis) => this.translateDiagnosisToObservation(diagnosis, diagnosis)),
