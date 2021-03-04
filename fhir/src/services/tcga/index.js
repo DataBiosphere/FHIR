@@ -55,6 +55,9 @@ class TCGA {
   translateSortParamstoResearchStudyParams(sortFields) {
     return sortFields ? this.resourceTranslator.toResearchStudySortParams(sortFields) : undefined;
   }
+  translateSearchParamsToResearchStudyParams(searchFields) {
+    return searchFields ? this.resourceTranslator.toResearchStudySearchParams(searchFields) : undefined;
+  }
 
   /**
    * Translate a TCGA GDC response to an Patient
@@ -135,9 +138,15 @@ class TCGA {
     return this.translateBiospecimentoSpecimen(data, data);
   }
 
-  async getAllResearchStudy({ page, pageSize, sort, offset } = {}) {
+  async getAllResearchStudy({ page, pageSize, sort, offset, search } = {}) {
     const { data } = await get(`${TCGA_URL}/api/projects`, {
-      params: { page, pageSize, offset, sort: this.translateSortParamstoResearchStudyParams(sort) },
+      params: {
+        page,
+        pageSize,
+        offset,
+        sort: this.translateSortParamstoResearchStudyParams(sort),
+        ...this.translateSearchParamsToResearchStudyParams(search)
+      },
     });
 
     const { results, count } = data;

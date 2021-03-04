@@ -147,6 +147,22 @@ class Translator {
       .join(',');
   }
 
+  toResearchStudySearchParams(searchFields) {
+    if (!searchFields)
+      return '';
+
+    const searchParams = {};
+
+    for (let search in searchFields) {
+      if (!search.includes(':') && anvilFieldMappings.RESEARCHSTUDY[search]) {
+        searchParams[anvilFieldMappings.RESEARCHSTUDY[search]] = searchFields[search];
+      }
+      // TODO implement _has and chaining
+    }
+
+    return searchParams;
+  }
+
   toPatient(subject) {
     const id = buildSubjectId(subject.workspaceName, subject.name);
     const slug = buildSlug('Patient', id);

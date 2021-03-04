@@ -30,6 +30,10 @@ class ANVIL {
     return sortFields ? this.resourceTranslator.toResearchStudySortParams(sortFields) : undefined;
   }
 
+  translateSearchParamstoResearchStudyParams(searchFields) {
+    return searchFields ? this.resourceTranslator.toResearchStudySearchParams(searchFields) : undefined;
+  }
+
   translateSubjecttoObservation(subject) {
     return this.resourceTranslator.toObservation(subject);
   }
@@ -44,9 +48,15 @@ class ANVIL {
     return sortFields ? this.resourceTranslator.toPatientSortParams(sortFields) : undefined;
   }
 
-  async getAllResearchStudy({ page, pageSize, offset, sort } = {}) {
+  async getAllResearchStudy({ page, pageSize, offset, sort, search } = {}) {
     const { data } = await get(`${ANVIL_URL}/api/workspace`, {
-      params: { page, pageSize, offset, sort: this.translateSortParamstoResearchStudyParams(sort) },
+      params: {
+        page,
+        pageSize,
+        offset,
+        sort: this.translateSortParamstoResearchStudyParams(sort),
+        ...this.translateSearchParamstoResearchStudyParams(search)
+      },
     });
 
     const { results, count } = data;
