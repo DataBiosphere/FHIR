@@ -30,16 +30,21 @@ const getStandardParameters = (query) => {
     // _security,
     _source,
     // _tag,
-    _hash = '',
     _sort = DEFAULT_SORT,
   } = query;
-  return { _page, _count, _id, _include, _source, _hash, _sort };
+  return { _page, _count, _id, _include, _source, _sort };
+};
+
+const getCustomSearchParameters = (query) => {
+  const { _hash = '' } = query;
+  return { _hash };
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('ResearchStudy >>> search');
   const { query } = req;
-  const { _page, _count, _id, _source, _hash, _sort } = getStandardParameters(query);
+  const { _page, _count, _id, _source, _sort } = getStandardParameters(query);
+  const { _hash } = getCustomSearchParameters(query);
 
   // WARN: this only works because we have two datasets
   //        needs changing for more datasets

@@ -24,18 +24,23 @@ const getStandardParameters = (query) => {
     // _security,
     _source,
     // _tag,
-    _hash = '',
     _sort = DEFAULT_SORT,
-    _has,
-    _text,
+    // _has,
+    // _text,
   } = query;
-  return { _page, _count, _id, _include, _source, _hash, _sort, _has, _text };
+  return { _page, _count, _id, _include, _source, _sort };
+};
+
+const getCustomSearchParameters = (query) => {
+  const { _hash = '' } = query;
+  return { _hash };
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('Patient >>> search');
   const { query } = req;
-  const { _page, _count, _id, _source, _hash, _sort, _has, _text } = getStandardParameters(query);
+  const { _page, _count, _id, _source, _sort } = getStandardParameters(query);
+  const { _hash } = getCustomSearchParameters(query);
 
   if (_id) {
     const tcgaResult = await tcga.getPatientById(_id).catch((err) => {
