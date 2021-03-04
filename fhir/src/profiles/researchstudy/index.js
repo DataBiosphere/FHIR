@@ -39,7 +39,7 @@ const getStandardParameters = (query) => {
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('ResearchStudy >>> search');
   const { query } = req;
-  const { _page, _count, _id, _hash, _source, _sort } = getStandardParameters(query);
+  const { _page, _count, _id, _source, _hash, _sort } = getStandardParameters(query);
 
   // WARN: this only works because we have two datasets
   //        needs changing for more datasets
@@ -71,7 +71,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     }
   }
 
-  // create pomises and add both adapters
+  // create promises and add both adapters
   const params = { page: _page, pageSize: _count, sort: _sort };
   let results = [];
   let count = 0;

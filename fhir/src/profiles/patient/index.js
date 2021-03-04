@@ -35,7 +35,7 @@ const getStandardParameters = (query) => {
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('Patient >>> search');
   const { query } = req;
-  const { _page, _count, _id, _hash, _source, _sort, _has, _text } = getStandardParameters(query);
+  const { _page, _count, _id, _source, _hash, _sort, _has, _text } = getStandardParameters(query);
 
   if (_id) {
     const tcgaResult = await tcga.getPatientById(_id).catch((err) => {

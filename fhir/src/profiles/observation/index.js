@@ -8,7 +8,7 @@ const PagingSession = require('../../utils/pagingsession');
 
 const tcga = new TCGA();
 const anvil = new ANVIL();
-const DEFAULT_SORT = 'disease';
+const DEFAULT_SORT = 'subject';
 
 const logger = loggers.get();
 
