@@ -1,10 +1,14 @@
 const { loggers } = require('@asymmetrik/node-fhir-server-core');
 
-const { bundleSize } = require('../../config');
 const { buildSearchBundle, buildEntry, TCGA_SOURCE, ANVIL_SOURCE } = require('../../utils');
 const { TCGA, ANVIL } = require('../../services');
 const { buildCompareFn, mergeResults } = require('../../utils/sorting');
 const PagingSession = require('../../utils/pagingsession');
+const {
+  getQueryStandardParameters,
+  standardParameters,
+  getSearchParameters,
+} = require('../../utils/searching');
 
 const tcga = new TCGA();
 const anvil = new ANVIL();
@@ -12,35 +16,13 @@ const DEFAULT_SORT = 'gender';
 
 const logger = loggers.get();
 
-const getStandardParameters = (query) => {
-  const {
-    _page = 1,
-    _count = bundleSize,
-    _id,
-    _include,
-    // _lastUpdated,
-    // _profile,
-    // _query,
-    // _security,
-    _source,
-    // _tag,
-    _sort = DEFAULT_SORT,
-    // _has,
-    // _text,
-  } = query;
-  return { _page, _count, _id, _include, _source, _sort };
-};
-
-const getCustomSearchParameters = (query) => {
-  const { _hash = '' } = query;
-  return { _hash };
-};
-
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('Patient >>> search');
   const { query } = req;
-  const { _page, _count, _id, _source, _sort } = getStandardParameters(query);
-  const { _hash } = getCustomSearchParameters(query);
+  const { _page, _count, _id, _source, _hash, _sort } = getQueryStandardParameters(query, {
+    defaultSort: DEFAULT_SORT,
+  });
+  const searchParams = getSearchParameters(query);
 
   if (_id) {
     const tcgaResult = await tcga.getPatientById(_id).catch((err) => {
@@ -89,12 +71,14 @@ const search = async ({ base_version: baseVersion }, { req }) => {
       case TCGA_SOURCE:
         [results, count] = await tcga.getAllPatients({
           offset: currentOffsets.tcga,
+          search: searchParams,
           ...params,
         });
         break;
       case ANVIL_SOURCE:
         [results, count] = await anvil.getAllPatients({
           offset: currentOffsets.anvil,
+          search: searchParams,
           ...params,
         });
         break;
@@ -105,8 +89,12 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   } else {
     // creates and resolves all promises
     const promises = [];
-    promises.push(tcga.getAllPatients({ offset: currentOffsets.tcga, ...params }));
-    promises.push(anvil.getAllPatients({ offset: currentOffsets.anvil, ...params }));
+    promises.push(
+      tcga.getAllPatients({ offset: currentOffsets.tcga, search: searchParams, ...params })
+    );
+    promises.push(
+      anvil.getAllPatients({ offset: currentOffsets.anvil, search: searchParams, ...params })
+    );
 
     const allResults = await Promise.all(promises);
     count = allResults.map((r) => r[1]).reduce((acc, val) => acc + val);
