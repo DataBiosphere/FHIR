@@ -31,16 +31,24 @@ class TCGA {
   translateDiagnosisToObservation(diagnosis, gdcResult) {
     return this.resourceTranslator.toObservation(diagnosis, gdcResult);
   }
+  translateSortParamstoObservationParams(sortFields) {
+    return sortFields ? this.resourceTranslator.toObservationSortParams(sortFields) : undefined;
+  }
 
   /**
-   * Translate a TCGA Diagnosis response to an Specimen
+   * Translate a TCGA Biospecimen response to an Specimen
    *
-   * @param {object} diagnosis
+   * @param {object} biospecimen
    */
   translateBiospecimentoSpecimen(biospecimen) {
     return this.resourceTranslator.toSpecimen(biospecimen);
   }
 
+  /**
+   * Translate a TCGA project response to a Research Study
+   *
+   * @param {object} project
+   */
   translateProjectToResearchStudy(project) {
     return this.resourceTranslator.toResearchStudy(project);
   }
@@ -48,6 +56,11 @@ class TCGA {
     return sortFields ? this.resourceTranslator.toResearchStudySortParams(sortFields) : undefined;
   }
 
+  /**
+   * Translate a TCGA GDC response to an Patient
+   *
+   * @param {object} biospecimen
+   */
   translateGdctoPatient(gdcResult) {
     return this.resourceTranslator.toPatient(gdcResult);
   }
@@ -94,8 +107,10 @@ class TCGA {
     return this.translateSingleGdcResultsToFhir(data);
   }
 
-  async getAllDiagnoses({ page, pageSize } = {}) {
-    const { data } = await get(`${TCGA_URL}/api/diagnosis`, { params: { page, pageSize } });
+  async getAllDiagnoses({ page, pageSize, sort, offset } = {}) {
+    const { data } = await get(`${TCGA_URL}/api/diagnosis`, {
+      params: { page, pageSize, offset, sort: this.translateSortParamstoObservationParams(sort) },
+    });
     const { results, count } = data;
     return [
       results.map((diagnosis) => this.translateDiagnosisToObservation(diagnosis, diagnosis)),
@@ -120,9 +135,9 @@ class TCGA {
     return this.translateBiospecimentoSpecimen(data, data);
   }
 
-  async getAllResearchStudy({ pageSize, sort, offset } = {}) {
+  async getAllResearchStudy({ page, pageSize, sort, offset } = {}) {
     const { data } = await get(`${TCGA_URL}/api/projects`, {
-      params: { offset, pageSize, sort: this.translateSortParamstoResearchStudyParams(sort) },
+      params: { page, pageSize, offset, sort: this.translateSortParamstoResearchStudyParams(sort) },
     });
 
     const { results, count } = data;
@@ -135,7 +150,7 @@ class TCGA {
 
   async getAllPatients({ page, pageSize, sort, offset } = {}) {
     const { data } = await get(`${TCGA_URL}/api/patient`, {
-      params: { page, offset, pageSize, sort: this.translateSortParamstoPatientParams(sort) },
+      params: { page, pageSize, offset, sort: this.translateSortParamstoPatientParams(sort) },
     });
 
     const { results, count } = data;

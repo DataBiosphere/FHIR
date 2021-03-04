@@ -23,8 +23,8 @@ const getGdcById = async (req, res) => {
 
 const getAllDiagnosis = async (req, res) => {
   logger.info('TCGA >>> getAllDiagnosis');
-  const { page, pageSize } = req.query;
-  const [results, count] = await service.getAllDiagnosis({ page, pageSize });
+  const { page, pageSize, offset, sort } = req.query;
+  const [results, count] = await service.getAllDiagnosis({ page, pageSize, offset, sort });
   res.json({
     results,
     count,

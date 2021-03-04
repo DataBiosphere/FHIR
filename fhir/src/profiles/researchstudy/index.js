@@ -21,7 +21,7 @@ const logger = loggers.get();
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('ResearchStudy >>> search');
   const { query } = req;
-  const { _page, _count, _id, _hash, _source, _sort } = getQueryStandardParameters(query, { defaultSort: DEFAULT_SORT });
+  const { _page, _count, _id, _source, _hash, _sort } = getQueryStandardParameters(query, { defaultSort: DEFAULT_SORT });
   const searchParams = getSearchParameters(query);
 
   // WARN: this only works because we have two datasets
@@ -54,7 +54,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     }
   }
 
-  // create pomises and add both adapters
+  // create promises and add both adapters
   const params = { page: _page, pageSize: _count, sort: _sort };
   let results = [];
   let count = 0;

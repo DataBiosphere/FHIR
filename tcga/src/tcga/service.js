@@ -111,8 +111,13 @@ const getGdcById = async (id) => {
  * @param {string=} page
  * @param {string=} pageSize
  */
-const getAllDiagnosis = async ({ page = 1, pageSize = 20 } = {}) => {
-  const [rows, count] = await DiagnosisService.get({ page, pageSize });
+const getAllDiagnosis = async ({ page = 1, pageSize = 20, sort = '', offset = 0 } = {}) => {
+  const [rows, count] = await DiagnosisService.get({
+    page,
+    pageSize,
+    orderBy: buildOrderBy(sort),
+    offset,
+  });
 
   return [rows, count];
 };

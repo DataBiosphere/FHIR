@@ -547,7 +547,7 @@ const diseaseDisplayMapping = {
 };
 
 const anvilFieldMappings = {
-  OBSERVATION: { disease: 'diseaseId' },
+  OBSERVATION: { subject: 'id' },
   RESEARCHSTUDY: {
     category: '',
     date: '',
