@@ -42,6 +42,9 @@ class Translator {
         versionId: diagnosis.diag__treat__treatment_id,
       },
       status: 'final',
+      subject: {
+        reference: `Patient/${gdcResult.submitter_id}`,
+      },
       text: {
         status: 'generated',
         div: `<div xmlns="http://www.w3.org/1999/xhtml">${diagnosis.diag__treat__treatment_type}</div>`,

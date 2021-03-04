@@ -64,7 +64,7 @@ const getAllSubjects = async ({
 
   // in case no sort is provided
   const query = existObj
-    ? { $and: [{ workspaceName: { $regex: workspace }, ...existObj }] }
+    ? { $and: [{ workspaceName: { $regex: workspace } }, existObj] }
     : { workspaceName: { $regex: workspace } };
 
   const [results, count] = await SubjectService.find({
@@ -88,18 +88,41 @@ const getSubjectById = async ({ workspace = '', id }) => {
   return result || null;
 };
 
-const getAllObservations = async ({ workspace = '', page = 1, pageSize = 25 }) => {
-  let [results, count] = await SubjectService.find({
+const getAllObservations = async ({
+  workspace = '',
+  page = 1,
+  pageSize = 25,
+  sort = '',
+  offset = 0,
+}) => {
+  // TODO: need to rework this existsObj
+  const [sortObj, existObj] = buildSortObject(sort);
+
+  // in case no sort is provided
+  const query = existObj
+    ? {
+        $and: [
+          { workspaceName: { $regex: workspace } },
+          { diseases: { $ne: null } },
+          { $where: 'this.diseases.length > 0 && this.diseases[0] != null' },
+          existObj,
+        ],
+      }
+    : {
+        $and: [
+          { workspaceName: { $regex: workspace } },
+          { diseases: { $ne: null } },
+          { $where: 'this.diseases.length > 0 && this.diseases[0] != null' },
+        ],
+      };
+
+  const [results, count] = await SubjectService.find({
     page: page,
     pageSize: pageSize,
-    query: {
-      $and: [
-        { workspaceName: { $regex: workspace } },
-        { diseases: { $exists: true } },
-        { diseases: { $size: 1 } },
-      ],
-    },
+    query: query,
     projection: {},
+    offset: offset,
+    sort: sortObj,
   });
 
   return [results, count];
@@ -110,8 +133,8 @@ const getObservationById = async ({ workspace = '', id }) => {
       $and: [
         { workspaceName: { $regex: workspace } },
         { id: id },
-        { diseases: { $exists: true } },
-        { diseases: { $size: 1 } },
+        { diseases: { $ne: null } },
+        { $where: 'this.diseases.length > 0 && this.diseases[0] != null' },
       ],
     },
   });

@@ -84,8 +84,14 @@ const getAllObservations = async (req, res) => {
     workspace = req.params.workspace;
   }
 
-  const { page, pageSize } = req.query;
-  const [results, count] = await service.getAllObservations({ workspace, page, pageSize });
+  const { page, pageSize, sort, offset } = req.query;
+  const [results, count] = await service.getAllObservations({
+    workspace,
+    page,
+    pageSize,
+    sort,
+    offset,
+  });
   res.json({
     results,
     count,

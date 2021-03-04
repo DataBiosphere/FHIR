@@ -35,7 +35,7 @@ const getStandardParameters = (query) => {
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('Patient >>> search');
   const { query } = req;
-  const { _page, _count, _id, _hash, _source, _sort, _has, _text } = getStandardParameters(query);
+  const { _page, _count, _id, _source, _hash, _sort, _has, _text } = getStandardParameters(query);
 
   if (_id) {
     const tcgaResult = await tcga.getPatientById(_id).catch((err) => {
@@ -95,6 +95,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
         break;
       default:
         logger.error('_source is not valid');
+        break;
     }
   } else {
     // creates and resolves all promises
@@ -146,7 +147,8 @@ const searchById = async (args, { req }) => {
   });
 
   // TODO: add some filter for nulls
-  return tcgaResult ? tcgaResult : anvilResult;
+  const patient = tcgaResult ? tcgaResult : anvilResult;
+  return patient || null;
 };
 
 module.exports = {
