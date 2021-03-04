@@ -23,6 +23,7 @@
     "jest-cli": "^26.6.3",
     "knex": "^0.21.6",
     "lodash": "^4.17.20",
+    "node-notifier": "^9.0.0",
     "supertest": "^5.0.0",
     "winston": "^3.3.3"
   },
