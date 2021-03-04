@@ -1,4 +1,4 @@
-const { dedupeObjects } = require('.');
+const { dedupeObjects, buildOrderBy } = require('.');
 
 describe('Utils tests', () => {
   it('should remove duplicate objects', () => {
@@ -51,6 +51,16 @@ describe('Utils tests', () => {
       {
         fooz: 'barz',
       },
+    ]);
+  });
+
+  it('should CSV into KNEX orderBy object', () => {
+    expect(buildOrderBy()).toEqual(null);
+
+    expect(buildOrderBy('foo, bar, -foobar')).toEqual([
+      { column: 'foo', order: 'asc' },
+      { column: 'bar', order: 'asc' },
+      { column: 'foobar', order: 'desc' },
     ]);
   });
 });

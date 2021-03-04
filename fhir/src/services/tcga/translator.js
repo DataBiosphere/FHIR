@@ -12,6 +12,7 @@ const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
+const Patient = resolveSchema('4_0_0', 'Patient');
 
 const { observationCodeMappings, tcgaFieldMappings } = require('../../utils/tcgamappings');
 
@@ -41,6 +42,9 @@ class Translator {
         versionId: diagnosis.diag__treat__treatment_id,
       },
       status: 'final',
+      subject: {
+        reference: `Patient/${gdcResult.submitter_id}`,
+      },
       text: {
         status: 'generated',
         div: `<div xmlns="http://www.w3.org/1999/xhtml">${diagnosis.diag__treat__treatment_type}</div>`,
@@ -49,6 +53,15 @@ class Translator {
       issued: gdcResult.diag__treat__updated_datetime,
       effectiveDateTime: gdcResult.diag__treat__updated_datetime,
     });
+  }
+  toObservationSortParams(sortFields) {
+    const sortArray = buildSortArray(sortFields);
+    const observationMappings = tcgaFieldMappings.OBSERVATION;
+
+    return sortArray
+      .filter((sf) => observationMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${observationMappings[sf.field]}`)
+      .join(',');
   }
 
   toDiagnosticReport(tcgaResult) {
@@ -130,7 +143,6 @@ class Translator {
       ),
     });
   }
-
   toResearchStudySortParams(sortFields) {
     const sortArray = buildSortArray(sortFields);
     const researchStudyMappings = tcgaFieldMappings.RESEARCHSTUDY;
@@ -138,6 +150,52 @@ class Translator {
     return sortArray
       .filter((sf) => researchStudyMappings[sf.field])
       .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${researchStudyMappings[sf.field]}`)
+      .join(',');
+  }
+
+  toPatient(gdcResult) {
+    const patient = new Patient({
+      id: gdcResult.submitter_id,
+      identifier: buildIdentifier(
+        'https://portal.gdc.cancer.gov/projects/',
+        gdcResult.proj__project_id
+      ),
+      meta: {
+        profile: ['https://www.hl7.org/fhir/patient.html'],
+      },
+    });
+
+    // translate gender value to code
+    const GENDER_SYSTEM = 'http://hl7.org/fhir/administrative-gender';
+    if (gdcResult.demo__gender) {
+      let gender = gdcResult.demo__gender.toLowerCase();
+
+      switch (gender) {
+        case 'male':
+          gender = buildCoding('male', GENDER_SYSTEM, 'Male');
+          break;
+        case 'female':
+          gender = buildCoding('female', GENDER_SYSTEM, 'Female');
+          break;
+        default:
+          gender = buildCoding('unknown', GENDER_SYSTEM, 'Unknown');
+      }
+
+      patient.gender = gender;
+    } else {
+      patient.gender = buildCoding('unknown', GENDER_SYSTEM, 'Unknown');
+    }
+
+    return patient;
+  }
+  // TODO: reduce this with ResearchStudy sort params
+  toPatientSortParams(sortFields) {
+    const sortArray = buildSortArray(sortFields);
+    const patientMappings = tcgaFieldMappings.PATIENT;
+
+    return sortArray
+      .filter((sf) => patientMappings[sf.field])
+      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${patientMappings[sf.field]}`)
       .join(',');
   }
 

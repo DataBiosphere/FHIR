@@ -26,41 +26,61 @@ class ANVIL {
   translateWorkspacetoResearchStudy(workspace) {
     return this.resourceTranslator.toResearchStudy(workspace);
   }
-
-  translateSampletoObservation(sample) {
-    return this.resourceTranslator.toObservation(sample);
-  }
-
   translateSortParamstoResearchStudyParams(sortFields) {
-    return this.resourceTranslator.toResearchStudySortParams(sortFields);
+    return sortFields ? this.resourceTranslator.toResearchStudySortParams(sortFields) : undefined;
   }
 
-  async getAllResearchStudy({ page, pageSize, sort, offset } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/Workspace`, {
-      params: { offset, pageSize, sort: this.translateSortParamstoResearchStudyParams(sort) },
+  translateSubjecttoObservation(subject) {
+    return this.resourceTranslator.toObservation(subject);
+  }
+  translateSortParamstoObservationParams(sortFields) {
+    return sortFields ? this.resourceTranslator.toObservationSortParams(sortFields) : undefined;
+  }
+
+  translateSubjecttoPatient(subject) {
+    return this.resourceTranslator.toPatient(subject);
+  }
+  translateSortParamstoPatientParams(sortFields) {
+    return sortFields ? this.resourceTranslator.toPatientSortParams(sortFields) : undefined;
+  }
+
+  async getAllResearchStudy({ page, pageSize, offset, sort } = {}) {
+    const { data } = await get(`${ANVIL_URL}/api/workspace`, {
+      params: { page, pageSize, offset, sort: this.translateSortParamstoResearchStudyParams(sort) },
     });
 
     const { results, count } = data;
     return [results.map((result) => this.translateWorkspacetoResearchStudy(result)), count];
   }
-
   async getResearchStudyById(id) {
-    const { data } = await get(`${ANVIL_URL}/api/Workspace/${id}`);
+    const { data } = await get(`${ANVIL_URL}/api/workspace/${id}`);
     return this.translateWorkspacetoResearchStudy(data);
   }
 
-  async getAllObservations({ page, pageSize } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/Sample`, {
-      params: { page, pageSize },
+  async getAllObservations({ page, pageSize, offset, sort } = {}) {
+    const { data } = await get(`${ANVIL_URL}/api/observation`, {
+      params: { page, pageSize, offset, sort: this.translateSortParamstoObservationParams(sort) },
     });
 
     const { results, count } = data;
-    return [results.map((result) => this.translateSampletoObservation(result)), count];
+    return [results.map((result) => this.translateSubjecttoObservation(result)), count];
+  }
+  async getObservationById(id) {
+    const { data } = await get(`${ANVIL_URL}/api/observation/${id}`);
+    return this.translateSubjecttoObservation(data);
   }
 
-  async getObservationById(id) {
-    const { data } = await get(`${ANVIL_URL}/api/Subject/${id}`);
-    return this.translateSampletoObservation(data);
+  async getAllPatients({ page, pageSize, offset, sort } = {}) {
+    const { data } = await get(`${ANVIL_URL}/api/subject`, {
+      params: { page, pageSize, offset, sort: this.translateSortParamstoPatientParams(sort) },
+    });
+
+    const { results, count } = data;
+    return [results.map((result) => this.translateSubjecttoPatient(result)), count];
+  }
+  async getPatientById(id) {
+    const { data } = await get(`${ANVIL_URL}/api/subject/${id}`);
+    return this.translateSubjecttoPatient(data);
   }
 }
 

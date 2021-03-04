@@ -16,7 +16,9 @@ const observationCodeMappings = [
 ];
 
 const tcgaFieldMappings = {
+  OBSERVATION: { subject: 'submitter_id' },
   RESEARCHSTUDY: { title: 'proj__name' },
+  PATIENT: { gender: 'demo__gender' },
 };
 
 module.exports = { observationCodeMappings, tcgaFieldMappings };

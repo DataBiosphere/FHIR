@@ -133,9 +133,9 @@ const transformGdcResults = (row) => ({
 });
 
 /**
- *
- * @param list {Array} - List of objects to dedupe
- * @returns {Array}
+ * Removes duplicate objects in list
+ * @param {Array} list - list of objects to dedupe
+ * @returns {Array} list of unique objects
  */
 function dedupeObjects(list) {
   const compareObjects = (a, b) => {
@@ -159,17 +159,29 @@ function dedupeObjects(list) {
   });
 }
 
+/**
+ * Creates string for BigQuery to sort by
+ * @param {string} sort - decides to sort by name or number
+ * @returns {string}
+ */
 function buildOrderBy(sort) {
-    return sort.split(',').filter((str) => str).map((str) => {
-        return {
+  return sort
+    ? sort
+        .split(',')
+        .filter((str) => str)
+        .map((str) => {
+          str = str.trim();
+
+          return {
             column: str[0] === '-' ? str.substring(1) : str,
-            order: str[0] === '-' ? 'desc' : 'asc'
-        };
-    });
+            order: str[0] === '-' ? 'desc' : 'asc',
+          };
+        })
+    : null;
 }
 
 module.exports = {
   transformGdcResults,
   dedupeObjects,
-  buildOrderBy
+  buildOrderBy,
 };

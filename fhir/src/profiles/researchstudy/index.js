@@ -21,7 +21,6 @@ const logger = loggers.get();
 const getStandardParameters = (query) => {
   const {
     _page = 1,
-    _hash = '',
     _count = bundleSize,
     _id,
     _include,
@@ -31,15 +30,16 @@ const getStandardParameters = (query) => {
     // _security,
     _source,
     // _tag,
+    _hash = '',
     _sort = DEFAULT_SORT,
   } = query;
-  return { _page, _hash, _count, _id, _include, _source, _sort };
+  return { _page, _count, _id, _include, _source, _hash, _sort };
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('ResearchStudy >>> search');
   const { query } = req;
-  const { _page, _hash, _count, _id, _source, _sort } = getStandardParameters(query);
+  const { _page, _count, _id, _source, _hash, _sort } = getStandardParameters(query);
 
   // WARN: this only works because we have two datasets
   //        needs changing for more datasets
@@ -71,7 +71,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     }
   }
 
-  // create pomises and add both adapters
+  // create promises and add both adapters
   const params = { page: _page, pageSize: _count, sort: _sort };
   let results = [];
   let count = 0;
@@ -96,9 +96,6 @@ const search = async ({ base_version: baseVersion }, { req }) => {
         logger.error('_source is not valid');
     }
   } else {
-    // TODO: add pagination
-    // it currently returns TWICE as many results as asked
-
     // creates and resolves all promises
     const promises = [];
     promises.push(tcga.getAllResearchStudy({ offset: currentOffsets.tcga, ...params }));

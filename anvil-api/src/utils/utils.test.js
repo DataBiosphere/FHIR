@@ -1,4 +1,4 @@
-const { dedupeObjects } = require('.');
+const { dedupeObjects, buildSortObject } = require('.');
 
 describe('Utils tests', () => {
   it('should remove duplicate objects', () => {
@@ -51,6 +51,15 @@ describe('Utils tests', () => {
       {
         fooz: 'barz',
       },
+    ]);
+  });
+
+  it('should CSV into Mongo sort object', () => {
+    expect(buildSortObject()).toEqual([{}, {}]);
+
+    expect(buildSortObject('foo, bar, -foobar')).toEqual([
+      { foo: 1, bar: 1, foobar: -1 },
+      { foo: { $exists: true }, bar: { $exists: true }, foobar: { $exists: true } },
     ]);
   });
 });

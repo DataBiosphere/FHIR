@@ -16,16 +16,13 @@ const buildCompareFn = (sort) => {
 
   return (a1, a2) => {
     if (!a1) {
-      if (a2) {
-        return -1;
-      }
-
-      return 0;
+      return a2 ? -1 : 0;
     }
 
     if (!a2) {
       return 1;
     }
+
     let value = 0;
     sortByArray.forEach((sortObj) => {
       if (a1[sortObj.field] < a2[sortObj.field]) {

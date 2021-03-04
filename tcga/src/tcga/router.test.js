@@ -1,12 +1,14 @@
 jest.mock('./controller', () => ({
-  getAllGdc: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getGdcById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getAllDiagnosis: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getDiagnosisById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getAllBiospecimen: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getBiospecimenById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getAllProjects: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getProjectById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getAllGdc: jest.fn().mockImplementation((req, res) => res.json({ id: 'gdc' })),
+  getGdcById: jest.fn().mockImplementation((req, res) => res.json({ id: 'gdcid' })),
+  getAllDiagnosis: jest.fn().mockImplementation((req, res) => res.json({ id: 'diag' })),
+  getDiagnosisById: jest.fn().mockImplementation((req, res) => res.json({ id: 'diagid' })),
+  getAllBiospecimen: jest.fn().mockImplementation((req, res) => res.json({ id: 'bio' })),
+  getBiospecimenById: jest.fn().mockImplementation((req, res) => res.json({ id: 'bioid' })),
+  getAllProjects: jest.fn().mockImplementation((req, res) => res.json({ id: 'project' })),
+  getProjectById: jest.fn().mockImplementation((req, res) => res.json({ id: 'projectid' })),
+  getAllPatients: jest.fn().mockImplementation((req, res) => res.json({ id: 'patient' })),
+  getPatientById: jest.fn().mockImplementation((req, res) => res.json({ id: 'patientid' })),
 }));
 
 const express = require('express');
@@ -90,6 +92,23 @@ describe('router tests', () => {
       .get('/projects/foobar')
       .end((err, res) => {
         expect(controller.getProjectById.mock.calls.length).toEqual(1);
+        done();
+      });
+  });
+
+  it('should route Patient base requests to the getAllPatients function of the controller', (done) => {
+    supertest(app)
+      .get('/patient')
+      .end(() => {
+        expect(controller.getAllPatients.mock.calls.length).toEqual(1);
+        done();
+      });
+  });
+  it('should route Patient ID requests to the getPatientById function of the controller', (done) => {
+    supertest(app)
+      .get('/patient/foobar')
+      .end((err, res) => {
+        expect(controller.getPatientById.mock.calls.length).toEqual(1);
         done();
       });
   });

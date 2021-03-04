@@ -8,7 +8,7 @@ const PagingSession = require('../../utils/pagingsession');
 
 const tcga = new TCGA();
 const anvil = new ANVIL();
-const DEFAULT_SORT = 'subject';
+const DEFAULT_SORT = 'gender';
 
 const logger = loggers.get();
 
@@ -26,21 +26,23 @@ const getStandardParameters = (query) => {
     // _tag,
     _hash = '',
     _sort = DEFAULT_SORT,
+    _has,
+    _text,
   } = query;
-  return { _page, _count, _id, _include, _source, _hash, _sort };
+  return { _page, _count, _id, _include, _source, _hash, _sort, _has, _text };
 };
 
 const search = async ({ base_version: baseVersion }, { req }) => {
-  logger.info('Observation >>> search');
+  logger.info('Patient >>> search');
   const { query } = req;
-  const { _page, _count, _id, _source, _hash, _sort } = getStandardParameters(query);
+  const { _page, _count, _id, _source, _hash, _sort, _has, _text } = getStandardParameters(query);
 
   if (_id) {
-    const tcgaResult = await tcga.getDiagnosisById(_id).catch((err) => {
-      logger.info('_id is not an TCGA ID');
+    const tcgaResult = await tcga.getPatientById(_id).catch((err) => {
+      logger.info('_id is not a TCGA ID');
     });
-    const anvilResult = await anvil.getObservationById(_id).catch((err) => {
-      logger.info('_id is not an ANVIL ID');
+    const anvilResult = await anvil.getPatientById(_id).catch((err) => {
+      logger.info('_id is not a ANVIL ID');
     });
 
     // WARN: this only works because we have two datasets
@@ -48,7 +50,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     const resource = tcgaResult ? tcgaResult : anvilResult;
 
     return buildSearchBundle({
-      resourceType: 'Observation',
+      resourceType: 'Patient',
       entries: [buildEntry(resource)],
       page: _page,
       pageSize: _count,
@@ -70,7 +72,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     }
   }
 
-  // create promises and add both adapters
+  // create pomises and add both adapters
   const params = { page: _page, pageSize: _count, sort: _sort };
   let results = [];
   let count = 0;
@@ -80,13 +82,13 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   if (_source) {
     switch (_source) {
       case TCGA_SOURCE:
-        [results, count] = await tcga.getAllDiagnoses({
+        [results, count] = await tcga.getAllPatients({
           offset: currentOffsets.tcga,
           ...params,
         });
         break;
       case ANVIL_SOURCE:
-        [results, count] = await anvil.getAllObservations({
+        [results, count] = await anvil.getAllPatients({
           offset: currentOffsets.anvil,
           ...params,
         });
@@ -98,8 +100,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   } else {
     // creates and resolves all promises
     const promises = [];
-    promises.push(tcga.getAllDiagnoses({ offset: currentOffsets.tcga, ...params }));
-    promises.push(anvil.getAllObservations({ offset: currentOffsets.anvil, ...params }));
+    promises.push(tcga.getAllPatients({ offset: currentOffsets.tcga, ...params }));
+    promises.push(anvil.getAllPatients({ offset: currentOffsets.anvil, ...params }));
 
     const allResults = await Promise.all(promises);
     count = allResults.map((r) => r[1]).reduce((acc, val) => acc + val);
@@ -115,7 +117,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   }
 
   return buildSearchBundle({
-    resourceType: 'Observation',
+    resourceType: 'Patient',
     page: _page,
     pageSize: _count,
     fhirVersion: baseVersion,
@@ -130,23 +132,23 @@ const search = async ({ base_version: baseVersion }, { req }) => {
 };
 
 const searchById = async (args, { req }) => {
-  logger.info('Observation >>> searchById');
+  logger.info('Patient >>> searchById');
   const { params } = req;
   const { id } = params;
 
   // TODO: look into promise.all
   //        https://stackoverflow.com/questions/30362733/handling-errors-in-promise-all
   // queries both databases
-  const tcgaResult = await tcga.getDiagnosisById(id).catch((err) => {
-    logger.info('id is not an TCGA ID');
+  const tcgaResult = await tcga.getPatientById(id).catch((err) => {
+    logger.info('_id is not a TCGA ID');
   });
-  const anvilResult = await anvil.getObservationById(id).catch((err) => {
-    logger.info('id is not an ANVIL ID');
+  const anvilResult = await anvil.getPatientById(id).catch((err) => {
+    logger.info('_id is not a ANVIL ID');
   });
 
   // TODO: add some filter for nulls
-  const observation = tcgaResult ? tcgaResult : anvilResult;
-  return observation || null;
+  const patient = tcgaResult ? tcgaResult : anvilResult;
+  return patient || null;
 };
 
 module.exports = {
