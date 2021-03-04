@@ -55,7 +55,7 @@ class ANVIL {
         pageSize,
         offset,
         sort: this.translateSortParamstoResearchStudyParams(sort),
-        search: this.translateSearchParamstoResearchStudyParams(search)
+        ...this.translateSearchParamstoResearchStudyParams(search)
       },
     });
 

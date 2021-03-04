@@ -153,6 +153,22 @@ class Translator {
       .join(',');
   }
 
+  toResearchStudySearchParams(searchFields) {
+    if (!searchFields)
+      return '';
+
+    const searchParams = {};
+
+    for (let search in searchFields) {
+      if (!search.includes(':') && tcgaFieldMappings.RESEARCHSTUDY[search]) {
+        searchParams[tcgaFieldMappings.RESEARCHSTUDY[search]] = searchFields[search];
+      }
+      // TODO implement _has and chaining
+    }
+
+    return searchParams;
+  }
+
   toPatient(gdcResult) {
     const patient = new Patient({
       id: gdcResult.submitter_id,

@@ -151,17 +151,16 @@ class Translator {
     if (!searchFields)
       return '';
 
-    const searchArray = [];
-    let searchString = '';
+    const searchParams = {};
 
     for (let search in searchFields) {
-      if (!search.contains(':') && anvilFieldMappins.RESEARCHSTUDY[search]) {
-        searchArray.push(anvilFieldMappins.RESEARCHSTUDY[search]);
+      if (!search.includes(':') && anvilFieldMappings.RESEARCHSTUDY[search]) {
+        searchParams[anvilFieldMappings.RESEARCHSTUDY[search]] = searchFields[search];
       }
       // TODO implement _has and chaining
     }
 
-    return searchString;
+    return searchParams;
   }
 
   toPatient(subject) {
