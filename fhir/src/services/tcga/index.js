@@ -98,9 +98,7 @@ class TCGA {
   }
 
   async getAllDiagnosticReports({ page, pageSize } = {}) {
-    const { data } = await get(`${TCGA_URL}/api/gdc`, {
-      params: { page, pageSize },
-    });
+    const { data } = await get(`${TCGA_URL}/api/gdc`, { params: { page, pageSize } });
     const { results, count } = data;
     return [this.translateGdcResultsToFhir(results), count];
   }
