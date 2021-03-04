@@ -15,7 +15,18 @@ module.exports = {
       conditionalDelete: 'not-supported',
       searchInclude: [],
       searchRevInclude: [],
-      searchParam: [],
+      searchParam: [{
+        name: "identifier",
+        definition: "http://hl7.org/fhir/SearchParameter/ResearchStudy-identifier",
+        type: "token",
+        documentation: "Identifier for study"
+      },
+      {
+        name: "title",
+        definition: "http://hl7.org/fhir/SearchParameter/ResearchStudy-title",
+        type: "string",
+        documentation: "Title for this study"
+      }],
     };
   },
 };
