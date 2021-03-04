@@ -1,6 +1,7 @@
 const axios = require('axios');
 const tcgaResponseFixture = require('../../../__fixtures__/tcgaResponse');
 const TCGA = require('.');
+const Translator = require('./translator');
 
 jest.mock('axios');
 
@@ -83,6 +84,9 @@ describe('TCGA service tests', () => {
             },
             resourceType: 'Observation',
             status: 'final',
+            subject: {
+              reference: 'Patient/TCGA-CN-5363',
+            },
             text: {
               div: '<div xmlns="http://www.w3.org/1999/xhtml">Pharmaceutical Therapy, NOS</div>',
               status: 'generated',
@@ -114,6 +118,9 @@ describe('TCGA service tests', () => {
             },
             resourceType: 'Observation',
             status: 'final',
+            subject: {
+              reference: 'Patient/TCGA-CN-5363',
+            },
             text: {
               div: '<div xmlns="http://www.w3.org/1999/xhtml">Radiation Therapy, NOS</div>',
               status: 'generated',
@@ -163,6 +170,7 @@ describe('TCGA service tests', () => {
     axios.get.mockImplementation(() => ({ data: tcgaResponseFixture }));
 
     const tcga = new TCGA();
+    const translator = new Translator();
     const results = await tcga.getDiagnosticReportById('foobar');
 
     expect(JSON.parse(JSON.stringify(results))).toEqual({
@@ -231,6 +239,9 @@ describe('TCGA service tests', () => {
           },
           resourceType: 'Observation',
           status: 'final',
+          subject: {
+            reference: 'Patient/TCGA-CN-5363',
+          },
           text: {
             div: '<div xmlns="http://www.w3.org/1999/xhtml">Pharmaceutical Therapy, NOS</div>',
             status: 'generated',
@@ -262,6 +273,9 @@ describe('TCGA service tests', () => {
           },
           resourceType: 'Observation',
           status: 'final',
+          subject: {
+            reference: 'Patient/TCGA-CN-5363',
+          },
           text: {
             div: '<div xmlns="http://www.w3.org/1999/xhtml">Radiation Therapy, NOS</div>',
             status: 'generated',
@@ -301,5 +315,52 @@ describe('TCGA service tests', () => {
       ],
     });
     expect(axios.get).toHaveBeenCalledWith('http://tcga/api/gdc/foobar');
+  });
+
+  it('should get all Research Study data', async () => {
+    axios.get.mockImplementation(() => ({ data: { results: [tcgaResponseFixture], count: 1 } }));
+
+    const tcga = new TCGA();
+    const translator = new Translator();
+    const [_, count] = await tcga.getAllResearchStudy({ page: 1, pageSize: 1 });
+    const results = translator.toResearchStudy(tcgaResponseFixture);
+
+    expect(JSON.parse(JSON.stringify(results))).toEqual({
+      resourceType: 'ResearchStudy',
+      id: 'TCGA-HNSC',
+      meta: {
+        profile: ['https://www.hl7.org/fhir/researchstudy.html'],
+      },
+      identifier: [
+        {
+          use: 'temp',
+          system: 'https://portal.gdc.cancer.gov/projects/',
+          value: 'TCGA-HNSC',
+        },
+      ],
+      title: 'Head and Neck Squamous Cell Carcinoma',
+      status: 'completed',
+      category: [
+        {
+          coding: [
+            {
+              system: 'http://terminology.hl7.org/CodeSystem/v2-0074',
+              code: 'GE',
+              display: 'Genetics',
+            },
+          ],
+        },
+      ],
+      sponsor: {
+        reference: 'Organization/The Cancer Genome Atlas',
+        type: 'Organization',
+        display: 'The Cancer Genome Atlas',
+      },
+    });
+
+    expect(count).toEqual(1);
+    expect(axios.get).toHaveBeenCalledWith('http://tcga/api/projects', {
+      params: { page: 1, pageSize: 1 },
+    });
   });
 });
