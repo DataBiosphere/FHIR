@@ -44,6 +44,7 @@ import mappings from './mappings';
 import { DEFAULT_ROWS_PER_PAGE, GET_BUNDLE, GET_DOWNLOAD } from './constants';
 import PaginatedTable from '../../components/PaginatedTable';
 import ExportButton from '../../components/ExportButton';
+import ViewingEntry from '../../components/ViewingEntry';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -175,21 +176,12 @@ export function Search(props: any) {
             onChangeRowsPerPage={onChangeRowsPerPage}
           />
           {viewingEntry && (
-            <Dialog open={open} onClose={closeViewingEntry} maxWidth="md">
-              <DialogTitle>
-                {`Viewing ${viewingEntry.resourceType} - ${viewingEntry?.id}`}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText className={classes.viewingEntry}>
-                  <pre>
-                    <code>{JSON.stringify(viewingEntry, null, 2)}</code>
-                  </pre>
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={closeViewingEntry}>Close</Button>
-              </DialogActions>
-            </Dialog>
+            <ViewingEntry
+              title={`${viewingEntry.resourceType} - ${viewingEntry?.id}`}
+              entry={JSON.stringify(viewingEntry, null, 2)}
+              isOpen={open}
+              handleClose={closeViewingEntry}
+            />
           )}
         </div>
       ) : null}
