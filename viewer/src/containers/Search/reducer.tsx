@@ -8,10 +8,13 @@ import {
   DEFAULT_ACTION,
   GET_BUNDLE_REQUEST,
   GET_BUNDLE_SUCCESS,
+  GET_ENTRY_REQUEST,
+  GET_ENTRY_SUCCESS,
+  GET_ENTRY_ERROR,
   GET_DOWNLOAD_REQUEST,
   GET_DOWNLOAD_UPDATE,
   GET_DOWNLOAD_SUCCESS,
-} from './constants';
+} from './types';
 
 export const initialState = {
   container: 'Search',
@@ -31,16 +34,24 @@ const searchReducer = (state = initialState, action: any) =>
         draft.pageLinks = action.payload.links;
         draft.loading = false;
         break;
-
+      case GET_ENTRY_REQUEST:
+        draft.resourceType = action.payload.resourceType;
+        draft.id = action.payload.id;
+        break;
+      case GET_ENTRY_SUCCESS:
+        draft.entry = action.payload.entry;
+        break;
+      case GET_ENTRY_ERROR:
+        break;
       case GET_DOWNLOAD_REQUEST:
         draft.downloadProgress = 0;
         break;
       case GET_DOWNLOAD_UPDATE:
-        draft.downloadProgress = action.payload;
+        draft.downloadProgress = action.payload.downloadProgress;
         break;
       case GET_DOWNLOAD_SUCCESS:
         draft.downloadProgress = 0;
-        draft.download = action.payload;
+        draft.download = action.payload.download;
         break;
 
       case DEFAULT_ACTION:

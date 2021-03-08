@@ -41,7 +41,8 @@ import {
 import reducer from './reducer';
 import saga from './saga';
 import mappings from './mappings';
-import { DEFAULT_ROWS_PER_PAGE, GET_BUNDLE, GET_DOWNLOAD } from './constants';
+import { DEFAULT_ROWS_PER_PAGE } from './constants';
+import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 import PaginatedTable from '../../components/PaginatedTable';
 import ExportButton from '../../components/ExportButton';
 import ViewingEntry from '../../components/ViewingEntry';

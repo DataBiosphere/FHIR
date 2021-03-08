@@ -10,11 +10,16 @@ import {
   downloadBundleErrorAction,
   downloadBundleUpdateAction,
   downloadBundleSuccessAction,
+  loadEntryRequestAction,
+  loadEntrySuccessAction,
+  loadEntryErrorAction,
 } from './actions';
-import { GET_BUNDLE, GET_DOWNLOAD, PARSING_ROWS_PER_PAGE } from './constants';
+import { PARSING_ROWS_PER_PAGE } from './constants';
+import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 
 // TODO: explore memoizing this for pageLinks
 function* getResourceType({ resourceType, page, count, pageLinks }: any) {
+  // @ts-ignore
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
@@ -25,6 +30,7 @@ function* getResourceType({ resourceType, page, count, pageLinks }: any) {
       pageLinks && pageLinks[page]
         ? pageLinks[page]
         : `${resourceType}?_page=${page}&_count=${count}`;
+    // @ts-ignore
     const bundle = yield call(requester, requestUrl);
 
     // create paging array
@@ -51,7 +57,24 @@ function* getResourceType({ resourceType, page, count, pageLinks }: any) {
   }
 }
 
-function* getDownloadType({ resourceType, params }: any) {
+function* getEntry({ resourceType, id }: any) {
+  // @ts-ignore
+  const client = yield call(connect);
+  const requester = makeRequester(client);
+  try {
+    yield put(loadEntryRequestAction(resourceType, id));
+
+    // @ts-ignore
+    const entry = yield call(requester, `${resourceType}/${id}`);
+
+    yield put(loadEntrySuccessAction(entry));
+  } catch (e) {
+    loadEntryErrorAction(e);
+  }
+}
+
+function* getDownload({ resourceType, params }: any) {
+  // @ts-ignore
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
@@ -62,6 +85,7 @@ function* getDownloadType({ resourceType, params }: any) {
     const entries: Array<any> = [];
     // parse through and get all entries into bundle
     do {
+      // @ts-ignore
       const bundle = yield call(
         requester,
         `${resourceType}?_page=${page}&_count=${PARSING_ROWS_PER_PAGE}&${params}`
@@ -91,5 +115,6 @@ function* getDownloadType({ resourceType, params }: any) {
 
 export default function* searchSaga() {
   yield all([takeEvery(GET_BUNDLE, getResourceType)]);
-  yield all([takeEvery(GET_DOWNLOAD, getDownloadType)]);
+  yield all([takeEvery(GET_ENTRY, getEntry)]);
+  yield all([takeEvery(GET_DOWNLOAD, getDownload)]);
 }
