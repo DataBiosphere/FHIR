@@ -26,6 +26,14 @@ import SEO from '../SEO';
 
 import config from '../../config';
 
+// TODO: figure out default props for iss
+// interface LayoutType {
+//   topSideBarMenu: { icon: React.ReactNode; to: string; text: string; external: boolean }[];
+//   bottomSideBarMenu: { icon: React.ReactNode; to: string; text: string; external: boolean }[];
+//   children: React.ReactNode; // Proptypes.node
+//   iss?: string;
+// }
+
 const { iss: fhirUrl } = config;
 
 const drawerWidth = 240;

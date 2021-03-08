@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import {
   TableContainer,
@@ -13,6 +12,22 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
+
+interface PaginatedTableType {
+  count: number;
+  rows: any[];
+  renderers: any[];
+  columns: any[];
+  onView: (event: any, item: any) => any;
+  page: number;
+  onChangePage: (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    page: number
+  ) => void;
+  itemKey: string;
+  rowsPerPage: number;
+  onChangeRowsPerPage: React.ChangeEventHandler<Element>;
+}
 
 const useStyles = makeStyles(() => ({
   pagination: {
@@ -40,7 +55,7 @@ function PaginatedTable({
   itemKey,
   onChangeRowsPerPage,
   rowsPerPage,
-}: any) {
+}: PaginatedTableType) {
   const classes = useStyles();
 
   return (
@@ -102,18 +117,5 @@ function PaginatedTable({
     </>
   );
 }
-
-PaginatedTable.propTypes = {
-  count: PropTypes.number.isRequired,
-  rows: PropTypes.array.isRequired,
-  renderers: PropTypes.array.isRequired,
-  columns: PropTypes.array.isRequired,
-  onView: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  itemKey: PropTypes.string.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-  onChangeRowsPerPage: PropTypes.func.isRequired,
-};
 
 export default PaginatedTable;

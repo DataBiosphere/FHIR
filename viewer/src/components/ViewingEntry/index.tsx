@@ -9,7 +9,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
-interface ViewingEntryValue {
+interface ViewingEntryType {
   title: string;
   entry: string;
   isOpen: boolean;
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ViewingEntry({ title, entry, isOpen, handleClose }: ViewingEntryValue) {
+function ViewingEntry({ title, entry, isOpen, handleClose }: ViewingEntryType) {
   const classes = useStyles();
 
   return (

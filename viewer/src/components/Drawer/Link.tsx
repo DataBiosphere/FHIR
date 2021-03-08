@@ -10,6 +10,14 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
+// TODO: figure out defaultProp for external
+// interface LinkType {
+//   icon: React.ReactNode; // PropTypes.node
+//   text: string;
+//   to: string;
+//   external: boolean;
+// }
+
 const useStyles = makeStyles(() => ({
   drawerText: {
     color: '#757575',
