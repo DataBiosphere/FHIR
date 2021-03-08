@@ -50,8 +50,8 @@ Thumbs.db
 
 # Env file
 *.env
-*.env.local
-*.env.production
+*.local
+*.production
 
 # GCP Credentials
 creds.json
@@ -73,5 +73,9 @@ anvil/data/*
 *.sqlite
 *.sqlite3
 
-#
+# MongoDB
 anvil-mongodb/database/*
+
+# Viewer
+viewer/src/react-app-env.d.ts
+viewer/public/launch.html

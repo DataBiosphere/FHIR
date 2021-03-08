@@ -60,9 +60,10 @@ const useStyles = makeStyles((theme) => {
       margin: theme.spacing(1),
       minWidth: 120,
     },
-    flexCenter: {
-      display: 'flex',
-      justifyContent: 'center',
+    inline: {
+      margin: theme.spacing(1),
+      marginTop: 20,
+      display: 'inline-block',
     },
     viewingEntry: {
       color: theme.palette.text.primary,
@@ -152,7 +153,7 @@ export function Search(props: any) {
         </Select>
       </FormControl>
 
-      <div className={classes.flexCenter}>
+      <div className={classes.inline}>
         <ExportButton downloadProgress={downloadProgress} onClick={onExportClicked} />
       </div>
 

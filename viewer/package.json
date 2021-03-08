@@ -4,6 +4,7 @@
   "description": "Broad FHIR Viewer",
   "keywords": [
     "FHIR",
+    "SMART on FHIR",
     "React",
     "Redux",
     "Redux-Saga",
@@ -12,7 +13,8 @@
   ],
   "author": "Asymmetrik Ltd.",
   "contributors": [
-    "Shane O'Neill <soneill@asymmetrik.com>"
+    "Shane O'Neill <soneill@asymmetrik.com>",
+    "Luan Tran <ltran@asymmetrik.com>"
   ],
   "bugs": "https://github.com/databiosphere/fhir",
   "repository": {
