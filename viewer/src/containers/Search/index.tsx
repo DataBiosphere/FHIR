@@ -9,18 +9,12 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import {
   Typography,
-  Button,
   makeStyles,
   CircularProgress,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
 } from '@material-ui/core';
 import { compose } from 'redux';
 import saveAs from 'file-saver';
@@ -36,6 +30,7 @@ import {
   selectPage,
   selectPageLinks,
   selectDownload,
+  selectViewingEntry,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -56,6 +51,7 @@ interface SearchType {
   pageLinks?: any;
   downloadProgress?: number;
   selectedResource?: string;
+  viewingEntry?: fhir.BundleEntry;
 }
 
 const useStyles = makeStyles((theme) => {
@@ -105,7 +101,7 @@ export function Search(props: any) {
 
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
   const [open, setOpen] = useState(false);
-  const [viewingEntry, setviewingEntry] = useState<any>();
+  const [viewingEntry, setViewingEntry] = useState<any>();
 
   const classes = useStyles();
 
@@ -151,23 +147,25 @@ export function Search(props: any) {
         <meta name="description" content="Description of Search" />
       </Helmet>
       <Typography variant="h1">Search</Typography>
-      <FormControl className={classes.formControl}>
-        <InputLabel>Resource</InputLabel>
-        <Select
-          defaultValue="DiagnosticReport"
-          onChange={(event) => {
-            getResources(event.target.value, 1, rowsPerPage, {});
-          }}
-        >
-          <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
-          <MenuItem value="Observation">Observation</MenuItem>
-          <MenuItem value="Specimen">Specimen</MenuItem>
-          <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
-        </Select>
-      </FormControl>
 
-      <div className={classes.inline}>
-        <ExportButton downloadProgress={downloadProgress} onClick={onExportClicked} />
+      <div id="facetedSearch">
+        <FormControl className={classes.formControl}>
+          <InputLabel>Resource</InputLabel>
+          <Select
+            defaultValue="DiagnosticReport"
+            onChange={(event) => {
+              getResources(event.target.value, 1, rowsPerPage, {});
+            }}
+          >
+            <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
+            <MenuItem value="Observation">Observation</MenuItem>
+            <MenuItem value="Specimen">Specimen</MenuItem>
+            <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
+          </Select>
+        </FormControl>
+        <div className={classes.inline}>
+          <ExportButton downloadProgress={downloadProgress} onClick={onExportClicked} />
+        </div>
       </div>
 
       {bundle && !loading ? (
@@ -179,7 +177,7 @@ export function Search(props: any) {
             count={bundle.total}
             page={page - 1}
             onView={(event, item) => {
-              setviewingEntry(item);
+              setViewingEntry(item);
               setOpen(true);
             }}
             onChangePage={onChangePage}
@@ -187,6 +185,7 @@ export function Search(props: any) {
             rowsPerPage={rowsPerPage}
             onChangeRowsPerPage={onChangeRowsPerPage}
           />
+
           {viewingEntry && (
             <ViewingEntry
               title={`${viewingEntry.resourceType} - ${viewingEntry?.id}`}
@@ -225,6 +224,7 @@ const mapStateToProps = (state: any) => {
     page: selectPage(state),
     pageLinks: selectPageLinks(state),
     download: selectDownload(state),
+    viewingEntry: selectViewingEntry(state),
   };
 };
 
@@ -236,6 +236,10 @@ function mapDispatchToProps(dispatch: any) {
 
     getDownload: (resourceType: string, params: any) => {
       dispatch({ type: GET_DOWNLOAD, resourceType, params });
+    },
+
+    getViewingEntry: (resourceType: string, id: string) => {
+      dispatch({ resourceType, id });
     },
   };
 }

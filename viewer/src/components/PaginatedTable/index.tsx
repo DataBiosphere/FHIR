@@ -104,7 +104,6 @@ function PaginatedTable({
                       variant="contained"
                       color="primary"
                     >
-                      {/* TODO: coming soon un-disable it above when ready */}
                       View
                     </Button>
                   </TableCell>

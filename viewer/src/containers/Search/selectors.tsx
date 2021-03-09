@@ -24,6 +24,10 @@ export const selectSelectedResource = createSelector(
   selectSearchDomain,
   (substate) => substate.selectedResource
 );
+export const selectViewingEntry = createSelector(
+  selectSearchDomain,
+  (substate) => substate.viewingEntry
+);
 
 /**
  * Default selector used by Search

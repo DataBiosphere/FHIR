@@ -39,9 +39,7 @@ const searchReducer = (state = initialState, action: any) =>
         draft.id = action.payload.id;
         break;
       case GET_ENTRY_SUCCESS:
-        draft.entry = action.payload.entry;
-        break;
-      case GET_ENTRY_ERROR:
+        draft.viewingEntry = action.payload.entry;
         break;
       case GET_DOWNLOAD_REQUEST:
         draft.downloadProgress = 0;
