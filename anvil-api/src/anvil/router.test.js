@@ -1,10 +1,10 @@
 jest.mock('./controller', () => ({
-  getAllWorkspaces: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getWorkspaceById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getAllResearchStudies: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getResearchStudyById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getAllSamples: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getSampleById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getAllSubjects: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
-  getSubjectById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getAllPatients: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
+  getPatientById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getAllObservations: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
   getObservationById: jest.fn().mockImplementation((req, res) => res.json({ id: 'test' })),
 }));
@@ -26,20 +26,20 @@ describe('router tests', () => {
     jest.resetAllMocks();
   });
 
-  it('should route Workspace Requests to getAllWorkspaces controller', (done) => {
+  it('should route ResearchStudy Requests to getAllResearchStudies controller', (done) => {
     supertest(app)
-      .get('/Workspace')
+      .get('/ResearchStudy')
       .end(() => {
-        expect(controller.getAllWorkspaces.mock.calls.length).toEqual(1);
+        expect(controller.getAllResearchStudies.mock.calls.length).toEqual(1);
         done();
       });
   });
 
-  it('should route Workspace ID Requests to getWorkspaceById controller', (done) => {
+  it('should route ResearchStudy ID Requests to getResearchStudyById controller', (done) => {
     supertest(app)
-      .get('/Workspace/foobar')
+      .get('/ResearchStudy/foobar')
       .end(() => {
-        expect(controller.getWorkspaceById.mock.calls.length).toEqual(1);
+        expect(controller.getResearchStudyById.mock.calls.length).toEqual(1);
         done();
       });
   });
@@ -78,36 +78,36 @@ describe('router tests', () => {
       });
   });
 
-  it('should route Subject Requests to getAllSubjects controller', (done) => {
+  it('should route Patient Requests to getAllPatients controller', (done) => {
     supertest(app)
-      .get('/Subject')
+      .get('/Patient')
       .end(() => {
-        expect(controller.getAllSubjects.mock.calls.length).toEqual(1);
+        expect(controller.getAllPatients.mock.calls.length).toEqual(1);
         done();
       });
   });
-  it('should route Subject Requests with a Workspace to getAllSubjects controller', (done) => {
+  it('should route Subject Requests with a Workspace to getAllPatients controller', (done) => {
     supertest(app)
       .get('/Workspace/foobar/Subject')
       .end(() => {
-        expect(controller.getAllSubjects.mock.calls.length).toEqual(2);
+        expect(controller.getAllPatients.mock.calls.length).toEqual(2);
         done();
       });
   });
 
-  it('should route Subject ID Requests to getSubjectById controller', (done) => {
+  it('should route Patient ID Requests to getPatientById controller', (done) => {
     supertest(app)
-      .get('/Subject/foobar')
+      .get('/Patient/foobar')
       .end(() => {
-        expect(controller.getSubjectById.mock.calls.length).toEqual(1);
+        expect(controller.getPatientById.mock.calls.length).toEqual(1);
         done();
       });
   });
-  it('should route Workspace Subject ID Requests to getSubjectById controller', (done) => {
+  it('should route Workspace Patient ID Requests to getPatientById controller', (done) => {
     supertest(app)
       .get('/workspace/foo/Subject/bar')
       .end(() => {
-        expect(controller.getSubjectById.mock.calls.length).toEqual(2);
+        expect(controller.getPatientById.mock.calls.length).toEqual(2);
         done();
       });
   });
