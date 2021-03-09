@@ -4,13 +4,11 @@ import { initialState } from './reducer';
 /**
  * Direct selector to the search state domain
  */
-
 const selectSearchDomain = (state: any) => state.search || initialState;
 
 /**
  * Other specific selectors
  */
-
 export const selectBundle = createSelector(selectSearchDomain, (substate) => substate.bundle);
 export const selectLoading = createSelector(selectSearchDomain, (substate) => substate.loading);
 export const selectPage = createSelector(selectSearchDomain, (substate) => substate.page);
@@ -24,6 +22,7 @@ export const selectSelectedResource = createSelector(
   selectSearchDomain,
   (substate) => substate.selectedResource
 );
+export const selectParams = createSelector(selectSearchDomain, (substate) => substate.params);
 export const selectViewingEntry = createSelector(
   selectSearchDomain,
   (substate) => substate.viewingEntry
