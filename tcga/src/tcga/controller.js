@@ -1,19 +1,19 @@
 const logger = require('../logger');
 const service = require('./service');
 
-const getAllGdc = async (req, res) => {
-  logger.info('TCGA >>> getAllGdc');
-  const { page, pageSize } = req.query;
-  const [results, count] = await service.getAllGdc({ page, pageSize });
+const getAllDiagnosticReports = async (req, res) => {
+  logger.info('TCGA >>> getAllDiagnosticReports');
+  const { _page, _count, _sort, _offset } = req.query;
+  const [results, count] = await service.getAllDiagnosticReports({ _page, _count, _sort, _offset });
   res.json({
     results,
     count,
   });
 };
-const getGdcById = async (req, res) => {
-  logger.info('TCGA >>> getGdcById');
+const getDiagnosticReportById = async (req, res) => {
+  logger.info('TCGA >>> getDiagnosticReportById');
   const { id } = req.params;
-  const results = await service.getGdcById(id);
+  const results = await service.getDiagnosticReportById(id);
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -21,19 +21,19 @@ const getGdcById = async (req, res) => {
   }
 };
 
-const getAllDiagnosis = async (req, res) => {
-  logger.info('TCGA >>> getAllDiagnosis');
-  const { page, pageSize, offset, sort } = req.query;
-  const [results, count] = await service.getAllDiagnosis({ page, pageSize, offset, sort });
+const getAllObservations = async (req, res) => {
+  logger.info('TCGA >>> getAllObservations');
+  const { _page, _count, _offset, _sort } = req.query;
+  const [results, count] = await service.getAllObservations({ _page, _count, _sort, _offset });
   res.json({
     results,
     count,
   });
 };
-const getDiagnosisById = async (req, res) => {
-  logger.info('TCGA >>> getDiagnosisById');
+const getObservationById = async (req, res) => {
+  logger.info('TCGA >>> getObservationById');
   const { id } = req.params;
-  const results = await service.getDiagnosisById(id);
+  const results = await service.getObservationById(id);
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -41,19 +41,19 @@ const getDiagnosisById = async (req, res) => {
   }
 };
 
-const getAllBiospecimen = async (req, res) => {
-  logger.info('TCGA >>> getAllBiospecimen');
-  const { page, pageSize } = req.query;
-  const [results, count] = await service.getAllBiospecimen({ page, pageSize });
+const getAllSpecimen = async (req, res) => {
+  logger.info('TCGA >>> getAllSpecimen');
+  const { _page, _count, _sort, _offset } = req.query;
+  const [results, count] = await service.getAllSpecimen({ _page, _count, _sort, _offset });
   res.json({
     results,
     count,
   });
 };
-const getBiospecimenById = async (req, res) => {
-  logger.info('TCGA >>> getBiospecimenById');
+const getSpecimenById = async (req, res) => {
+  logger.info('TCGA >>> getSpecimenById');
   const { id } = req.params;
-  const results = await service.getBiospecimenById(id);
+  const results = await service.getSpecimenById(id);
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -61,19 +61,19 @@ const getBiospecimenById = async (req, res) => {
   }
 };
 
-const getAllProjects = async (req, res) => {
-  logger.info('TCGA >>> getAllProjects');
-  const { page, pageSize, sort, offset } = req.query;
-  const [results, count] = await service.getAllProjects({ page, pageSize, sort, offset });
+const getAllResearchStudies = async (req, res) => {
+  logger.info('TCGA >>> getAllResearchStudies');
+  const { _page, _count, _sort, _offset } = req.query;
+  const [results, count] = await service.getAllResearchStudies({ _page, _count, _sort, _offset });
   res.json({
     results,
     count,
   });
 };
-const getProjectById = async (req, res) => {
-  logger.info('TCGA >>> getProjectById');
+const getResearchStudyById = async (req, res) => {
+  logger.info('TCGA >>> getResearchStudyById');
   const { id } = req.params;
-  const results = await service.getProjectById(id);
+  const results = await service.getResearchStudyById(id);
   if (!results) {
     res.sendStatus(404);
   } else {
@@ -83,8 +83,8 @@ const getProjectById = async (req, res) => {
 
 const getAllPatients = async (req, res) => {
   logger.info('TCGA >>> getAllPatients');
-  const { page, pageSize, sort, offset } = req.query;
-  const [results, count] = await service.getAllPatients({ page, pageSize, sort, offset });
+  const { _page, _count, _sort, _offset } = req.query;
+  const [results, count] = await service.getAllPatients({ _page, _count, _sort, _offset });
   res.json({
     results,
     count,
@@ -102,14 +102,14 @@ const getPatientById = async (req, res) => {
 };
 
 module.exports = {
-  getAllGdc,
-  getGdcById,
-  getAllDiagnosis,
-  getDiagnosisById,
-  getAllBiospecimen,
-  getBiospecimenById,
-  getAllProjects,
-  getProjectById,
+  getAllDiagnosticReports,
+  getDiagnosticReportById,
+  getAllObservations,
+  getObservationById,
+  getAllSpecimen,
+  getSpecimenById,
+  getAllResearchStudies,
+  getResearchStudyById,
   getAllPatients,
   getPatientById,
 };

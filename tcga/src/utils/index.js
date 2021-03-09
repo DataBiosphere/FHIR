@@ -162,26 +162,87 @@ function dedupeObjects(list) {
 /**
  * Creates string for BigQuery to sort by
  * @param {string} sort - decides to sort by name or number
- * @returns {string}
+ * @returns {Array}
  */
-function buildOrderBy(sort) {
-  return sort
-    ? sort
-        .split(',')
-        .filter((str) => str)
-        .map((str) => {
-          str = str.trim();
+function buildOrderBy(sort, getFieldsFn) {
+  if (!sort)
+    return null;
 
+  let orderBy = [];
+
+  sort.split(',')
+      .filter((str) => str)
+      .forEach((str) => {
+        str = str.trim();
+
+        const descending = str[0] === '-';
+        const realStr = descending ? str.substring(1) : str;
+        const fields = getFieldsFn(realStr);
+        console.log(fields);
+        orderBy = orderBy.concat(...fields.map((f) => {
           return {
-            column: str[0] === '-' ? str.substring(1) : str,
-            order: str[0] === '-' ? 'desc' : 'asc',
+            column: f.field,
+            tableAlias: fields.tableAlias,
+            order: descending ? 'desc' : 'asc',
           };
-        })
-    : null;
+        }));
+      });
+
+  console.log(JSON.stringify(orderBy));
+  return orderBy;
 }
+
+const buildIdentifier = (system, value, use = 'temp') => {
+  return {
+    use: use,
+    system: system,
+    value: value,
+  };
+};
+
+const buildCodeableConcept = (codes, text = '') => {
+  const codeableConcept = { coding: codes };
+  if (text) {
+    codeableConcept.text = text;
+  }
+
+  return codeableConcept;
+};
+
+/**
+ * Build coding
+ * @param {string} code - code for coding
+ * @param {string} system - uri for code
+ * @param {string} display - the text for the code within the system
+ */
+const buildCoding = (code, system = '', display = '') => {
+  const coding = { code: code };
+
+  if (system) {
+    coding.system = system;
+  }
+
+  if (display) {
+    coding.display = display;
+  }
+
+  return coding;
+};
+
+const buildReference = (reference, type, display) => {
+  return {
+    reference: reference,
+    type: type,
+    display: display,
+  };
+};
 
 module.exports = {
   transformGdcResults,
   dedupeObjects,
   buildOrderBy,
+  buildIdentifier,
+  buildReference,
+  buildCodeableConcept,
+  buildCoding,
 };
