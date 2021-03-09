@@ -21,7 +21,7 @@ interface CapabilityType {
   metadata: fhir.CapabilityStatement; // PropTypes.shape({})
 }
 
-export function Capability(props: any) {
+export function Capability(props: CapabilityType) {
   const { metadata } = props;
   useInjectReducer({ key: 'capability', reducer });
   useInjectSaga({ key: 'capability', saga });
