@@ -5,7 +5,6 @@
  */
 
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { compose } from 'redux';
@@ -38,6 +37,15 @@ import { selectSummaryInfo, selectLoading } from './selectors';
 import reducer from './reducer';
 import { getSummaryInfoAction } from './actions';
 import saga from './saga';
+
+interface HomeType {
+  getSummaryInfo: () => any;
+  summaryInfo?: {
+    resourceType: string;
+    total: number;
+  }[];
+  loading?: boolean;
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -189,17 +197,6 @@ export function Home(props: any) {
     </div>
   );
 }
-
-Home.propTypes = {
-  getSummaryInfo: PropTypes.func.isRequired,
-  summaryInfo: PropTypes.arrayOf(
-    PropTypes.shape({
-      resourceType: PropTypes.string.isRequired,
-      total: PropTypes.number.isRequired,
-    })
-  ),
-  loading: PropTypes.bool,
-};
 
 Home.defaultProps = {
   summaryInfo: null,

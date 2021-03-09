@@ -5,7 +5,6 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import {
@@ -46,6 +45,18 @@ import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 import PaginatedTable from '../../components/PaginatedTable';
 import ExportButton from '../../components/ExportButton';
 import ViewingEntry from '../../components/ViewingEntry';
+
+interface SearchType {
+  getResources: any; // PropTypes.func
+  getDownload: any; // PropTypes.func
+  bundle: fhir.Bundle;
+  download?: string;
+  loading?: boolean;
+  page?: number;
+  pageLinks?: any;
+  downloadProgress?: number;
+  selectedResource?: string;
+}
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -195,21 +206,6 @@ export function Search(props: any) {
   );
 }
 
-Search.propTypes = {
-  getResources: PropTypes.func.isRequired,
-  getDownload: PropTypes.func.isRequired,
-  loading: PropTypes.bool,
-  selectedResource: PropTypes.string,
-  page: PropTypes.number,
-  pageLinks: PropTypes.any,
-  downloadProgress: PropTypes.number,
-  bundle: PropTypes.shape({
-    entry: PropTypes.array.isRequired,
-    total: PropTypes.number,
-  }),
-  download: PropTypes.string,
-};
-
 Search.defaultProps = {
   bundle: undefined,
   download: undefined,
@@ -223,12 +219,12 @@ Search.defaultProps = {
 const mapStateToProps = (state: any) => {
   return {
     bundle: selectBundle(state),
-    download: selectDownload(state),
     loading: selectLoading(state),
     downloadProgress: selectDownloadProgress(state),
     selectedResource: selectSelectedResource(state),
     page: selectPage(state),
     pageLinks: selectPageLinks(state),
+    download: selectDownload(state),
   };
 };
 

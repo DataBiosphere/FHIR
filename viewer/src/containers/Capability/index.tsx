@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -17,6 +16,10 @@ import { selectMetadata, selectCapabilityDomain, selectSmartContext } from './se
 import reducer from './reducer';
 import saga from './saga';
 import SEO from '../../components/SEO';
+
+interface CapabilityType {
+  metadata: fhir.CapabilityStatement; // PropTypes.shape({})
+}
 
 export function Capability(props: any) {
   const { metadata } = props;
@@ -48,10 +51,6 @@ function mapDispatchToProps(dispatch: any) {
     dispatch,
   };
 }
-
-Capability.propTypes = {
-  metadata: PropTypes.shape({}).isRequired,
-};
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
