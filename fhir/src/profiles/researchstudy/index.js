@@ -48,9 +48,14 @@ const search = async ({ base_version: baseVersion }, { req }) => {
       ? await tcga.getResearchStudyById(_id)
       : await anvil.getResearchStudyById(_id);
 
+    let entries = [];
+    if (resource) {
+      entries = [buildEntry(resource)];
+    }
+
     return buildSearchBundle({
       resourceType: 'ResearchStudy',
-      entries: [buildEntry(resource)],
+      entries: entries,
       page: _page,
       pageSize: _count,
       fhirVersion: baseVersion,

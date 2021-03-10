@@ -49,9 +49,14 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     //        needs changing for more datasets
     const resource = tcgaResult ? tcgaResult : anvilResult;
 
+    let entries = [];
+    if (resource) {
+      entries = [buildEntry(resource)];
+    }
+
     return buildSearchBundle({
       resourceType: 'Patient',
-      entries: [buildEntry(resource)],
+      entries: entries,
       page: _page,
       pageSize: _count,
       fhirVersion: baseVersion,

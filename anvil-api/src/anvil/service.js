@@ -32,7 +32,7 @@ const getResearchStudyById = async (id) => {
     query: { name: id },
   });
 
-  return resourceTranslator.toResearchStudy(result) || null;
+  return result ? resourceTranslator.toResearchStudy(result) : null;
 };
 
 const getAllSamples = async ({ workspace = '', _page = 1, _count = 25 }) => {
@@ -87,7 +87,7 @@ const getPatientById = async ({ workspace = '', id }) => {
     },
   });
 
-  return resourceTranslator.toPatient(result) || null;
+  return result ? resourceTranslator.toPatient(result) : null;
 };
 
 const getAllObservations = async ({
@@ -141,7 +141,7 @@ const getObservationById = async ({ workspace = '', id }) => {
     },
   });
 
-  return resourceTranslator.toObservation(result) || null;
+  return result ? resourceTranslator.toObservation(result) : null;
 };
 
 module.exports = {
