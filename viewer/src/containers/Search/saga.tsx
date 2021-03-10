@@ -112,6 +112,8 @@ function* getDownload({ resourceType, params }: any) {
         bundle = yield call(requester, nextPage);
       }
 
+      console.log(bundle);
+
       // get next link
       nextPage = bundle.link.filter((l: any) => l.relation === 'next')[0].url;
 
