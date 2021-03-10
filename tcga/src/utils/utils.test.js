@@ -57,9 +57,18 @@ describe('Utils tests', () => {
   it('should CSV into KNEX orderBy object', () => {
     expect(buildOrderBy()).toEqual(null);
 
-    expect(buildOrderBy('foo, bar, -foobar')).toEqual([
-      { column: 'foo', order: 'asc' },
+    expect(buildOrderBy('foo, bar, -foobar', (str) => {
+      switch (str) {
+        case 'foo':
+          return [{ field: 'bar' }];
+        case 'bar':
+          return [{ field: 'foo' }];
+        case 'foobar':
+          return [{ field: 'foobar' }];
+      }
+    })).toEqual([
       { column: 'bar', order: 'asc' },
+      { column: 'foo', order: 'asc' },
       { column: 'foobar', order: 'desc' },
     ]);
   });
