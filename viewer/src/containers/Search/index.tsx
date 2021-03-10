@@ -4,7 +4,7 @@
  *
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import {
@@ -119,11 +119,15 @@ export function Search(props: any) {
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
 
+  // hooks
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
   const [paramKey, setParamKey] = useState<any>('_id');
   const [paramValue, setParamValue] = useState<any>('');
   const [open, setOpen] = useState(false);
   const [viewingEntry, setViewingEntry] = useState<any>();
+
+  // TODO: this ref can be typed better
+  const paramRef = useRef<any>(null);
 
   const classes = useStyles();
 
@@ -145,7 +149,12 @@ export function Search(props: any) {
   };
 
   const onResetClicked = () => {
+    clearParamField();
     resetParams();
+  };
+
+  const clearParamField = () => {
+    paramRef.current.value = '';
   };
 
   const closeViewingEntry = () => setOpen(false);
@@ -190,6 +199,7 @@ export function Search(props: any) {
           <Select
             defaultValue="DiagnosticReport"
             onChange={(event) => {
+              clearParamField();
               getResources(event.target.value, 1, rowsPerPage, {});
             }}
           >
@@ -206,6 +216,7 @@ export function Search(props: any) {
             id="paramKey"
             defaultValue="_id"
             onChange={(event) => {
+              clearParamField();
               setParamKey(event.target.value);
             }}
           >
@@ -216,8 +227,8 @@ export function Search(props: any) {
 
         <FormControl className={classes.search}>
           <TextField
-            id="paramValue"
-            label="Search"
+            inputRef={paramRef} // inputRef != ref...
+            label="Search Value"
             onChange={(event) => {
               setParamValue(event.target.value);
             }}
@@ -258,7 +269,7 @@ export function Search(props: any) {
             columns={columns}
             count={bundle.total}
             page={page - 1}
-            onView={(event, item) => {
+            onView={(_, item) => {
               setViewingEntry(item);
               setOpen(true);
             }}
