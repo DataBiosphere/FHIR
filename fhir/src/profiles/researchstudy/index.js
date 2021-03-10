@@ -72,7 +72,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   }
 
   // create promises and add both adapters
-  const params = { page: _page, pageSize: _count, sort: _sort };
+  const params = { _page, _count, _sort };
   let results = [];
   let count = 0;
   let newHash = '';
@@ -82,13 +82,13 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     switch (_source) {
       case TCGA_SOURCE:
         [results, count] = await tcga.getAllResearchStudy({
-          offset: currentOffsets.tcga,
+          _offset: currentOffsets.tcga,
           ...params,
         });
         break;
       case ANVIL_SOURCE:
         [results, count] = await anvil.getAllResearchStudy({
-          offset: currentOffsets.anvil,
+          _offset: currentOffsets.anvil,
           ...params,
         });
         break;
@@ -98,8 +98,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   } else {
     // creates and resolves all promises
     const promises = [];
-    promises.push(tcga.getAllResearchStudy({ offset: currentOffsets.tcga, ...params }));
-    promises.push(anvil.getAllResearchStudy({ offset: currentOffsets.anvil, ...params }));
+    promises.push(tcga.getAllResearchStudy({ _offset: currentOffsets.tcga, ...params }));
+    promises.push(anvil.getAllResearchStudy({ _offset: currentOffsets.anvil, ...params }));
 
     const allResults = await Promise.all(promises);
     count = allResults.map((r) => r[1]).reduce((acc, val) => acc + val);
