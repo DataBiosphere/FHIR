@@ -39,9 +39,11 @@ import {
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import { addParamAction, resetParamAction } from './actions';
+import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
+
 import mappings from './mappings';
 import { DEFAULT_ROWS_PER_PAGE } from './constants';
-import { GET_BUNDLE, GET_ENTRY, ADD_PARAM, RESET_PARAM, GET_DOWNLOAD } from './types';
 import PaginatedTable from '../../components/PaginatedTable';
 import ExportButton from '../../components/ExportButton';
 import ViewingEntry from '../../components/ViewingEntry';
@@ -153,6 +155,7 @@ export function Search(props: any) {
     getResources(selectedResource, page, rowsPerPage, pageLinks);
   }, []);
 
+  // DEV: prints when params is change
   useEffect(() => {
     console.log(params);
   }, [params]);
@@ -171,6 +174,8 @@ export function Search(props: any) {
 
   const { columns, renderers } = getColumnsAndRenderers(selectedResource);
 
+  // TODO: look into making the search bar Flexbox
+  //        https://css-tricks.com/snippets/css/a-guide-to-flexbox/
   return (
     <>
       <Helmet>
@@ -205,7 +210,7 @@ export function Search(props: any) {
             }}
           >
             <MenuItem value="_id">ID</MenuItem>
-            <MenuItem value="name">Name</MenuItem>
+            <MenuItem value="_source">Source</MenuItem>
           </Select>
         </FormControl>
 
@@ -317,11 +322,11 @@ function mapDispatchToProps(dispatch: any) {
     },
 
     addParams: (key: string, value: any) => {
-      dispatch({ type: ADD_PARAM, key, value });
+      dispatch(addParamAction(key, value));
     },
 
     resetParams: () => {
-      dispatch({ type: RESET_PARAM });
+      dispatch(resetParamAction());
     },
 
     getDownload: (resourceType: string, params: any) => {

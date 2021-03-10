@@ -44,7 +44,7 @@ const searchReducer = (state = initialState, action: any) =>
         draft.viewingEntry = action.payload.entry;
         break;
       case ADD_PARAM:
-        draft.params[action.key] = action.value;
+        draft.params[action.payload.key] = action.payload.value;
         break;
       case RESET_PARAM:
         draft.params = {};

@@ -9,15 +9,13 @@ import {
   loadEntryRequestAction,
   loadEntrySuccessAction,
   loadEntryErrorAction,
-  addParamAction,
-  resetParamAction,
   downloadBundleRequestAction,
   downloadBundleErrorAction,
   downloadBundleUpdateAction,
   downloadBundleSuccessAction,
 } from './actions';
 import { PARSING_ROWS_PER_PAGE } from './constants';
-import { GET_BUNDLE, GET_ENTRY, ADD_PARAM, RESET_PARAM, GET_DOWNLOAD } from './types';
+import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 
 // TODO: explore memoizing this for pageLinks
 function* getResourceType({ resourceType, page, count, pageLinks }: any) {
@@ -73,14 +71,6 @@ function* getEntry({ resourceType, id }: any) {
   } catch (e) {
     loadEntryErrorAction(e);
   }
-}
-
-function* addParam({ key, value }: any) {
-  addParamAction(key, value);
-}
-
-function* resetParam() {
-  resetParamAction();
 }
 
 function* getDownload({ resourceType, params }: any) {
@@ -144,7 +134,5 @@ function* getDownload({ resourceType, params }: any) {
 export default function* searchSaga() {
   yield all([takeEvery(GET_BUNDLE, getResourceType)]);
   yield all([takeEvery(GET_ENTRY, getEntry)]);
-  yield all([takeEvery(ADD_PARAM, addParam)]);
-  yield all([takeEvery(RESET_PARAM, resetParam)]);
   yield all([takeEvery(GET_DOWNLOAD, getDownload)]);
 }
