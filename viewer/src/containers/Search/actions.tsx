@@ -12,6 +12,8 @@ import {
   GET_ENTRY_REQUEST,
   GET_ENTRY_SUCCESS,
   GET_ENTRY_ERROR,
+  ADD_PARAM,
+  RESET_PARAM,
   GET_DOWNLOAD_REQUEST,
   GET_DOWNLOAD_UPDATE,
   GET_DOWNLOAD_SUCCESS,
@@ -70,6 +72,20 @@ export function loadEntryErrorAction(error: Error): SearchActionTypes {
   return {
     type: GET_ENTRY_ERROR,
     payload: { error },
+  };
+}
+
+// param actions
+export function addParamAction(key: string, value: any): SearchActionTypes {
+  return {
+    type: ADD_PARAM,
+    payload: { key, value },
+  };
+}
+
+export function resetParamAction(): SearchActionTypes {
+  return {
+    type: RESET_PARAM,
   };
 }
 

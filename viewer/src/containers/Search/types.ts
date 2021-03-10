@@ -43,6 +43,18 @@ interface GetEntryErrorAction {
   payload: { error: Error };
 }
 
+export const ADD_PARAM = 'app/Search/ADD_PARAM';
+export const RESET_PARAM = 'app/Search/RESET_PARAM';
+
+interface AddParamAction {
+  type: typeof ADD_PARAM;
+  payload: { key: string; value: any };
+}
+
+interface ResetParamAction {
+  type: typeof RESET_PARAM;
+}
+
 export const GET_DOWNLOAD = 'app/Search/GET_DOWNLOAD';
 export const GET_DOWNLOAD_REQUEST = 'app/Search/GET_DOWNLOAD_REQUEST';
 export const GET_DOWNLOAD_UPDATE = 'app/Search/GET_DOWNLOAD_UPDATE';
@@ -77,6 +89,8 @@ export type SearchActionTypes =
   | GetEntryRequestAction
   | GetEntrySuccessAction
   | GetEntryErrorAction
+  | AddParamAction
+  | ResetParamAction
   | GetDownloadRequestAction
   | GetDownloadUpdateAction
   | GetDownloadSuccessAction

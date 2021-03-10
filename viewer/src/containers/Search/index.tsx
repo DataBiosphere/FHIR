@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import {
+  Button,
   Typography,
   makeStyles,
   CircularProgress,
@@ -15,7 +16,10 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  TextField,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import { compose } from 'redux';
 import saveAs from 'file-saver';
 
@@ -30,21 +34,23 @@ import {
   selectPage,
   selectPageLinks,
   selectDownload,
+  selectParams,
   selectViewingEntry,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import mappings from './mappings';
 import { DEFAULT_ROWS_PER_PAGE } from './constants';
-import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
+import { GET_BUNDLE, GET_ENTRY, ADD_PARAM, RESET_PARAM, GET_DOWNLOAD } from './types';
 import PaginatedTable from '../../components/PaginatedTable';
 import ExportButton from '../../components/ExportButton';
 import ViewingEntry from '../../components/ViewingEntry';
 
 interface SearchType {
-  getResources: any; // PropTypes.func
-  getDownload: any; // PropTypes.func
+  getResources: any; // TODO: fix this PropTypes.func
+  getDownload: any; // TODO: fix this PropTypes.func
   bundle: fhir.Bundle;
+  params?: any; // TODO: fix this
   download?: string;
   loading?: boolean;
   page?: number;
@@ -65,14 +71,23 @@ const useStyles = makeStyles((theme) => {
       marginBottom: '1rem',
       marginTop: '1rem',
     },
+    facetedSearch: {},
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120,
+      minWidth: 125,
+    },
+    search: {
+      margin: theme.spacing(1),
+      minWidth: 500,
     },
     inline: {
-      margin: theme.spacing(1),
+      margin: theme.spacing(0.25),
       marginTop: 20,
       display: 'inline-block',
+    },
+    flexCenter: {
+      display: 'flex',
+      justifyContent: 'center',
     },
     viewingEntry: {
       color: theme.palette.text.primary,
@@ -87,6 +102,8 @@ const getColumnsAndRenderers = (resource: string) => {
 export function Search(props: any) {
   const {
     getResources,
+    addParams,
+    resetParams,
     getDownload,
     bundle,
     loading,
@@ -95,11 +112,14 @@ export function Search(props: any) {
     pageLinks,
     download,
     downloadProgress,
+    params,
   } = props;
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
 
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
+  const [paramKey, setParamKey] = useState<any>('_id');
+  const [paramValue, setParamValue] = useState<any>('');
   const [open, setOpen] = useState(false);
   const [viewingEntry, setViewingEntry] = useState<any>();
 
@@ -115,8 +135,15 @@ export function Search(props: any) {
   };
 
   const onExportClicked = () => {
-    // TODO: add params for exports
-    getDownload(selectedResource, '');
+    getDownload(selectedResource, params);
+  };
+
+  const onAddClicked = () => {
+    addParams(paramKey, paramValue);
+  };
+
+  const onResetClicked = () => {
+    resetParams();
   };
 
   const closeViewingEntry = () => setOpen(false);
@@ -125,6 +152,10 @@ export function Search(props: any) {
   useEffect(() => {
     getResources(selectedResource, page, rowsPerPage, pageLinks);
   }, []);
+
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
 
   // runs when download changes
   // not too sure if this is the best implementation though
@@ -148,7 +179,7 @@ export function Search(props: any) {
       </Helmet>
       <Typography variant="h1">Search</Typography>
 
-      <div id="facetedSearch">
+      <div className={classes.facetedSearch}>
         <FormControl className={classes.formControl}>
           <InputLabel>Resource</InputLabel>
           <Select
@@ -163,9 +194,55 @@ export function Search(props: any) {
             <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
           </Select>
         </FormControl>
+
+        <FormControl className={classes.formControl}>
+          <InputLabel>Parameter</InputLabel>
+          <Select
+            id="paramKey"
+            defaultValue="_id"
+            onChange={(event) => {
+              setParamKey(event.target.value);
+            }}
+          >
+            <MenuItem value="_id">ID</MenuItem>
+            <MenuItem value="name">Name</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl className={classes.search}>
+          <TextField
+            id="paramValue"
+            label="Search"
+            onChange={(event) => {
+              setParamValue(event.target.value);
+            }}
+          />
+        </FormControl>
+
         <div className={classes.inline}>
-          <ExportButton downloadProgress={downloadProgress} onClick={onExportClicked} />
+          <Button
+            color="primary"
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={onAddClicked}
+          >
+            Add Filter
+          </Button>
         </div>
+        <div className={classes.inline}>
+          <Button
+            color="primary"
+            variant="contained"
+            startIcon={<RotateLeftIcon />}
+            onClick={onResetClicked}
+          >
+            Reset Filters
+          </Button>
+        </div>
+      </div>
+
+      <div className={classes.flexCenter}>
+        <ExportButton downloadProgress={downloadProgress} onClick={onExportClicked} />
       </div>
 
       {bundle && !loading ? (
@@ -213,6 +290,7 @@ Search.defaultProps = {
   pageLinks: {},
   downloadProgress: 0,
   selectedResource: 'DiagnosticReport',
+  params: [],
 };
 
 const mapStateToProps = (state: any) => {
@@ -224,6 +302,10 @@ const mapStateToProps = (state: any) => {
     page: selectPage(state),
     pageLinks: selectPageLinks(state),
     download: selectDownload(state),
+    params: selectParams(state),
+
+    // TODO: figure out how to display different viewing entries
+    //        boiler plate is all written
     viewingEntry: selectViewingEntry(state),
   };
 };
@@ -234,12 +316,20 @@ function mapDispatchToProps(dispatch: any) {
       dispatch({ type: GET_BUNDLE, resourceType, page, count, pageLinks });
     },
 
+    addParams: (key: string, value: any) => {
+      dispatch({ type: ADD_PARAM, key, value });
+    },
+
+    resetParams: () => {
+      dispatch({ type: RESET_PARAM });
+    },
+
     getDownload: (resourceType: string, params: any) => {
       dispatch({ type: GET_DOWNLOAD, resourceType, params });
     },
 
     getViewingEntry: (resourceType: string, id: string) => {
-      dispatch({ resourceType, id });
+      dispatch({ type: GET_ENTRY, resourceType, id });
     },
   };
 }

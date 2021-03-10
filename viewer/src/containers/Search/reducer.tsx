@@ -10,7 +10,8 @@ import {
   GET_BUNDLE_SUCCESS,
   GET_ENTRY_REQUEST,
   GET_ENTRY_SUCCESS,
-  GET_ENTRY_ERROR,
+  ADD_PARAM,
+  RESET_PARAM,
   GET_DOWNLOAD_REQUEST,
   GET_DOWNLOAD_UPDATE,
   GET_DOWNLOAD_SUCCESS,
@@ -18,6 +19,7 @@ import {
 
 export const initialState = {
   container: 'Search',
+  params: {},
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -40,6 +42,12 @@ const searchReducer = (state = initialState, action: any) =>
         break;
       case GET_ENTRY_SUCCESS:
         draft.viewingEntry = action.payload.entry;
+        break;
+      case ADD_PARAM:
+        draft.params[action.key] = action.value;
+        break;
+      case RESET_PARAM:
+        draft.params = {};
         break;
       case GET_DOWNLOAD_REQUEST:
         draft.downloadProgress = 0;
