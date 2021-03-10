@@ -39,7 +39,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     const resource = await tcga.getDiagnosticReportById(_id);
     return buildSearchBundle({
       resourceType: 'DiagnosticReport',
-      resources: [resource],
+      entries: [buildEntry(resource)],
       page: _page,
       pageSize: _count,
       fhirVersion: baseVersion,
