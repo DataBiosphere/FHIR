@@ -28,6 +28,7 @@ spec:
     spec:
       containers:
         - name: anvil
-          image: gcr.io/broad-fhir-dev/broad/anvil:5f102a9
+          image: gcr.io/broad-fhir-dev/broad/anvil:79168f5
           ports:
             - containerPort: 3002
+          imagePullPolicy: Always
