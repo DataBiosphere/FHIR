@@ -2,8 +2,6 @@ const axios = require('axios');
 const memoize = require('fast-memoize');
 const { createCache } = require('../../utils');
 
-const ANVILResourceTranslator = require('./translator');
-
 const { ANVIL_URL, ANVIL_CACHE_TTL } = process.env;
 
 const ONE_SECOND = 1;
@@ -20,28 +18,7 @@ const get = memoize(axios.get, {
 
 class ANVIL {
   constructor() {
-    this.resourceTranslator = new ANVILResourceTranslator();
-  }
 
-  translateWorkspacetoResearchStudy(workspace) {
-    return this.resourceTranslator.toResearchStudy(workspace);
-  }
-  translateSortParamstoResearchStudyParams(sortFields) {
-    return sortFields ? this.resourceTranslator.toResearchStudySortParams(sortFields) : undefined;
-  }
-
-  translateSubjecttoObservation(subject) {
-    return this.resourceTranslator.toObservation(subject);
-  }
-  translateSortParamstoObservationParams(sortFields) {
-    return sortFields ? this.resourceTranslator.toObservationSortParams(sortFields) : undefined;
-  }
-
-  translateSubjecttoPatient(subject) {
-    return this.resourceTranslator.toPatient(subject);
-  }
-  translateSortParamstoPatientParams(sortFields) {
-    return sortFields ? this.resourceTranslator.toPatientSortParams(sortFields) : undefined;
   }
 
   async getAllResearchStudy({ _page, _count, _offset, _sort } = {}) {

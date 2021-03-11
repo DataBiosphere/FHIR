@@ -58,7 +58,9 @@ class Translator {
     return buildOrderBy(sortFields, (field) => {
       switch (field) {
         case 'id':
-          return ['diag__treat__treatment_id'];
+          return [{ field: 'diag__treat__treatment_id' }];
+        case 'subject':
+          return [{ field: 'submitter_id', tableAlias: 'table_1' }];
         default:
           return [];
       }

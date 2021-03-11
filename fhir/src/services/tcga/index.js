@@ -2,8 +2,6 @@ const axios = require('axios');
 const memoize = require('fast-memoize');
 const { createCache } = require('../../utils');
 
-const TCGAResourceTranslator = require('./translator');
-
 const { TCGA_URL, TCGA_CACHE_TTL } = process.env;
 
 const ONE_SECOND = 1;
@@ -20,81 +18,7 @@ const get = memoize(axios.get, {
 
 class TCGA {
   constructor() {
-    this.resourceTranslator = new TCGAResourceTranslator();
-  }
 
-  /**
-   * Translate a TCGA Diagnosis response to an Observation
-   *
-   * @param {object} diagnosis
-   */
-  translateDiagnosisToObservation(diagnosis, gdcResult) {
-    return this.resourceTranslator.toObservation(diagnosis, gdcResult);
-  }
-  translateSortParamstoObservationParams(sortFields) {
-    return sortFields ? this.resourceTranslator.toObservationSortParams(sortFields) : undefined;
-  }
-
-  /**
-   * Translate a TCGA Biospecimen response to an Specimen
-   *
-   * @param {object} biospecimen
-   */
-  translateBiospecimentoSpecimen(biospecimen) {
-    return this.resourceTranslator.toSpecimen(biospecimen);
-  }
-
-  /**
-   * Translate a TCGA project response to a Research Study
-   *
-   * @param {object} project
-   */
-  translateProjectToResearchStudy(project) {
-    return this.resourceTranslator.toResearchStudy(project);
-  }
-  translateSortParamstoResearchStudyParams(sortFields) {
-    return sortFields ? this.resourceTranslator.toResearchStudySortParams(sortFields) : undefined;
-  }
-
-  /**
-   * Translate a TCGA GDC response to an Patient
-   *
-   * @param {object} biospecimen
-   */
-  translateGdctoPatient(gdcResult) {
-    return this.resourceTranslator.toPatient(gdcResult);
-  }
-  // TODO: combine this with translateSortParamstoResearchStudyParams
-  translateSortParamstoPatientParams(sortFields) {
-    return sortFields ? this.resourceTranslator.toPatientSortParams(sortFields) : undefined;
-  }
-
-  /**
-   * Convert a single TCGA Result to a DiagnosticResource
-   *
-   * @param {object} tcgaResult
-   */
-  translateSingleGdcResultsToFhir(tcgaResult) {
-    const diagnosticReport = this.resourceTranslator.toDiagnosticReport(tcgaResult);
-
-    const observations = tcgaResult.diagnoses.map((diagnosis) =>
-      this.translateDiagnosisToObservation(diagnosis, tcgaResult)
-    );
-
-    const specimens = tcgaResult.biospecimen.map((biospecimen) =>
-      this.translateBiospecimentoSpecimen(biospecimen)
-    );
-
-    return { diagnosticReport, observations, specimens };
-  }
-
-  /**
-   * Convert a list of TCGA Results to DiagnosticReports
-   *
-   * @param {array} tcgaResults
-   */
-  translateGdcResultsToFhir(tcgaResults) {
-    return tcgaResults.map((tcgaResult) => this.translateSingleGdcResultsToFhir(tcgaResult));
   }
 
   async getAllDiagnosticReports({ _page, _count, _sort, _offset } = {}) {

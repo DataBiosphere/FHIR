@@ -101,16 +101,7 @@ const getAllObservations = async ({
   const [sortObj, existObj] = resourceTranslator.toPatientSortParams(_sort);
 
   // in case no _sort is provided
-  const query = existObj
-    ? {
-        $and: [
-          { workspaceName: { $regex: workspace } },
-          { diseases: { $ne: null } },
-          { $where: 'this.diseases.length > 0 && this.diseases[0] != null' },
-          existObj,
-        ],
-      }
-    : {
+  const query = {
         $and: [
           { workspaceName: { $regex: workspace } },
           { diseases: { $ne: null } },

@@ -182,7 +182,7 @@ function buildOrderBy(sort, getFieldsFn) {
         orderBy = orderBy.concat(...fields.map((f) => {
           return {
             column: f.field,
-            tableAlias: fields.tableAlias,
+            tableAlias: f.tableAlias,
             order: descending ? 'desc' : 'asc',
           };
         }));

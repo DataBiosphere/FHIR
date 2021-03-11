@@ -1,6 +1,5 @@
 const axios = require('axios');
 const ANVIL = require('./index');
-const Translator = require('./translator');
 
 jest.mock('axios');
 

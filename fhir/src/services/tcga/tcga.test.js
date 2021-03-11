@@ -1,7 +1,6 @@
 const axios = require('axios');
 const tcgaResponseFixture = require('../../../__fixtures__/tcgaResponse');
 const TCGA = require('.');
-const Translator = require('./translator');
 
 jest.mock('axios');
 
