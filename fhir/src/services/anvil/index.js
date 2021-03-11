@@ -2,8 +2,6 @@ const axios = require('axios');
 const memoize = require('fast-memoize');
 const { createCache } = require('../../utils');
 
-const ANVILResourceTranslator = require('./translator');
-
 const { ANVIL_URL, ANVIL_CACHE_TTL } = process.env;
 
 const ONE_SECOND = 1;
@@ -20,67 +18,46 @@ const get = memoize(axios.get, {
 
 class ANVIL {
   constructor() {
-    this.resourceTranslator = new ANVILResourceTranslator();
+
   }
 
-  translateWorkspacetoResearchStudy(workspace) {
-    return this.resourceTranslator.toResearchStudy(workspace);
-  }
-  translateSortParamstoResearchStudyParams(sortFields) {
-    return sortFields ? this.resourceTranslator.toResearchStudySortParams(sortFields) : undefined;
-  }
-
-  translateSubjecttoObservation(subject) {
-    return this.resourceTranslator.toObservation(subject);
-  }
-  translateSortParamstoObservationParams(sortFields) {
-    return sortFields ? this.resourceTranslator.toObservationSortParams(sortFields) : undefined;
-  }
-
-  translateSubjecttoPatient(subject) {
-    return this.resourceTranslator.toPatient(subject);
-  }
-  translateSortParamstoPatientParams(sortFields) {
-    return sortFields ? this.resourceTranslator.toPatientSortParams(sortFields) : undefined;
-  }
-
-  async getAllResearchStudy({ page, pageSize, offset, sort } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/workspace`, {
-      params: { page, pageSize, offset, sort: this.translateSortParamstoResearchStudyParams(sort) },
+  async getAllResearchStudy({ _page, _count, _offset, _sort } = {}) {
+    const { data } = await get(`${ANVIL_URL}/api/researchstudy`, {
+      params: { _page, _count, _offset, _sort },
     });
 
     const { results, count } = data;
-    return [results.map((result) => this.translateWorkspacetoResearchStudy(result)), count];
+    return [results, count];
   }
   async getResearchStudyById(id) {
-    const { data } = await get(`${ANVIL_URL}/api/workspace/${id}`);
-    return this.translateWorkspacetoResearchStudy(data);
+    const { data } = await get(`${ANVIL_URL}/api/researchstudy/${id}`);
+    return data;
   }
 
-  async getAllObservations({ page, pageSize, offset, sort } = {}) {
+  async getAllObservations({ _page, _count, _offset, _sort } = {}) {
     const { data } = await get(`${ANVIL_URL}/api/observation`, {
-      params: { page, pageSize, offset, sort: this.translateSortParamstoObservationParams(sort) },
+      params: { _page, _count, _offset, _sort },
     });
 
     const { results, count } = data;
-    return [results.map((result) => this.translateSubjecttoObservation(result)), count];
+    return [results, count];
   }
   async getObservationById(id) {
     const { data } = await get(`${ANVIL_URL}/api/observation/${id}`);
-    return this.translateSubjecttoObservation(data);
+    return data;
   }
 
-  async getAllPatients({ page, pageSize, offset, sort } = {}) {
-    const { data } = await get(`${ANVIL_URL}/api/subject`, {
-      params: { page, pageSize, offset, sort: this.translateSortParamstoPatientParams(sort) },
+  async getAllPatients({ _page, _count, _offset, _sort } = {}) {
+    const { data } = await get(`${ANVIL_URL}/api/patient`, {
+      params: { _page, _count, _offset, _sort },
     });
 
     const { results, count } = data;
-    return [results.map((result) => this.translateSubjecttoPatient(result)), count];
+    return [results, count];
   }
   async getPatientById(id) {
-    const { data } = await get(`${ANVIL_URL}/api/subject/${id}`);
-    return this.translateSubjecttoPatient(data);
+    const { data } = await get(`${ANVIL_URL}/api/patient/${id}`);
+    return data;
   }
 }
 

@@ -1,12 +1,12 @@
 jest.mock('./controller', () => ({
-  getAllGdc: jest.fn().mockImplementation((req, res) => res.json({ id: 'gdc' })),
-  getGdcById: jest.fn().mockImplementation((req, res) => res.json({ id: 'gdcid' })),
-  getAllDiagnosis: jest.fn().mockImplementation((req, res) => res.json({ id: 'diag' })),
-  getDiagnosisById: jest.fn().mockImplementation((req, res) => res.json({ id: 'diagid' })),
-  getAllBiospecimen: jest.fn().mockImplementation((req, res) => res.json({ id: 'bio' })),
-  getBiospecimenById: jest.fn().mockImplementation((req, res) => res.json({ id: 'bioid' })),
-  getAllProjects: jest.fn().mockImplementation((req, res) => res.json({ id: 'project' })),
-  getProjectById: jest.fn().mockImplementation((req, res) => res.json({ id: 'projectid' })),
+  getAllDiagnosticReports: jest.fn().mockImplementation((req, res) => res.json({ id: 'gdc' })),
+  getDiagnosticReportById: jest.fn().mockImplementation((req, res) => res.json({ id: 'gdcid' })),
+  getAllObservations: jest.fn().mockImplementation((req, res) => res.json({ id: 'diag' })),
+  getObservationById: jest.fn().mockImplementation((req, res) => res.json({ id: 'diagid' })),
+  getAllSpecimen: jest.fn().mockImplementation((req, res) => res.json({ id: 'bio' })),
+  getSpecimenById: jest.fn().mockImplementation((req, res) => res.json({ id: 'bioid' })),
+  getAllResearchStudies: jest.fn().mockImplementation((req, res) => res.json({ id: 'project' })),
+  getResearchStudyById: jest.fn().mockImplementation((req, res) => res.json({ id: 'projectid' })),
   getAllPatients: jest.fn().mockImplementation((req, res) => res.json({ id: 'patient' })),
   getPatientById: jest.fn().mockImplementation((req, res) => res.json({ id: 'patientid' })),
 }));
@@ -30,68 +30,68 @@ describe('router tests', () => {
 
   it('should route GDC requests to the getAllGdc function of the controller', (done) => {
     supertest(app)
-      .get('/gdc')
+      .get('/diagnosticreport')
       .end(() => {
-        expect(controller.getAllGdc.mock.calls.length).toEqual(1);
+        expect(controller.getAllDiagnosticReports.mock.calls.length).toEqual(1);
         done();
       });
   });
   it('should route GDC ID requests to the getGdcById function of the controller', (done) => {
     supertest(app)
-      .get('/gdc/foobar')
+      .get('/diagnosticreport/foobar')
       .end(() => {
-        expect(controller.getGdcById.mock.calls.length).toEqual(1);
+        expect(controller.getDiagnosticReportById.mock.calls.length).toEqual(1);
         done();
       });
   });
 
   it('should route diagnosis base requests to the getAllDiagnosis function of the controller', (done) => {
     supertest(app)
-      .get('/diagnosis')
+      .get('/observation')
       .end(() => {
-        expect(controller.getAllDiagnosis.mock.calls.length).toEqual(1);
+        expect(controller.getAllObservations.mock.calls.length).toEqual(1);
         done();
       });
   });
   it('should route diagnosis ID requests to the getDiagnosisById function of the controller', (done) => {
     supertest(app)
-      .get('/diagnosis/foobar')
+      .get('/observation/foobar')
       .end(() => {
-        expect(controller.getDiagnosisById.mock.calls.length).toEqual(1);
+        expect(controller.getObservationById.mock.calls.length).toEqual(1);
         done();
       });
   });
 
   it('should route Biospecimen base requests to the getAllBiospecimen function of the controller', (done) => {
     supertest(app)
-      .get('/biospecimen')
+      .get('/specimen')
       .end(() => {
-        expect(controller.getAllBiospecimen.mock.calls.length).toEqual(1);
+        expect(controller.getAllSpecimen.mock.calls.length).toEqual(1);
         done();
       });
   });
   it('should route Biospecimen ID requests to the getBiospecimenById function of the controller', (done) => {
     supertest(app)
-      .get('/biospecimen/foobar')
+      .get('/specimen/foobar')
       .end((err, res) => {
-        expect(controller.getBiospecimenById.mock.calls.length).toEqual(1);
+        expect(controller.getSpecimenById.mock.calls.length).toEqual(1);
         done();
       });
   });
 
   it('should route Projects base requests to the getAllBiospecimen function of the controller', (done) => {
     supertest(app)
-      .get('/projects')
+      .get('/researchstudy')
       .end(() => {
-        expect(controller.getAllProjects.mock.calls.length).toEqual(1);
+        expect(controller.getAllResearchStudies.mock.calls.length).toEqual(1);
         done();
       });
   });
   it('should route Project ID requests to the getBiospecimenById function of the controller', (done) => {
     supertest(app)
-      .get('/projects/foobar')
+      .get('/researchstudy/foobar')
       .end((err, res) => {
-        expect(controller.getProjectById.mock.calls.length).toEqual(1);
+        expect(controller.getResearchStudyById.mock.calls.length).toEqual(1);
         done();
       });
   });

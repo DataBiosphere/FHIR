@@ -27,7 +27,7 @@ const getStandardParameters = (query) => {
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('Specimen >>> search');
   const { query } = req;
-  const { _page, _count, _id } = getStandardParameters(query);
+  const { _page, _count, _id, _hash, _sort } = getStandardParameters(query);
 
   if (_id) {
     const resource = await tcga.getSpecimenById(_id);
@@ -41,8 +41,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   }
 
   const [results, count] = await tcga.getAllSpecimen({
-    page: _page,
-    pageSize: _count,
+    _page,
+    _count,
   });
 
   return buildSearchBundle({

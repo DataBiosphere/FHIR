@@ -75,6 +75,7 @@ anvil/data/*
 
 # MongoDB
 anvil-mongodb/database/*
+paging.db
 
 # Viewer
 viewer/src/react-app-env.d.ts

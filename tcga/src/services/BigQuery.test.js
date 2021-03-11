@@ -211,7 +211,7 @@ describe('BigQuery client tests', () => {
 
     expect(querySpy.mock.calls).toEqual([
       [
-        'select * from `test-table` as `table_0` order by `foo` asc nulls last, `bar` desc nulls last',
+        'select * from `test-table` as `table_0` order by `table_0`.`foo` asc nulls last, `table_0`.`bar` desc nulls last',
       ],
       ['select count(distinct `table_0`.`id`) as `count` from `test-table` as `table_0`'],
     ]);
