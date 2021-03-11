@@ -17,12 +17,13 @@ const get = memoize(axios.get, {
 });
 
 class TCGA {
-  constructor() {
+  constructor() {}
 
-  }
+  async getAllDiagnosticReports({ _page, _count, _include, _sort, _offset } = {}) {
+    const { data } = await get(`${TCGA_URL}/api/diagnosticreport`, {
+      params: { _page, _count, _sort, _offset },
+    });
 
-  async getAllDiagnosticReports({ _page, _count, _sort, _offset } = {}) {
-    const { data } = await get(`${TCGA_URL}/api/diagnosticreport`, { params: { _page, _count, _sort, _offset } });
     const { results, count } = data;
     return [results, count];
   }
@@ -35,11 +36,9 @@ class TCGA {
     const { data } = await get(`${TCGA_URL}/api/observation`, {
       params: { _page, _count, _offset, _sort },
     });
+
     const { results, count } = data;
-    return [
-      results,
-      count,
-    ];
+    return [results, count];
   }
   async getObservationById(id) {
     const { data } = await get(`${TCGA_URL}/api/observation/${id}`);
@@ -47,12 +46,12 @@ class TCGA {
   }
 
   async getAllSpecimen({ _page, _count, _sort, _offset } = {}) {
-    const { data } = await get(`${TCGA_URL}/api/specimen`, { params: { _page, _count, _sort, _offset } });
+    const { data } = await get(`${TCGA_URL}/api/specimen`, {
+      params: { _page, _count, _sort, _offset },
+    });
+
     const { results, count } = data;
-    return [
-      results,
-      count,
-    ];
+    return [results, count];
   }
   async getSpecimenById(id) {
     const { data } = await get(`${TCGA_URL}/api/specimen/${id}`);
@@ -61,7 +60,7 @@ class TCGA {
 
   async getAllResearchStudy({ _page, _count, _sort, _offset } = {}) {
     const { data } = await get(`${TCGA_URL}/api/researchstudy`, {
-      params: { _page, _count, _offset, _sort},
+      params: { _page, _count, _offset, _sort },
     });
 
     const { results, count } = data;

@@ -76,7 +76,11 @@ const transformGdcRows = (rows) => {
   }, {});
   return Object.keys(caseIdMappings).map((caseId) => {
     const entry = caseIdMappings[caseId];
-    return resourceTranslator.toDiagnosticReport({ ...entry.current, diagnoses: entry.diagnoses, biospecimen: entry.biospecimen });
+    return resourceTranslator.toDiagnosticReport({
+      ...entry.current,
+      diagnoses: entry.diagnoses,
+      biospecimen: entry.biospecimen,
+    });
   });
 };
 
@@ -85,12 +89,18 @@ const transformGdcRows = (rows) => {
  * @param {string=} _page
  * @param {string=} _count
  */
-const getAllDiagnosticReports = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 } = {}) => {
+const getAllDiagnosticReports = async ({
+  _page = 1,
+  _count = 20,
+  _sort = '',
+  _offset = 0,
+} = {}) => {
   const [caseIds] = await ClinicalGDCRawService.get({
     selection: [CASE_IDENTIFIER],
     page: _page,
     count: _count,
     orderBy: resourceTranslator.toDiagnosticReportOrderBy(_sort),
+    offset: _offset,
   });
 
   const [rows, count] = await ClinicalGDCService.get({
@@ -147,6 +157,7 @@ const getAllSpecimen = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 
     page: _page,
     count: _count,
     orderBy: resourceTranslator.toSpecimenOrderBy(_sort),
+    offset: _offset,
   });
 
   return [rows.map((row) => resourceTranslator.toSpecimen(row)), count];
