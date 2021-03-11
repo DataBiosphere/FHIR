@@ -13,7 +13,6 @@ describe('ANVIL service tests', () => {
     axios.get.mockImplementationOnce(() => ({ data: { count: 10, results: [] } }));
 
     const anvil = new ANVIL();
-    const translator = new Translator();
     const [_, count] = await anvil.getAllPatients({ _page: 2, _count: 10 });
 
     expect(count).toEqual(10);

@@ -26,7 +26,6 @@ describe('TCGA service tests', () => {
     axios.get.mockImplementation(() => ({ data: tcgaResponseFixture }));
 
     const tcga = new TCGA();
-    const translator = new Translator();
     const results = await tcga.getDiagnosticReportById('foobar');
 
     expect(axios.get).toHaveBeenCalledWith('http://tcga/api/diagnosticreport/foobar');
@@ -36,7 +35,6 @@ describe('TCGA service tests', () => {
     axios.get.mockImplementation(() => ({ data: { results: [], count: 1 } }));
 
     const tcga = new TCGA();
-    const translator = new Translator();
     const [_, count] = await tcga.getAllResearchStudy({ _page: 1, _count: 1 });
 
     expect(count).toEqual(1);
