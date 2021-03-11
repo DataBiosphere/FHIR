@@ -1,4 +1,4 @@
-name: TCGA - Build and Publish to GCR
+name: AnVIL - Build and Publish to GCR
 
 on:
   push:
@@ -21,6 +21,7 @@ env:
   TOKEN_URI: ${{ secrets.TOKEN_URI }}
   AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
   CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
+  MONGO_READ_CONNECTION_STRING: ${{ secrets.MONGO_READ_CONNECTION_STRING }}
 
 jobs:
   run-tests:
@@ -75,6 +76,9 @@ jobs:
 
       - name: Generate GCP Credentials
         run: node ../scripts/create-gcp-cred-file.js
+
+      - name: Generate env
+        run: node ../scripts/create-env-file.js PORT=3002 PROJECT_ID=${{ secrets.PROJECT_ID }}
 
       - name: Build
         run: |
