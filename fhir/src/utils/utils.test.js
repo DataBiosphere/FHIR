@@ -8,6 +8,8 @@ const {
   mergeResults,
 } = require('.');
 
+const LOCAL_URL = process.env.URL;
+
 describe('Utils tests', () => {
   it('should build links from URL', () => {
     expect(buildLinkFromUrl('self', new URL('https://example.com/'))).toEqual({
@@ -62,7 +64,7 @@ describe('Utils tests', () => {
   it('should build an entry without a source', () => {
     const resource = { resourceType: 'ResearchStudy' };
     expect(buildEntry(resource)).toEqual({
-      fullUrl: 'http://localhost:3000/4_0_0/ResearchStudy/undefined',
+      fullUrl: `${LOCAL_URL}/ResearchStudy/undefined`,
       resource: { resourceType: 'ResearchStudy' },
       search: { mode: 'match' },
     });
@@ -73,7 +75,7 @@ describe('Utils tests', () => {
     const searchMode = 'match';
     const queryParams = { _source: TCGA_SOURCE, test: 'test', foo: 'bar' };
     expect(buildEntry(resource, searchMode, queryParams)).toEqual({
-      fullUrl: `http://localhost:3000/4_0_0/ResearchStudy/undefined?_source=https%3A%2F%2Fportal.gdc.cancer.gov%2F&test=test&foo=bar`,
+      fullUrl: `${LOCAL_URL}/ResearchStudy/undefined?_source=https%3A%2F%2Fportal.gdc.cancer.gov%2F&test=test&foo=bar`,
       resource: { resourceType: 'ResearchStudy' },
       search: { mode: 'match' },
     });

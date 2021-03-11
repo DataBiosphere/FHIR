@@ -2,6 +2,8 @@ const axios = require('axios');
 const tcgaResponseFixture = require('../../../__fixtures__/tcgaResponse');
 const TCGA = require('.');
 
+const TCGA_URL = process.env.TCGA_URL;
+
 jest.mock('axios');
 
 // TODO: update TCGA tests
@@ -17,7 +19,7 @@ describe('TCGA service tests', () => {
     const [results, count] = await tcga.getAllDiagnosticReports({ _page: 2, _count: 10 });
 
     expect(count).toEqual(10);
-    expect(axios.get).toHaveBeenCalledWith('http://tcga/api/diagnosticreport', {
+    expect(axios.get).toHaveBeenCalledWith(`${TCGA_URL}/api/diagnosticreport`, {
       params: { _page: 2, _count: 10 },
     });
   });
@@ -28,7 +30,7 @@ describe('TCGA service tests', () => {
     const tcga = new TCGA();
     const results = await tcga.getDiagnosticReportById('foobar');
 
-    expect(axios.get).toHaveBeenCalledWith('http://tcga/api/diagnosticreport/foobar');
+    expect(axios.get).toHaveBeenCalledWith(`${TCGA_URL}/api/diagnosticreport/foobar`);
   });
 
   it('should get all Research Study data', async () => {
@@ -38,7 +40,7 @@ describe('TCGA service tests', () => {
     const [_, count] = await tcga.getAllResearchStudy({ _page: 1, _count: 1 });
 
     expect(count).toEqual(1);
-    expect(axios.get).toHaveBeenCalledWith('http://tcga/api/researchstudy', {
+    expect(axios.get).toHaveBeenCalledWith(`${TCGA_URL}/api/researchstudy`, {
       params: { _page: 1, _count: 1 },
     });
   });
