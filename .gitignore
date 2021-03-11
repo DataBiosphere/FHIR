@@ -75,3 +75,5 @@ anvil/data/*
 
 #
 anvil-mongodb/database/*
+
+paging.db
