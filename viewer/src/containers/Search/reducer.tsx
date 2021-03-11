@@ -12,10 +12,12 @@ import {
   GET_ENTRY_REQUEST,
   GET_ENTRY_SUCCESS,
   ADD_PARAM,
+  DELETE_PARAM,
   RESET_PARAM,
   GET_DOWNLOAD_REQUEST,
   GET_DOWNLOAD_UPDATE,
   GET_DOWNLOAD_SUCCESS,
+  GET_DOWNLOAD_ERROR,
 } from './types';
 
 export const initialState = {
@@ -38,7 +40,8 @@ const searchReducer = (state = initialState, action: any) =>
         draft.loading = false;
         break;
       case GET_BUNDLE_ERROR:
-        console.log('error');
+        // TODO: maybe make error more descriptive?
+        draft.error = action.payload.error;
         draft.bundle = undefined;
         draft.loading = false;
         break;
@@ -57,9 +60,14 @@ const searchReducer = (state = initialState, action: any) =>
         draft.params[action.payload.key] = action.payload.value;
         draft.pageLinks = [];
         break;
+      case DELETE_PARAM:
+        delete draft.params.action.payload.key;
+        draft.pageLinks = [];
+        break;
       case RESET_PARAM:
         draft.params = {};
         draft.pageLinks = [];
+        draft.error = '';
         break;
 
       case GET_DOWNLOAD_REQUEST:
@@ -71,6 +79,12 @@ const searchReducer = (state = initialState, action: any) =>
       case GET_DOWNLOAD_SUCCESS:
         draft.downloadProgress = 0;
         draft.download = action.payload.download;
+        break;
+      case GET_DOWNLOAD_ERROR:
+        // TODO: maybe make error more descriptive?
+        draft.error = action.payload.error;
+        draft.bundle = undefined;
+        draft.downloadProgress = 0;
         break;
 
       case DEFAULT_ACTION:

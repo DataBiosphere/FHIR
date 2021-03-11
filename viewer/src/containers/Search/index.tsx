@@ -43,10 +43,11 @@ import {
   selectDownload,
   selectParams,
   selectViewingEntry,
+  selectError,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { addParamAction, resetParamAction } from './actions';
+import { addParamAction, deleteParamAction, resetParamAction } from './actions';
 import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 
 import mappings from './mappings';
@@ -67,6 +68,7 @@ interface SearchType {
   pageLinks?: any;
   downloadProgress?: number;
   selectedResource?: string;
+  error: Error;
   viewingEntry?: fhir.BundleEntry;
 }
 
@@ -100,6 +102,7 @@ export function Search(props: any) {
   const {
     getResources,
     addParams,
+    deleteParam,
     resetParams,
     getDownload,
 
@@ -114,6 +117,8 @@ export function Search(props: any) {
 
     download,
     downloadProgress,
+
+    error,
   } = props;
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
@@ -154,6 +159,10 @@ export function Search(props: any) {
 
   const onApplyClicked = () => {
     getResources(selectedResource, 1, rowsPerPage, pageLinks, params);
+  };
+
+  const onDeleteParam = (name: string) => {
+    deleteParam(name);
   };
 
   const clearParamField = () => {
@@ -275,39 +284,41 @@ export function Search(props: any) {
       </Box>
 
       <div className={classes.flexCenter}>
+        <FilterList params={params} onDelete={onDeleteParam} />
+      </div>
+      <div className={classes.flexCenter}>
         <ExportButton downloadProgress={downloadProgress} onClick={onExportClicked} />
       </div>
 
-      {bundle && !loading ? (
-        <div className={classes.table}>
-          <PaginatedTable
-            rows={bundle.entry.map(({ resource }: any) => resource)}
-            renderers={renderers}
-            columns={columns}
-            count={bundle.total}
-            page={page - 1}
-            onView={(_, item) => {
-              setViewingEntry(item);
-              setOpen(true);
-            }}
-            onChangePage={onChangePage}
-            itemKey={itemKey}
-            rowsPerPage={rowsPerPage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-          />
+      <div className={classes.table}>
+        <PaginatedTable
+          rows={bundle ? bundle.entry.map(({ resource }: any) => resource) : []}
+          renderers={renderers}
+          columns={columns}
+          count={bundle ? bundle.total : 0}
+          page={page - 1}
+          onView={(_, item) => {
+            setViewingEntry(item);
+            setOpen(true);
+          }}
+          onChangePage={onChangePage}
+          itemKey={itemKey}
+          rowsPerPage={rowsPerPage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+        />
 
-          {viewingEntry && (
-            <ViewingEntry
-              title={`${viewingEntry.resourceType} - ${viewingEntry?.id}`}
-              entry={JSON.stringify(viewingEntry, null, 2)}
-              isOpen={open}
-              handleClose={closeViewingEntry}
-            />
-          )}
-        </div>
-      ) : null}
+        {viewingEntry && (
+          <ViewingEntry
+            title={`${viewingEntry.resourceType} - ${viewingEntry?.id}`}
+            entry={JSON.stringify(viewingEntry, null, 2)}
+            isOpen={open}
+            handleClose={closeViewingEntry}
+          />
+        )}
+      </div>
+
       <div className={classes.flexCenter}>
-        {!bundle && !loading ? <Alert severity="info">No entires matching filters</Alert> : null}
+        {error ? <Alert severity="error">{error.toString()}</Alert> : null}
         {loading ? <CircularProgress size={80} /> : null}
       </div>
     </>
@@ -326,6 +337,8 @@ Search.defaultProps = {
 
   download: undefined,
   downloadProgress: 0,
+
+  error: undefined,
 };
 
 const mapStateToProps = (state: any) => {
@@ -341,6 +354,8 @@ const mapStateToProps = (state: any) => {
 
     download: selectDownload(state),
     downloadProgress: selectDownloadProgress(state),
+
+    error: selectError(state),
 
     // TODO: figure out how to display different viewing entries
     //        boiler plate is all written
@@ -362,6 +377,10 @@ function mapDispatchToProps(dispatch: any) {
 
     addParams: (key: string, value: any) => {
       dispatch(addParamAction(key, value));
+    },
+
+    deleteParam: (key: string) => {
+      dispatch(deleteParamAction(key));
     },
 
     resetParams: () => {

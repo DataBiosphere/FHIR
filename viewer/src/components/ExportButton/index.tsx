@@ -28,6 +28,10 @@ function ExportButton({ onClick, downloadProgress }: ExportButtonType) {
     if (downloadProgress >= 1) {
       setDownloading(false);
     }
+
+    if (downloading && downloadProgress == 0) {
+      setDownloading(false);
+    }
   }, [downloadProgress]);
 
   return (

@@ -124,7 +124,8 @@ function* getDownload({ resourceType, params }: any) {
     const download = '['.concat(entries.join(',\n'), ']');
     yield put(downloadBundleSuccessAction(download));
   } catch (e) {
-    downloadBundleErrorAction(e);
+    yield put(downloadBundleUpdateAction(-1));
+    yield put(downloadBundleErrorAction(e));
   }
 }
 

@@ -30,6 +30,9 @@ export const selectDownloadProgress = createSelector(
   (substate) => substate.downloadProgress
 );
 
+// error handling
+export const selectError = createSelector(selectSearchDomain, (substate) => substate.error);
+
 export const selectViewingEntry = createSelector(
   selectSearchDomain,
   (substate) => substate.viewingEntry
