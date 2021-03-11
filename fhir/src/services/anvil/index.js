@@ -17,9 +17,7 @@ const get = memoize(axios.get, {
 });
 
 class ANVIL {
-  constructor() {
-
-  }
+  constructor() {}
 
   async getAllResearchStudy({ _page, _count, _offset, _sort } = {}) {
     const { data } = await get(`${ANVIL_URL}/api/researchstudy`, {
