@@ -54,7 +54,7 @@ function* getBundle({ resourceType, page, count, pageLinks, params }: any) {
 
     yield put(loadBundleSuccessAction(bundle, links));
   } catch (e) {
-    loadBundleErrorAction(e);
+    yield put(loadBundleErrorAction(e));
   }
 }
 
@@ -100,8 +100,6 @@ function* getDownload({ resourceType, params }: any) {
         // @ts-ignore
         bundle = yield call(requester, nextPage);
       }
-
-      console.log(bundle);
 
       // get next link
       nextPage = bundle.link.filter((l: any) => l.relation === 'next')[0].url;

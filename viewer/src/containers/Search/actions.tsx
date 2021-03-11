@@ -38,11 +38,11 @@ export function loadBundleRequestAction(resourceType: string, page: number): Sea
 export function loadBundleSuccessAction(bundle: fhir.Bundle, links: any): SearchActionTypes {
   return {
     type: GET_BUNDLE_SUCCESS,
-    payload: { bundle: bundle, links: links },
+    payload: { bundle, links },
   };
 }
 
-export function loadBundleErrorAction(error: any): SearchActionTypes {
+export function loadBundleErrorAction(error: Error): SearchActionTypes {
   return {
     type: GET_BUNDLE_ERROR,
     payload: { error },

@@ -31,7 +31,7 @@ function ExportButton({ onClick, downloadProgress }: ExportButtonType) {
   }, [downloadProgress]);
 
   return (
-    <div>
+    <>
       <Button
         color="primary"
         variant="contained"
@@ -40,7 +40,7 @@ function ExportButton({ onClick, downloadProgress }: ExportButtonType) {
         disabled={downloading}
       >
         Export Page
-        <div className={classes.divider} />
+        <span className={classes.divider} />
         <CircularProgress
           color="inherit"
           variant="determinate"
@@ -48,7 +48,7 @@ function ExportButton({ onClick, downloadProgress }: ExportButtonType) {
           value={downloadProgress * 100}
         />
       </Button>
-    </div>
+    </>
   );
 }
 

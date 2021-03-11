@@ -8,6 +8,7 @@ import {
   DEFAULT_ACTION,
   GET_BUNDLE_REQUEST,
   GET_BUNDLE_SUCCESS,
+  GET_BUNDLE_ERROR,
   GET_ENTRY_REQUEST,
   GET_ENTRY_SUCCESS,
   ADD_PARAM,
@@ -34,6 +35,11 @@ const searchReducer = (state = initialState, action: any) =>
       case GET_BUNDLE_SUCCESS:
         draft.bundle = action.payload.bundle;
         draft.pageLinks = action.payload.links;
+        draft.loading = false;
+        break;
+      case GET_BUNDLE_ERROR:
+        console.log('error');
+        draft.bundle = undefined;
         draft.loading = false;
         break;
 
