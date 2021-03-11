@@ -81,22 +81,13 @@ const useStyles = makeStyles((theme) => {
       marginBottom: '1rem',
       marginTop: '1rem',
     },
-    facetedSearch: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
     formControl: {
       margin: theme.spacing(1),
       minWidth: 125,
     },
-    search: {
-      margin: theme.spacing(1),
-      minWidth: 500,
-    },
-    inline: {
+    button: {
       margin: theme.spacing(0.25),
       marginTop: 20,
-      display: 'inline-block',
     },
   };
 });
@@ -205,51 +196,56 @@ export function Search(props: any) {
       </Helmet>
       <Typography variant="h1">Search</Typography>
 
-      <div className={classes.facetedSearch}>
-        <FormControl className={classes.formControl}>
-          <InputLabel>Resource</InputLabel>
-          <Select
-            defaultValue="DiagnosticReport"
-            onChange={(event) => {
-              clearParamField();
-              resetParams();
-              getResources(event.target.value, 1, rowsPerPage, {}, {});
-            }}
-          >
-            <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
-            <MenuItem value="Observation">Observation</MenuItem>
-            <MenuItem value="Specimen">Specimen</MenuItem>
-            <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
-          </Select>
-        </FormControl>
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <Box flexGrow={0}>
+          <FormControl className={classes.formControl}>
+            <InputLabel>Resource</InputLabel>
+            <Select
+              defaultValue="DiagnosticReport"
+              onChange={(event) => {
+                clearParamField();
+                resetParams();
+                getResources(event.target.value, 1, rowsPerPage, {}, {});
+              }}
+            >
+              <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
+              <MenuItem value="Observation">Observation</MenuItem>
+              <MenuItem value="Specimen">Specimen</MenuItem>
+              <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
+            </Select>
+          </FormControl>
 
-        <FormControl className={classes.formControl}>
-          <InputLabel>Parameter</InputLabel>
-          <Select
-            id="paramKey"
-            defaultValue="_id"
-            onChange={(event) => {
-              clearParamField();
-              setParamKey(event.target.value);
-            }}
-          >
-            <MenuItem value="_id">ID</MenuItem>
-            <MenuItem value="_source">Source</MenuItem>
-          </Select>
-        </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel>Parameter</InputLabel>
+            <Select
+              id="paramKey"
+              defaultValue="_id"
+              onChange={(event) => {
+                clearParamField();
+                setParamKey(event.target.value);
+              }}
+            >
+              <MenuItem value="_id">ID</MenuItem>
+              <MenuItem value="_source">Source</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+        <Box></Box>
 
-        <FormControl className={classes.search}>
+        <Box className={classes.formControl} flexGrow={1} alignContent="center">
           <TextField
+            className={classes.flexCenter}
             inputRef={paramRef} // inputRef != ref...
             label="Search Value"
             onChange={(event) => {
               setParamValue(event.target.value);
             }}
           />
-        </FormControl>
+        </Box>
 
-        <div className={classes.inline}>
+        <Box className={classes.formControl} flexGrow={0}>
           <Button
+            className={classes.button}
             color="primary"
             variant="contained"
             startIcon={<AddIcon />}
@@ -257,9 +253,8 @@ export function Search(props: any) {
           >
             Add Filter
           </Button>
-        </div>
-        <div className={classes.inline}>
           <Button
+            className={classes.button}
             color="primary"
             variant="contained"
             startIcon={<RotateLeftIcon />}
@@ -267,9 +262,8 @@ export function Search(props: any) {
           >
             Reset Filters
           </Button>
-        </div>
-        <div className={classes.inline}>
           <Button
+            className={classes.button}
             color="primary"
             variant="contained"
             startIcon={<SearchIcon />}
@@ -277,8 +271,8 @@ export function Search(props: any) {
           >
             Apply Filter
           </Button>
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       <div className={classes.flexCenter}>
         <ExportButton downloadProgress={downloadProgress} onClick={onExportClicked} />
