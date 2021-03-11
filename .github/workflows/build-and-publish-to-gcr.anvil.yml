@@ -1,4 +1,4 @@
-name: FHIR - Build and Publish to GCR
+name: AnVIL - Build and Publish to GCR
 
 on:
   push:
@@ -9,7 +9,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   GITHUB_REF: ${{ github.ref }}
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
-  IMAGE: fhir
+  IMAGE: anvil
   ORGANIZATION: broad
   REGISTRY_HOSTNAME: gcr.io
   TYPE: ${{ secrets.TYPE }}
@@ -21,9 +21,7 @@ env:
   TOKEN_URI: ${{ secrets.TOKEN_URI }}
   AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
   CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
-  URL: ${{ secrets.URL }}
-  TCGA_URL: ${{ secrets.TCGA_URL }}
-  ANVIL_URL: ${{ secrets.ANVIL_URL }}
+  MONGO_READ_CONNECTION_STRING: ${{ secrets.MONGO_READ_CONNECTION_STRING }}
 
 jobs:
   run-tests:
@@ -32,7 +30,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: fhir
+        working-directory: anvil-api
 
     strategy:
       matrix:
@@ -56,7 +54,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: fhir
+        working-directory: anvil-api
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -76,15 +74,17 @@ jobs:
       - name: Install Node Modules
         run: npm install
 
+      - name: Generate GCP Credentials
+        run: node ../scripts/create-gcp-cred-file.js
+
       - name: Generate env
-        run: node ../scripts/create-env-file.js TCGA_URL=${{ secrets.TCGA_URL }} ANVIL_URL=${{ secrets.ANVIL_URL }} URL=${{ secrets.URL }}
+        run: node ../scripts/create-env-file.js PORT=3002 PROJECT_ID=${{ secrets.PROJECT_ID }}
 
       - name: Build
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-7`
           echo Building image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
           docker build -t "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" .
-
       - name: Publish
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-7`
