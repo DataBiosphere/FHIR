@@ -4,11 +4,16 @@
  *
  */
 
+// DEV:
+// TCGA   - https://portal.gdc.cancer.gov/
+// AnVIL  - https://anvil.terra.bio/
+
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import {
   Button,
+  Box,
   Typography,
   makeStyles,
   CircularProgress,
@@ -18,8 +23,10 @@ import {
   MenuItem,
   TextField,
 } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import AddIcon from '@material-ui/icons/Add';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+import SearchIcon from '@material-ui/icons/Search';
 import { compose } from 'redux';
 import saveAs from 'file-saver';
 
@@ -44,8 +51,9 @@ import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 
 import mappings from './mappings';
 import { DEFAULT_ROWS_PER_PAGE } from './constants';
-import PaginatedTable from '../../components/PaginatedTable';
+import FilterList from '../../components/FilterList';
 import ExportButton from '../../components/ExportButton';
+import PaginatedTable from '../../components/PaginatedTable';
 import ViewingEntry from '../../components/ViewingEntry';
 
 interface SearchType {
@@ -67,13 +75,16 @@ const useStyles = makeStyles((theme) => {
     table: {
       marginTop: '1rem',
     },
-    loadingIcon: {
+    flexCenter: {
       display: 'flex',
       justifyContent: 'center',
       marginBottom: '1rem',
       marginTop: '1rem',
     },
-    facetedSearch: {},
+    facetedSearch: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
     formControl: {
       margin: theme.spacing(1),
       minWidth: 125,
@@ -86,13 +97,6 @@ const useStyles = makeStyles((theme) => {
       margin: theme.spacing(0.25),
       marginTop: 20,
       display: 'inline-block',
-    },
-    flexCenter: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    viewingEntry: {
-      color: theme.palette.text.primary,
     },
   };
 });
@@ -141,7 +145,7 @@ export function Search(props: any) {
 
   const onChangeRowsPerPage = (event: any) => {
     setRowsPerPage(event.target.value);
-    getResources(selectedResource, 1, rowsPerPage, {});
+    getResources(selectedResource, 1, rowsPerPage, {}, params);
   };
 
   const onExportClicked = () => {
@@ -150,14 +154,15 @@ export function Search(props: any) {
 
   const onAddClicked = () => {
     addParams(paramKey, paramValue);
-    // TODO: figure out this data race
-    getResources(selectedResource, 1, rowsPerPage, [], params);
   };
 
   const onResetClicked = () => {
     clearParamField();
     resetParams();
-    getResources(selectedResource, 1, rowsPerPage, [], []);
+  };
+
+  const onApplyClicked = () => {
+    getResources(selectedResource, 1, rowsPerPage, pageLinks, params);
   };
 
   const clearParamField = () => {
@@ -263,6 +268,16 @@ export function Search(props: any) {
             Reset Filters
           </Button>
         </div>
+        <div className={classes.inline}>
+          <Button
+            color="primary"
+            variant="contained"
+            startIcon={<SearchIcon />}
+            onClick={onApplyClicked}
+          >
+            Apply Filter
+          </Button>
+        </div>
       </div>
 
       <div className={classes.flexCenter}>
@@ -297,11 +312,10 @@ export function Search(props: any) {
           )}
         </div>
       ) : null}
-      {loading ? (
-        <div className={classes.loadingIcon}>
-          <CircularProgress size={80} />
-        </div>
-      ) : null}
+      <div className={classes.flexCenter}>
+        {!bundle && !loading ? <Alert severity="info">No entires matching filters</Alert> : null}
+        {loading ? <CircularProgress size={80} /> : null}
+      </div>
     </>
   );
 }
