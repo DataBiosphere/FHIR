@@ -58,7 +58,9 @@ kubectl set image deployments/fhir app=gcr.io/${PROJECT_ID}/broad/fhir:$(git log
 ## Deploy the K8 Spec file and monitor the deployment
 
 ```
-kubectl apply -f deployment.yml && kubectl rollout status deployment/broad-fhir-deployment
+kubectl apply -f fhir-deployment.yml && kubectl rollout status deployment/broad-fhir-deployment
+kubectl apply -f anvil-deployment.yml && kubectl rollout status deployment/broad-anvil-deployment
+kubectl apply -f tcga-deployment.yml && kubectl rollout status deployment/broad-tcga-deployment
 ```
 
 ## Common issues

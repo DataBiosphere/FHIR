@@ -28,21 +28,14 @@ spec:
     spec:
       containers:
         - name: fhir
-          image: gcr.io/broad-fhir-dev/broad/fhir:422d7b3
+          image: gcr.io/broad-fhir-dev/broad/fhir:5f102a9
           ports:
             - containerPort: 3000
           env:
             - name: TCGA_URL
-              value: http://localhost:3001
+              value: http://broad-tcga-svc.default.svc.cluster.local:3001
             - name: ANVIL_URL
-              value: http://localhost:3002
+              value: http://broad-anvil-svc.default.svc.cluster.local:3002
+            - name: URL
+              value: https://fhir.dev.envs-terra.bio/4_0_0/
           imagePullPolicy: Always
-        - name: tcga
-          image: gcr.io/broad-fhir-dev/broad/tcga:422d7b3
-          ports:
-            - containerPort: 3001
-          imagePullPolicy: Always
-        - name: anvil
-          image: gcr.io/broad-fhir-dev/broad/anvil:422d7b3
-          ports:
-            - containerPort: 3002

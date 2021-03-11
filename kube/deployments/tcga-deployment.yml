@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broad-tcga-svc
+spec:
+  selector:
+    app: broad-tcga-deployment
+  ports:
+    - port: 3001
+      targetPort: 3001
+      protocol: TCP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broad-tcga-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broad-tcga-deployment
+  template:
+    metadata:
+      labels:
+        app: broad-tcga-deployment
+    spec:
+      containers:
+        - name: tcga
+          image: gcr.io/broad-fhir-dev/broad/tcga:5f102a9
+          ports:
+            - containerPort: 3001
