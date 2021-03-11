@@ -78,7 +78,7 @@ jobs:
         run: node ../scripts/create-gcp-cred-file.js
 
       - name: Generate env
-        run: node ../scripts/create-env-file.js PORT=3002 PROJECT_ID=${{ secrets.PROJECT_ID }}
+        run: node ../scripts/create-env-file.js PORT=3002 MONGO_CONNECTION_STRING=${{ secrets.MONGO_READ_CONNECTION_STRING }} PROJECT_ID=${{ secrets.PROJECT_ID }}
 
       - name: Build
         run: |
