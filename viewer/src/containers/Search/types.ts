@@ -10,7 +10,10 @@ export const GET_BUNDLE_ERROR = 'app/Search/GET_BUNDLE_ERROR';
 
 interface GetBundleRequestAction {
   type: typeof GET_BUNDLE_REQUEST;
-  payload: { resourceType: string; page: number; count: number };
+  payload: {
+    resourceType: string;
+    page: number;
+  };
 }
 
 interface GetBundleSuccessAction {
@@ -63,7 +66,6 @@ export const GET_DOWNLOAD_ERROR = 'app/Search/GET_DOWNLOAD_ERROR';
 
 interface GetDownloadRequestAction {
   type: typeof GET_DOWNLOAD_REQUEST;
-  payload: { resourceType: string; params: string };
 }
 
 interface GetDownloadUpdateAction {

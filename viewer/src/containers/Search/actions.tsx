@@ -28,14 +28,10 @@ export function defaultAction(): SearchActionTypes {
 }
 
 // load bundle actions
-export function loadBundleRequestAction(
-  resourceType: string,
-  page: number,
-  count: number
-): SearchActionTypes {
+export function loadBundleRequestAction(resourceType: string, page: number): SearchActionTypes {
   return {
     type: GET_BUNDLE_REQUEST,
-    payload: { resourceType, page, count },
+    payload: { resourceType, page },
   };
 }
 
@@ -76,7 +72,7 @@ export function loadEntryErrorAction(error: Error): SearchActionTypes {
 }
 
 // param actions
-export function addParamAction(key: string, value: any): SearchActionTypes {
+export function addParamAction(key: string, value: string): SearchActionTypes {
   return {
     type: ADD_PARAM,
     payload: { key, value },
@@ -90,13 +86,9 @@ export function resetParamAction(): SearchActionTypes {
 }
 
 // export actions
-export function downloadBundleRequestAction(
-  resourceType: string,
-  params: string
-): SearchActionTypes {
+export function downloadBundleRequestAction(): SearchActionTypes {
   return {
     type: GET_DOWNLOAD_REQUEST,
-    payload: { resourceType, params },
   };
 }
 

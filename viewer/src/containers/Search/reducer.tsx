@@ -36,6 +36,7 @@ const searchReducer = (state = initialState, action: any) =>
         draft.pageLinks = action.payload.links;
         draft.loading = false;
         break;
+
       case GET_ENTRY_REQUEST:
         draft.resourceType = action.payload.resourceType;
         draft.id = action.payload.id;
@@ -43,12 +44,18 @@ const searchReducer = (state = initialState, action: any) =>
       case GET_ENTRY_SUCCESS:
         draft.viewingEntry = action.payload.entry;
         break;
+
+      // TODO: figure out this data race
+      //        it should update the params before it makes the first API call
       case ADD_PARAM:
         draft.params[action.payload.key] = action.payload.value;
+        draft.pageLinks = [];
         break;
       case RESET_PARAM:
         draft.params = {};
+        draft.pageLinks = [];
         break;
+
       case GET_DOWNLOAD_REQUEST:
         draft.downloadProgress = 0;
         break;

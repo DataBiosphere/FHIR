@@ -107,14 +107,18 @@ export function Search(props: any) {
     addParams,
     resetParams,
     getDownload,
+
     bundle,
     loading,
+
     selectedResource,
+    params,
+
     page,
     pageLinks,
+
     download,
     downloadProgress,
-    params,
   } = props;
   useInjectReducer({ key: 'search', reducer });
   useInjectSaga({ key: 'search', saga });
@@ -132,7 +136,7 @@ export function Search(props: any) {
   const classes = useStyles();
 
   const onChangePage = (_: any, newPage: number) => {
-    getResources(selectedResource, newPage + 1, rowsPerPage, pageLinks);
+    getResources(selectedResource, newPage + 1, rowsPerPage, pageLinks, params);
   };
 
   const onChangeRowsPerPage = (event: any) => {
@@ -146,11 +150,14 @@ export function Search(props: any) {
 
   const onAddClicked = () => {
     addParams(paramKey, paramValue);
+    // TODO: figure out this data race
+    getResources(selectedResource, 1, rowsPerPage, [], params);
   };
 
   const onResetClicked = () => {
     clearParamField();
     resetParams();
+    getResources(selectedResource, 1, rowsPerPage, [], []);
   };
 
   const clearParamField = () => {
@@ -161,13 +168,8 @@ export function Search(props: any) {
 
   // runs on inital launch
   useEffect(() => {
-    getResources(selectedResource, page, rowsPerPage, pageLinks);
+    getResources(selectedResource, page, rowsPerPage, pageLinks, params);
   }, []);
-
-  // DEV: prints when params is change
-  useEffect(() => {
-    console.log(params);
-  }, [params]);
 
   // runs when download changes
   // not too sure if this is the best implementation though
@@ -178,6 +180,11 @@ export function Search(props: any) {
       (saveAs as any)(blob, 'results.json');
     }
   }, [download]);
+
+  // DEV: prints when params is change
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
 
   const itemKey = 'id';
 
@@ -200,7 +207,8 @@ export function Search(props: any) {
             defaultValue="DiagnosticReport"
             onChange={(event) => {
               clearParamField();
-              getResources(event.target.value, 1, rowsPerPage, {});
+              resetParams();
+              getResources(event.target.value, 1, rowsPerPage, {}, {});
             }}
           >
             <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
@@ -300,25 +308,31 @@ export function Search(props: any) {
 
 Search.defaultProps = {
   bundle: undefined,
-  download: undefined,
   loading: true,
+
+  selectedResource: 'DiagnosticReport',
+  params: {},
+
   page: 1,
   pageLinks: {},
+
+  download: undefined,
   downloadProgress: 0,
-  selectedResource: 'DiagnosticReport',
-  params: [],
 };
 
 const mapStateToProps = (state: any) => {
   return {
     bundle: selectBundle(state),
     loading: selectLoading(state),
-    downloadProgress: selectDownloadProgress(state),
+
     selectedResource: selectSelectedResource(state),
+    params: selectParams(state),
+
     page: selectPage(state),
     pageLinks: selectPageLinks(state),
+
     download: selectDownload(state),
-    params: selectParams(state),
+    downloadProgress: selectDownloadProgress(state),
 
     // TODO: figure out how to display different viewing entries
     //        boiler plate is all written
@@ -328,8 +342,14 @@ const mapStateToProps = (state: any) => {
 
 function mapDispatchToProps(dispatch: any) {
   return {
-    getResources: (resourceType: string, page: number, count: number, pageLinks: any) => {
-      dispatch({ type: GET_BUNDLE, resourceType, page, count, pageLinks });
+    getResources: (
+      resourceType: string,
+      page: number,
+      count: number,
+      pageLinks: string[],
+      params: any
+    ) => {
+      dispatch({ type: GET_BUNDLE, resourceType, page, count, pageLinks, params });
     },
 
     addParams: (key: string, value: any) => {

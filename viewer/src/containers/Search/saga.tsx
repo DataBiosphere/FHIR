@@ -18,18 +18,19 @@ import { PARSING_ROWS_PER_PAGE } from './constants';
 import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 
 // TODO: explore memoizing this for pageLinks
-function* getResourceType({ resourceType, page, count, pageLinks }: any) {
+function* getBundle({ resourceType, page, count, pageLinks, params }: any) {
   // @ts-ignore
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
-    yield put(loadBundleRequestAction(resourceType, page, count));
+    yield put(loadBundleRequestAction(resourceType, page));
 
     // create API call
+    const paramString = makeParamString(params);
     const requestUrl: string =
       pageLinks && pageLinks[page]
         ? pageLinks[page]
-        : `${resourceType}?_page=${page}&_count=${count}`;
+        : `${resourceType}?_count=${count}&${paramString}`;
     // @ts-ignore
     const bundle = yield call(requester, requestUrl);
 
@@ -78,16 +79,14 @@ function* getDownload({ resourceType, params }: any) {
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
-    yield put(downloadBundleRequestAction(resourceType, params));
+    yield put(downloadBundleRequestAction());
     let nextPage;
     let count = 0;
 
     const entries: Array<string> = [];
     // parse through and get all entries into bundle
     do {
-      const paramString = Object.entries(params)
-        .map(([k, v]) => `${k}=${v}`)
-        .join('&');
+      const paramString = makeParamString(params);
 
       // get the initial page, or get the next page
       let bundle: any;
@@ -132,7 +131,14 @@ function* getDownload({ resourceType, params }: any) {
 }
 
 export default function* searchSaga() {
-  yield all([takeEvery(GET_BUNDLE, getResourceType)]);
+  yield all([takeEvery(GET_BUNDLE, getBundle)]);
   yield all([takeEvery(GET_ENTRY, getEntry)]);
   yield all([takeEvery(GET_DOWNLOAD, getDownload)]);
 }
+
+// util functions
+const makeParamString = (params: any): string => {
+  return Object.entries(params)
+    .map(([k, v]) => `${k}=${v}`)
+    .join('&');
+};

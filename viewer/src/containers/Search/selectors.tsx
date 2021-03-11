@@ -11,18 +11,25 @@ const selectSearchDomain = (state: any) => state.search || initialState;
  */
 export const selectBundle = createSelector(selectSearchDomain, (substate) => substate.bundle);
 export const selectLoading = createSelector(selectSearchDomain, (substate) => substate.loading);
-export const selectPage = createSelector(selectSearchDomain, (substate) => substate.page);
-export const selectPageLinks = createSelector(selectSearchDomain, (substate) => substate.pageLinks);
-export const selectDownload = createSelector(selectSearchDomain, (substate) => substate.download);
-export const selectDownloadProgress = createSelector(
-  selectSearchDomain,
-  (substate) => substate.downloadProgress
-);
+
+// api call selectors
 export const selectSelectedResource = createSelector(
   selectSearchDomain,
   (substate) => substate.selectedResource
 );
 export const selectParams = createSelector(selectSearchDomain, (substate) => substate.params);
+
+// page selectors
+export const selectPage = createSelector(selectSearchDomain, (substate) => substate.page);
+export const selectPageLinks = createSelector(selectSearchDomain, (substate) => substate.pageLinks);
+
+// download selectors
+export const selectDownload = createSelector(selectSearchDomain, (substate) => substate.download);
+export const selectDownloadProgress = createSelector(
+  selectSearchDomain,
+  (substate) => substate.downloadProgress
+);
+
 export const selectViewingEntry = createSelector(
   selectSearchDomain,
   (substate) => substate.viewingEntry
