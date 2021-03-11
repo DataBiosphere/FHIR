@@ -47,11 +47,17 @@ interface GetEntryErrorAction {
 }
 
 export const ADD_PARAM = 'app/Search/ADD_PARAM';
+export const DELETE_PARAM = 'app/Search/DELETE_PARAM';
 export const RESET_PARAM = 'app/Search/RESET_PARAM';
 
 interface AddParamAction {
   type: typeof ADD_PARAM;
   payload: { key: string; value: any };
+}
+
+interface DeleteParamAction {
+  type: typeof DELETE_PARAM;
+  payload: { key: string };
 }
 
 interface ResetParamAction {
@@ -92,6 +98,7 @@ export type SearchActionTypes =
   | GetEntrySuccessAction
   | GetEntryErrorAction
   | AddParamAction
+  | DeleteParamAction
   | ResetParamAction
   | GetDownloadRequestAction
   | GetDownloadUpdateAction

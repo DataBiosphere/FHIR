@@ -13,6 +13,7 @@ import {
   GET_ENTRY_SUCCESS,
   GET_ENTRY_ERROR,
   ADD_PARAM,
+  DELETE_PARAM,
   RESET_PARAM,
   GET_DOWNLOAD_REQUEST,
   GET_DOWNLOAD_UPDATE,
@@ -76,6 +77,13 @@ export function addParamAction(key: string, value: string): SearchActionTypes {
   return {
     type: ADD_PARAM,
     payload: { key, value },
+  };
+}
+
+export function deleteParamAction(key: string): SearchActionTypes {
+  return {
+    type: DELETE_PARAM,
+    payload: { key },
   };
 }
 
