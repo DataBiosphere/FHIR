@@ -1,5 +1,6 @@
 const { dedupeObjects, transformGdcResults, buildOrderBy } = require('../utils');
 const { BigQuery } = require('../services');
+const Translator = require('../services/translator');
 
 // table constants
 const GDC_TABLE = 'isb-cgc-bq.TCGA.clinical_gdc_current';
@@ -12,6 +13,8 @@ const DIAGNOSIS_IDENTIFIER = 'diag__diagnosis_id';
 const BIOSPECIMEN_IDENTIFIER = 'sample_gdc_id';
 const PROJECT_IDENTIFIER = 'proj__project_id';
 const PATIENT_IDENTIFIER = 'submitter_id';
+
+const resourceTranslator = new Translator();
 
 const ClinicalGDCRawService = new BigQuery({
   table: GDC_TABLE,
@@ -73,132 +76,138 @@ const transformGdcRows = (rows) => {
   }, {});
   return Object.keys(caseIdMappings).map((caseId) => {
     const entry = caseIdMappings[caseId];
-    return { ...entry.current, diagnoses: entry.diagnoses, biospecimen: entry.biospecimen };
+    return resourceTranslator.toDiagnosticReport({ ...entry.current, diagnoses: entry.diagnoses, biospecimen: entry.biospecimen });
   });
 };
 
 /**
- * getAll GDC data by page and pageSize
- * @param {string=} page
- * @param {string=} pageSize
+ * getAll Diagnostic Report data by _page and _count
+ * @param {string=} _page
+ * @param {string=} _count
  */
-const getAllGdc = async ({ page = 1, pageSize = 20 } = {}) => {
+const getAllDiagnosticReports = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 } = {}) => {
   const [caseIds] = await ClinicalGDCRawService.get({
     selection: [CASE_IDENTIFIER],
-    page,
-    pageSize,
+    page: _page,
+    count: _count,
+    orderBy: resourceTranslator.toDiagnosticReportOrderBy(_sort),
   });
 
   const [rows, count] = await ClinicalGDCService.get({
     whereIn: [CASE_IDENTIFIER, caseIds.map((row) => row.case_id)],
+    orderBy: resourceTranslator.toDiagnosticReportOrderBy(_sort),
   });
 
   return [transformGdcRows(rows), count];
 };
 
 /**
- * Get GDC data by an ID
+ * Get Diagnostic Report data by an ID
  * @param {string} id
  */
-const getGdcById = async (id) => {
+const getDiagnosticReportById = async (id) => {
   const [rows] = await ClinicalGDCService.get({ where: { case_id: id } });
 
   return rows && rows.length ? transformGdcRows(rows)[0] : null;
 };
 
 /**
- * getAll Diagnosis data by page and pageSize
- * @param {string=} page
- * @param {string=} pageSize
+ * getAll Observation data by _page and _count
+ * @param {string=} _page
+ * @param {string=} _count
  */
-const getAllDiagnosis = async ({ page = 1, pageSize = 20, sort = '', offset = 0 } = {}) => {
+const getAllObservations = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 } = {}) => {
   const [rows, count] = await DiagnosisService.get({
-    page,
-    pageSize,
-    orderBy: buildOrderBy(sort),
-    offset,
+    page: _page,
+    count: _count,
+    orderBy: resourceTranslator.toObservationOrderBy(_sort),
+    offset: _offset,
   });
 
-  return [rows, count];
+  return [rows.map((row) => resourceTranslator.toObservation(row)), count];
 };
 
 /**
- * Get Diagnosis data by an ID
+ * Get Observation data by an ID
  * @param {string} id
  */
-const getDiagnosisById = async (id) => {
+const getObservationById = async (id) => {
   const [rows] = await DiagnosisService.get({ where: { diag__treat__treatment_id: id } });
 
-  return rows && rows.length ? rows[0] : null;
+  return rows && rows.length ? resourceTranslator.toObservation(rows[0]) : null;
 };
 
 /**
- * getAll Biospecimen data by page and pageSize
- * @param {string=} page
- * @param {string=} pageSize
+ * getAll Specimen data by _page and _count
+ * @param {string=} _page
+ * @param {string=} _count
  */
-const getAllBiospecimen = async ({ page = 1, pageSize = 20 } = {}) => {
-  const [rows, count] = await BiospecimenService.get({ page, pageSize });
+const getAllSpecimen = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 } = {}) => {
+  const [rows, count] = await BiospecimenService.get({
+    page: _page,
+    count: _count,
+    orderBy: resourceTranslator.toSpecimenOrderBy(_sort),
+  });
 
-  return [rows, count];
+  return [rows.map((row) => resourceTranslator.toSpecimen(row)), count];
 };
 
 /**
- * Get Biospecimen data by an ID
+ * Get Specimen data by an ID
  * @param {string} id
  */
-const getBiospecimenById = async (id) => {
+const getSpecimenById = async (id) => {
   const [rows] = await BiospecimenService.get({ where: { sample_gdc_id: id } });
 
-  return rows && rows.length ? rows[0] : null;
+  return rows && rows.length ? resourceTranslator.toSpecimen(rows[0]) : null;
 };
 
 /**
- * getAll Project data by page and pageSize
- * @param {number=} [page]
- * @param {number=} [pageSize]
- * @param {string=} [sort]
- * @param {number=} [offset]
+ * getAll Research Study data by _page and _count
+ * @param {number=} [_page]
+ * @param {number=} [_count]
+ * @param {string=} [_sort]
+ * @param {number=} [_offset]
  */
-const getAllProjects = async ({ page = 1, pageSize = 20, sort = '', offset = 0 } = {}) => {
+const getAllResearchStudies = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 } = {}) => {
   const [rows, count] = await ClinicalGDCRawService.get({
     selection: ['proj__name', PROJECT_IDENTIFIER],
     distinct: true,
-    page,
-    pageSize,
-    orderBy: buildOrderBy(sort),
-    offset,
+    page: _page,
+    count: _count,
+    orderBy: resourceTranslator.toResearchStudyOrderBy(_sort),
+    offset: _offset,
   });
 
-  return [rows, count];
+  return [rows.map((row) => resourceTranslator.toResearchStudy(row)), count];
 };
 
 /**
- * Get Project data by an ID
+ * Get Research Study data by an ID
  * @param {string} id
  */
-const getProjectById = async (id) => {
+const getResearchStudyById = async (id) => {
   const [rows] = await ClinicalGDCRawService.get({ where: { [PROJECT_IDENTIFIER]: id } });
 
-  return rows && rows.length ? rows[0] : null;
+  return rows && rows.length ? resourceTranslator.toResearchStudy(rows[0]) : null;
 };
 
 /**
- * getAll Patient data by page and pageSize
- * @param {number=} [page]
- * @param {number=} [pageSize]
- * @param {string=} [sort]
- * @param {number=} [offset]
+ * getAll Patient data by _page and _count
+ * @param {number=} [_page]
+ * @param {number=} [_count]
+ * @param {string=} [_sort]
+ * @param {number=} [_offset]
  */
-const getAllPatients = async ({ page = 1, pageSize = 20, sort = '', offset = 0 } = {}) => {
+const getAllPatients = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 } = {}) => {
   const [rows, count] = await ClinicalGDCRawService.get({
-    page,
-    pageSize,
-    orderBy: buildOrderBy(sort),
-    offset,
+    page: _page,
+    count: _count,
+    orderBy: resourceTranslator.toPatientOrderBy(_sort),
+    offset: _offset,
   });
 
-  return [rows, count];
+  return [rows.map((row) => resourceTranslator.toPatient(row)), count];
 };
 
 /**
@@ -208,18 +217,18 @@ const getAllPatients = async ({ page = 1, pageSize = 20, sort = '', offset = 0 }
 const getPatientById = async (id) => {
   const [rows] = await ClinicalGDCRawService.get({ where: { [PATIENT_IDENTIFIER]: id } });
 
-  return rows && rows.length ? rows[0] : null;
+  return rows && rows.length ? resourceTranslator.toPatient(rows[0]) : null;
 };
 
 module.exports = {
-  getAllGdc,
-  getGdcById,
-  getAllDiagnosis,
-  getDiagnosisById,
-  getAllBiospecimen,
-  getBiospecimenById,
-  getAllProjects,
-  getProjectById,
+  getAllDiagnosticReports,
+  getDiagnosticReportById,
+  getAllObservations,
+  getObservationById,
+  getAllSpecimen,
+  getSpecimenById,
+  getAllResearchStudies,
+  getResearchStudyById,
   getAllPatients,
   getPatientById,
 };

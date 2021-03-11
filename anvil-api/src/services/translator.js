@@ -9,15 +9,15 @@ const {
   findDiseaseDisplay,
   buildSlug,
   buildSortArray,
-} = require('../../utils');
+  buildSortObject,
+  translateSortObj,
+} = require('../utils');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
 // const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
 // const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 const Patient = resolveSchema('4_0_0', 'Patient');
-
-const { anvilFieldMappings } = require('../../utils/anvilmappings');
 
 const buildSubjectId = (workspace, id) => {
   return `${workspace}-Su-${id}`;
@@ -81,14 +81,17 @@ class Translator {
     // TODO: look into subject.age
     return observation;
   }
-  toObservationSortParams(sortFields) {
-    const sortArray = buildSortArray(sortFields);
-    const observationMappings = anvilFieldMappings.OBSERVATION;
 
-    return sortArray
-      .filter((sf) => observationMappings[sf.field])
-      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${observationMappings[sf.field]}`)
-      .join(',');
+  toObservationSortParams(sortFields) {
+    return translateSortObj(sortFields, (sortObj, existsObj, key) => {
+      switch (key) {
+        case 'id':
+          sortObj['workspaceName'] = sortObj[key];
+          sortObj['name'] = sortObj[key];
+          delete sortObj[key];
+          break;
+      }
+    });
   }
 
   toResearchStudy(workspace) {
@@ -137,14 +140,18 @@ class Translator {
 
     return researchStudy;
   }
-  toResearchStudySortParams(sortFields) {
-    const sortArray = buildSortArray(sortFields);
-    const researchStudyMappings = anvilFieldMappings.RESEARCHSTUDY;
 
-    return sortArray
-      .filter((sf) => researchStudyMappings[sf.field])
-      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${researchStudyMappings[sf.field]}`)
-      .join(',');
+  toResearchStudySortParams(sortFields) {
+    return translateSortObj(sortFields, (sortObj, existsObj, key) => {
+      switch (key) {
+        case 'title':
+          sortObj['datasetName'] = sortObj[key];
+          existsObj['datasetName'] = existsObj[key];
+          delete sortObj[key];
+          delete existsObj[key];
+          break;
+      }
+    });
   }
 
   toPatient(subject) {
@@ -183,14 +190,17 @@ class Translator {
     // TODO: we can probably put ethnicity info in here too if we want
     return patient;
   }
-  toPatientSortParams(sortFields) {
-    const sortArray = buildSortArray(sortFields);
-    const patientMappings = anvilFieldMappings.PATIENT;
 
-    return sortArray
-      .filter((sf) => patientMappings[sf.field])
-      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${patientMappings[sf.field]}`)
-      .join(',');
+  toPatientSortParams(sortFields) {
+    return translateSortObj(sortFields, (sortObj, existsObj, key) => {
+      switch (key) {
+        case 'id':
+          sortObj['workspaceName'] = sortObj[key];
+          sortObj['name'] = sortObj[key];
+          delete sortObj[key];
+          break;
+      }
+    });
   }
 }
 

@@ -31,7 +31,7 @@ const getStandardParameters = (query) => {
 const search = async ({ base_version: baseVersion }, { req }) => {
   logger.info('DiagnosticReport >>> search');
   const { query } = req;
-  const { _page, _count, _id, _include } = getStandardParameters(query);
+  const { _page, _count, _id, _include, _sort } = getStandardParameters(query);
 
   let resultsSet = [];
 
@@ -47,11 +47,12 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   }
 
   const [tcgaResults, count] = await tcga.getAllDiagnosticReports({
-    page: _page,
-    pageSize: _count,
+    _page,
+    _count,
+    _sort
   });
 
-  tcgaResults.forEach((tcgaResult) => {
+  /*tcgaResults.forEach((tcgaResult) => {
     const { diagnosticReport } = tcgaResult;
     resultsSet = resultsSet.concat(buildEntry(diagnosticReport));
     if (_include) {
@@ -65,7 +66,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
         }
       });
     }
-  });
+  });*/
 
   return buildSearchBundle({
     resourceType: 'DiagnosticReport',

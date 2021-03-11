@@ -1,10 +1,10 @@
 jest.mock('./service', () => ({
-  getAllWorkspaces: jest.fn().mockImplementation(() => [[{ id: 'workspace' }], 1]),
-  getWorkspaceById: jest.fn().mockImplementation(() => ({ id: 'workspaceid' })),
+  getAllResearchStudies: jest.fn().mockImplementation(() => [[{ id: 'workspace' }], 1]),
+  getResearchStudyById: jest.fn().mockImplementation(() => ({ id: 'workspaceid' })),
   getAllSamples: jest.fn().mockImplementation(() => [[{ id: 'sample' }], 2]),
   getSampleById: jest.fn().mockImplementation(() => ({ id: 'sampleid' })),
-  getAllSubjects: jest.fn().mockImplementation(() => [[{ id: 'subject' }], 3]),
-  getSubjectById: jest.fn().mockImplementation(() => ({ id: 'subjectid' })),
+  getAllPatients: jest.fn().mockImplementation(() => [[{ id: 'subject' }], 3]),
+  getPatientById: jest.fn().mockImplementation(() => ({ id: 'subjectid' })),
   getAllObservations: jest.fn().mockImplementation(() => [[{ id: 'observation' }], 4]),
   getObservationById: jest.fn().mockImplementation(() => ({ id: 'observationid' })),
 }));
@@ -12,7 +12,7 @@ jest.mock('./service', () => ({
 const controller = require('./controller');
 
 describe('ANVIL controller tests', () => {
-  it('should get all Workspace data', async () => {
+  it('should get all ResearchStudy data', async () => {
     const mockRes = {
       json: jest.fn(),
     };
@@ -24,11 +24,11 @@ describe('ANVIL controller tests', () => {
       },
     };
 
-    await controller.getAllWorkspaces(mockReq, mockRes);
+    await controller.getAllResearchStudies(mockReq, mockRes);
     expect(mockRes.json.mock.calls[0][0]).toEqual({ count: 1, results: [{ id: 'workspace' }] });
   });
 
-  it('should get Workspace data by ID', async () => {
+  it('should get ResearchStudy data by ID', async () => {
     const mockRes = {
       json: jest.fn(),
     };
@@ -39,7 +39,7 @@ describe('ANVIL controller tests', () => {
       },
     };
 
-    await controller.getWorkspaceById(mockReq, mockRes);
+    await controller.getResearchStudyById(mockReq, mockRes);
     expect(mockRes.json.mock.calls[0][0]).toEqual({ id: 'workspaceid' });
   });
 
@@ -107,7 +107,7 @@ describe('ANVIL controller tests', () => {
     expect(mockRes.json.mock.calls[0][0]).toEqual({ id: 'sampleid' });
   });
 
-  it('should get all Subject data', async () => {
+  it('should get all Patient data', async () => {
     const mockRes = {
       json: jest.fn(),
     };
@@ -119,10 +119,10 @@ describe('ANVIL controller tests', () => {
       },
     };
 
-    await controller.getAllSubjects(mockReq, mockRes);
+    await controller.getAllPatients(mockReq, mockRes);
     expect(mockRes.json.mock.calls[0][0]).toEqual({ count: 3, results: [{ id: 'subject' }] });
   });
-  it('should get all Subject data with Workspace params', async () => {
+  it('should get all Patient data with Workspace params', async () => {
     const mockRes = {
       json: jest.fn(),
     };
@@ -137,11 +137,11 @@ describe('ANVIL controller tests', () => {
       },
     };
 
-    await controller.getAllSubjects(mockReq, mockRes);
+    await controller.getAllPatients(mockReq, mockRes);
     expect(mockRes.json.mock.calls[0][0]).toEqual({ count: 3, results: [{ id: 'subject' }] });
   });
 
-  it('should get Subject data by ID', async () => {
+  it('should get Patient data by ID', async () => {
     const mockRes = {
       json: jest.fn(),
     };
@@ -152,10 +152,10 @@ describe('ANVIL controller tests', () => {
       },
     };
 
-    await controller.getSubjectById(mockReq, mockRes);
+    await controller.getPatientById(mockReq, mockRes);
     expect(mockRes.json.mock.calls[0][0]).toEqual({ id: 'subjectid' });
   });
-  it('should get Subject data by Workspace ID', async () => {
+  it('should get Patient data by Workspace ID', async () => {
     const mockRes = {
       json: jest.fn(),
     };
@@ -167,7 +167,7 @@ describe('ANVIL controller tests', () => {
       },
     };
 
-    await controller.getSubjectById(mockReq, mockRes);
+    await controller.getPatientById(mockReq, mockRes);
     expect(mockRes.json.mock.calls[0][0]).toEqual({ id: 'subjectid' });
   });
 

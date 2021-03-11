@@ -1,42 +1,44 @@
 const { AnvilMongo } = require('../services');
 const { buildSortObject } = require('../utils');
+const Translator = require('../services/translator');
 
 const WorkspaceService = new AnvilMongo({ collectionName: 'workspace' });
 const SampleService = new AnvilMongo({ collectionName: 'sample' });
 const SubjectService = new AnvilMongo({ collectionName: 'subject' });
+const resourceTranslator = new Translator();
 
 /**
- * getAll Workspace data by page and pageSize
+ * getAll Research Study data by page and _count
  *
- * @param {string} page
- * @param {string} pageSize
+ * @param {string} _page
+ * @param {string} _count
  */
-const getAllWorkspaces = async ({ page = 1, pageSize = 25, sort = '', offset = 0 }) => {
-  const [sortObj, existsObj] = buildSortObject(sort);
+const getAllResearchStudies = async ({ _page = 1, _count = 25, _sort = '', _offset = 0 }) => {
+  const [sortObj, existsObj] = resourceTranslator.toResearchStudySortParams(_sort);
 
   const [results, count] = await WorkspaceService.find({
-    page: page,
-    pageSize: pageSize,
-    query: { ...existsObj },
+    page: _page,
+    size: _count,
+    query: { },
     projection: {},
-    offset: offset,
+    offset: _offset,
     sort: sortObj,
   });
 
-  return [results, count];
+  return [results.map((result) => resourceTranslator.toResearchStudy(result)), count];
 };
-const getWorkspaceById = async (id) => {
+const getResearchStudyById = async (id) => {
   const result = await WorkspaceService.findOne({
     query: { name: id },
   });
 
-  return result || null;
+  return result ? resourceTranslator.toResearchStudy(result) : null;
 };
 
-const getAllSamples = async ({ workspace = '', page = 1, pageSize = 25 }) => {
+const getAllSamples = async ({ workspace = '', _page = 1, _count = 25 }) => {
   let [results, count] = await SampleService.find({
-    page: page,
-    pageSize: pageSize,
+    page: _page,
+    size: _count,
     query: { workspaceName: { $regex: workspace } },
     projection: {},
   });
@@ -53,62 +55,53 @@ const getSampleById = async ({ workspace = '', id }) => {
   return result || null;
 };
 
-const getAllSubjects = async ({
+const getAllPatients = async ({
   workspace = '',
-  page = 1,
-  pageSize = 25,
-  sort = '',
-  offset = 0,
+  _page = 1,
+  _count = 25,
+  _sort = '',
+  _offset = 0,
 }) => {
-  const [sortObj, existObj] = buildSortObject(sort);
+  const [sortObj, existObj] = resourceTranslator.toPatientSortParams(_sort);
 
-  // in case no sort is provided
+  // in case no _sort is provided
   const query = existObj
     ? { $and: [{ workspaceName: { $regex: workspace } }, existObj] }
     : { workspaceName: { $regex: workspace } };
 
   const [results, count] = await SubjectService.find({
-    page: page,
-    pageSize: pageSize,
+    page: _page,
+    size: _count,
     query: query,
     projection: {},
-    offset: offset,
+    offset: _offset,
     sort: sortObj,
   });
 
-  return [results, count];
+  return [results.map((result) => resourceTranslator.toPatient(result)), count];
 };
-const getSubjectById = async ({ workspace = '', id }) => {
+const getPatientById = async ({ workspace = '', id }) => {
   const result = await SubjectService.findOne({
     query: {
       $and: [{ workspaceName: { $regex: workspace } }, { id: id }],
     },
   });
 
-  return result || null;
+  return result ? resourceTranslator.toPatient(result) : null;
 };
 
 const getAllObservations = async ({
   workspace = '',
-  page = 1,
-  pageSize = 25,
-  sort = '',
-  offset = 0,
+  _page = 1,
+  _count = 25,
+  _sort = '',
+  _offset = 0,
 }) => {
   // TODO: need to rework this existsObj
-  const [sortObj, existObj] = buildSortObject(sort);
+  const [sortObj, existObj] = resourceTranslator.toPatientSortParams(_sort);
 
-  // in case no sort is provided
-  const query = existObj
-    ? {
-        $and: [
-          { workspaceName: { $regex: workspace } },
-          { diseases: { $ne: null } },
-          { $where: 'this.diseases.length > 0 && this.diseases[0] != null' },
-          existObj,
-        ],
-      }
-    : {
+  // in case no _sort is provided
+  const query = {
         $and: [
           { workspaceName: { $regex: workspace } },
           { diseases: { $ne: null } },
@@ -117,15 +110,15 @@ const getAllObservations = async ({
       };
 
   const [results, count] = await SubjectService.find({
-    page: page,
-    pageSize: pageSize,
+    page: _page,
+    size: _count,
     query: query,
     projection: {},
-    offset: offset,
+    offset: _offset,
     sort: sortObj,
   });
 
-  return [results, count];
+  return [results.map((result) => resourceTranslator.toObservation(result)), count];
 };
 const getObservationById = async ({ workspace = '', id }) => {
   const result = await SubjectService.findOne({
@@ -139,16 +132,16 @@ const getObservationById = async ({ workspace = '', id }) => {
     },
   });
 
-  return result || null;
+  return result ? resourceTranslator.toObservation(result) : null;
 };
 
 module.exports = {
-  getAllWorkspaces,
-  getWorkspaceById,
+  getAllResearchStudies,
+  getResearchStudyById,
   getAllSamples,
   getSampleById,
-  getAllSubjects,
-  getSubjectById,
+  getAllPatients,
+  getPatientById,
   getAllObservations,
   getObservationById,
 };

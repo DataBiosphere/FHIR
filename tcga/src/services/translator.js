@@ -5,8 +5,8 @@ const {
   buildIdentifier,
   buildCodeableConcept,
   buildCoding,
-  buildSortArray,
-} = require('../../utils');
+  buildOrderBy,
+} = require('../utils');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
@@ -14,7 +14,7 @@ const Specimen = resolveSchema('4_0_0', 'Specimen');
 const ResearchStudy = resolveSchema('4_0_0', 'ResearchStudy');
 const Patient = resolveSchema('4_0_0', 'Patient');
 
-const { observationCodeMappings, tcgaFieldMappings } = require('../../utils/tcgamappings');
+const { observationCodeMappings, tcgaFieldMappings } = require('../utils/mappings');
 
 const findTCGACodes = (testString) => {
   const found = observationCodeMappings.find(({ regex }) => regex.test(testString));
@@ -27,41 +27,44 @@ const findTCGACodes = (testString) => {
 };
 
 class Translator {
-  toObservation(diagnosis, gdcResult) {
+  toObservation(diagnosis) {
     const { codes, text } = findTCGACodes(diagnosis.diag__treat__treatment_type);
     return new Observation({
       id: diagnosis.diag__treat__treatment_id,
       identifier: buildIdentifier(
         'https://portal.gdc.cancer.gov/projects/',
-        gdcResult.proj__project_id,
+        diagnosis.proj__project_id,
         'official'
       ),
       meta: {
         profile: ['https://www.hl7.org/fhir/observation.html'],
-        source: gdcResult.proj__project_id,
+        source: diagnosis.proj__project_id,
         versionId: diagnosis.diag__treat__treatment_id,
       },
       status: 'final',
       subject: {
-        reference: `Patient/${gdcResult.submitter_id}`,
+        reference: `Patient/${diagnosis.submitter_id}`,
       },
       text: {
         status: 'generated',
         div: `<div xmlns="http://www.w3.org/1999/xhtml">${diagnosis.diag__treat__treatment_type}</div>`,
       },
       code: buildCodeableConcept(codes, text),
-      issued: gdcResult.diag__treat__updated_datetime,
-      effectiveDateTime: gdcResult.diag__treat__updated_datetime,
+      issued: diagnosis.diag__treat__updated_datetime,
+      effectiveDateTime: diagnosis.diag__treat__updated_datetime,
     });
   }
-  toObservationSortParams(sortFields) {
-    const sortArray = buildSortArray(sortFields);
-    const observationMappings = tcgaFieldMappings.OBSERVATION;
-
-    return sortArray
-      .filter((sf) => observationMappings[sf.field])
-      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${observationMappings[sf.field]}`)
-      .join(',');
+  toObservationOrderBy(sortFields) {
+    return buildOrderBy(sortFields, (field) => {
+      switch (field) {
+        case 'id':
+          return [{ field: 'diag__treat__treatment_id' }];
+        case 'subject':
+          return [{ field: 'submitter_id', tableAlias: 'table_1' }];
+        default:
+          return [];
+      }
+    });
   }
 
   toDiagnosticReport(tcgaResult) {
@@ -102,6 +105,23 @@ class Translator {
     });
   }
 
+  toDiagnosticReportOrderBy(sortFields) {
+    return buildOrderBy(sortFields, (field) => {
+      switch (field) {
+        case 'id':
+          return [{ field: 'case_id' }];
+        case 'subject':
+          return [{ field: 'demo__demographic_id' }];
+        case 'issued':
+          return [{ field: 'updated_datetime' }];
+        case 'effectiveDateTime':
+          return [{ field: 'updated_datetime' }];
+        default:
+          return [];
+      }
+    });
+  }
+
   toSpecimen(biospecimen) {
     const sample_id = `${biospecimen.project_short_name}-${biospecimen.sample_gdc_id}`;
     // const subject_id = `${biospecimen.project_short_name}-${biospecimen.case_gdc_id}`;
@@ -116,6 +136,21 @@ class Translator {
       subject: {
         reference: biospecimen.case_gdc_id,
       },
+    });
+  }
+
+  toSpecimenOrderBy(sortFields) {
+    return buildOrderBy(sortFields, (field) => {
+      switch (field) {
+        case 'id':
+          return [{ field: 'sample_gdc_id' }];
+        case 'identifier':
+          return [{ field: 'project_short_name' }, { field: 'sample_gdc_id' }];
+        case 'subject':
+          return [{ field: 'case_gdc_id' }];
+        default:
+          return [];
+      }
     });
   }
 
@@ -143,14 +178,18 @@ class Translator {
       ),
     });
   }
-  toResearchStudySortParams(sortFields) {
-    const sortArray = buildSortArray(sortFields);
-    const researchStudyMappings = tcgaFieldMappings.RESEARCHSTUDY;
-
-    return sortArray
-      .filter((sf) => researchStudyMappings[sf.field])
-      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${researchStudyMappings[sf.field]}`)
-      .join(',');
+  toResearchStudyOrderBy(sortFields) {
+    return buildOrderBy(sortFields, (field) => {
+      switch (field) {
+        case 'id':
+        case 'identifier':
+          return [{ field: 'proj__project_id' }];
+        case 'title':
+          return [{ field: 'proj__name' }];
+        default:
+          return [];
+      }
+    });
   }
 
   toPatient(gdcResult) {
@@ -189,14 +228,19 @@ class Translator {
     return patient;
   }
   // TODO: reduce this with ResearchStudy sort params
-  toPatientSortParams(sortFields) {
-    const sortArray = buildSortArray(sortFields);
-    const patientMappings = tcgaFieldMappings.PATIENT;
-
-    return sortArray
-      .filter((sf) => patientMappings[sf.field])
-      .map((sf) => `${sf.multiplier === -1 ? '-' : ''}${patientMappings[sf.field]}`)
-      .join(',');
+  toPatientOrderBy(sortFields) {
+    return buildOrderBy(sortFields, (field) => {
+      switch (field) {
+        case 'id':
+          return [{ field: 'submitter_id' }];
+        case 'identifier':
+          return [{ field: 'proj__project_id' }];
+        case 'gender':
+          return [{ field: 'demo__gender' }];
+        default:
+          return [];
+      }
+    });
   }
 
   // TODO: remove this at some point
