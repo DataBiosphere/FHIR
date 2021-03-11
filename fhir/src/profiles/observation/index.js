@@ -36,7 +36,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   const { _page, _count, _id, _source, _hash, _sort } = getStandardParameters(query);
 
   if (_id) {
-    const tcgaResult = await tcga.getDiagnosisById(_id).catch((err) => {
+    const tcgaResult = await tcga.getObservationById(_id).catch((err) => {
       logger.info('_id is not an TCGA ID');
     });
     const anvilResult = await anvil.getObservationById(_id).catch((err) => {
@@ -46,10 +46,14 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     // WARN: this only works because we have two datasets
     //        needs changing for more datasets
     const resource = tcgaResult ? tcgaResult : anvilResult;
+    let entries = [];
+    if (resource) {
+      entries = [buildEntry(resource)];
+    }
 
     return buildSearchBundle({
       resourceType: 'Observation',
-      entries: [buildEntry(resource)],
+      entries: entries,
       page: _page,
       pageSize: _count,
       fhirVersion: baseVersion,
@@ -71,7 +75,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   }
 
   // create promises and add both adapters
-  const params = { page: _page, pageSize: _count, sort: _sort };
+  const params = { _page, _count, _sort };
   let results = [];
   let count = 0;
   let newHash = '';
@@ -80,14 +84,14 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   if (_source) {
     switch (_source) {
       case TCGA_SOURCE:
-        [results, count] = await tcga.getAllDiagnoses({
-          offset: currentOffsets.tcga,
+        [results, count] = await tcga.getAllObservations({
+          _offset: currentOffsets.tcga,
           ...params,
         });
         break;
       case ANVIL_SOURCE:
         [results, count] = await anvil.getAllObservations({
-          offset: currentOffsets.anvil,
+          _offset: currentOffsets.anvil,
           ...params,
         });
         break;
@@ -98,8 +102,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   } else {
     // creates and resolves all promises
     const promises = [];
-    promises.push(tcga.getAllDiagnoses({ offset: currentOffsets.tcga, ...params }));
-    promises.push(anvil.getAllObservations({ offset: currentOffsets.anvil, ...params }));
+    promises.push(tcga.getAllObservations({ _offset: currentOffsets.tcga, ...params }));
+    promises.push(anvil.getAllObservations({ _offset: currentOffsets.anvil, ...params }));
 
     const allResults = await Promise.all(promises);
     count = allResults.map((r) => r[1]).reduce((acc, val) => acc + val);
@@ -137,7 +141,7 @@ const searchById = async (args, { req }) => {
   // TODO: look into promise.all
   //        https://stackoverflow.com/questions/30362733/handling-errors-in-promise-all
   // queries both databases
-  const tcgaResult = await tcga.getDiagnosisById(id).catch((err) => {
+  const tcgaResult = await tcga.getObservationById(id).catch((err) => {
     logger.info('id is not an TCGA ID');
   });
   const anvilResult = await anvil.getObservationById(id).catch((err) => {

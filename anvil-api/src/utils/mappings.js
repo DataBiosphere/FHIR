@@ -546,10 +546,4 @@ const diseaseDisplayMapping = {
   'OMIM:618512': "O'DONNELL-LURIA-RODAN SYNDROME; ODLURO",
 };
 
-const anvilFieldMappings = {
-  OBSERVATION: { subject: 'id' },
-  RESEARCHSTUDY: { title: 'datasetName' },
-  PATIENT: { gender: 'sex' },
-};
-
-module.exports = { diseaseSystemMapping, diseaseDisplayMapping, anvilFieldMappings };
+module.exports = { diseaseSystemMapping, diseaseDisplayMapping };
