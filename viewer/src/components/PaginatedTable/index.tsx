@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 
 interface PaginatedTableType {
-  count: number;
+  count?: number;
   rows: any[];
   renderers: any[];
   columns: any[];
@@ -41,7 +41,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const labelDisplayedRows = ({ from, to, count }: any) =>
-  `Displaying ${from}-${to} of ${count} results`;
+  count ? `Displaying ${from}-${to} of ${count} results` : `No Results`;
 const rowsPerPageOptions = [25, 50, 100, 250];
 
 function PaginatedTable({
@@ -63,7 +63,7 @@ function PaginatedTable({
       <div className={classes.flexCenter}>
         <TablePagination
           className={classes.pagination}
-          count={count}
+          count={count ? count : 0}
           labelDisplayedRows={labelDisplayedRows}
           onChangePage={onChangePage}
           page={page}

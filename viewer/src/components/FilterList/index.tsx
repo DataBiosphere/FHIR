@@ -2,6 +2,7 @@ import React from 'react';
 import {
   makeStyles,
   IconButton,
+  Chip,
   List,
   ListItem,
   ListItemText,
@@ -15,9 +16,10 @@ interface FilterListType {
 }
 
 const useStyles = makeStyles(() => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
+  chip: {
+    minWidth: 150,
+    marginLeft: 5,
+    marginRight: 5,
   },
 }));
 
@@ -28,22 +30,19 @@ function FilterList({ params, onDelete }: FilterListType) {
 
   return (
     <>
-      <List className={classes.root}>
-        {Object.entries(params).map(([k, v]) => (
-          <ListItem key={k}>
-            <ListItemText>
-              {k}-{v}
-            </ListItemText>
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete" onClick={(_) => onDelete(k)}>
-                <HighlightOffIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
+      {Object.entries(params).map(([k, v]) => (
+        <Chip
+          key={k}
+          className={classes.chip}
+          label={`${k}: ${v}`}
+          onDelete={() => onDelete(k)}
+        ></Chip>
+      ))}
     </>
   );
+}
+{
+  /* <IconButton edge="end" aria-label="delete" onClick={(_) => onDelete(k)}> */
 }
 
 export default FilterList;

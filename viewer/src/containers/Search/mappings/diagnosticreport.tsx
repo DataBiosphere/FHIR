@@ -22,12 +22,21 @@ export const renderers = [
             key={`${result.display}${result.reference}`}
             style={{ display: 'flex', flexDirection: 'column', padding: '.25rem' }}
           >
-            <span>{result.display}</span>
-            <Chip label={result.reference} />
+            {result.display ? (
+              <>
+                <span>{result.display}</span>
+                <Chip label={result.reference} />{' '}
+              </>
+            ) : (
+              <>
+                <span>No Mapping</span>
+                <Chip label={result.reference} />
+              </>
+            )}
           </TableCell>
         ))
       ) : (
-        <TableCell />
+        <TableCell style={{ display: 'flex', flexDirection: 'column', padding: '.25rem' }} />
       );
     },
   ],
