@@ -192,9 +192,9 @@ export function Search(props: any) {
   }, [download]);
 
   // DEV: prints when params is change
-  useEffect(() => {
-    console.log(params);
-  }, [params]);
+  // useEffect(() => {
+  //   console.log(params);
+  // }, [params]);
 
   const itemKey = 'id';
 
