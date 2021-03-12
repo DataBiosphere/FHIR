@@ -124,6 +124,7 @@ export function Search(props: any) {
   useInjectSaga({ key: 'search', saga });
 
   // hooks
+  const [fileName, setFileName] = useState('results.json');
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
   const [paramKey, setParamKey] = useState<any>('_id');
   const [paramValue, setParamValue] = useState<any>('');
@@ -145,6 +146,10 @@ export function Search(props: any) {
   };
 
   const onExportClicked = () => {
+    const date = new Date();
+    setFileName(
+      `Export_${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${selectedResource}`
+    );
     getDownload(selectedResource, params);
   };
 
@@ -182,7 +187,7 @@ export function Search(props: any) {
     // write to file
     if (download) {
       const blob = new Blob([download], { type: 'application/json' });
-      (saveAs as any)(blob, 'results.json');
+      (saveAs as any)(blob, `${fileName}`);
     }
   }, [download]);
 

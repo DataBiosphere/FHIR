@@ -43,7 +43,7 @@ function ExportButton({ onClick, downloadProgress }: ExportButtonType) {
         onClick={processClick}
         disabled={downloading}
       >
-        Export Page
+        Export Results
         <span className={classes.divider} />
         <CircularProgress
           color="inherit"
