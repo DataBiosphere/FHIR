@@ -98,7 +98,7 @@ const getAllDiagnosticReports = async ({
   const [caseIds] = await ClinicalGDCRawService.get({
     selection: [CASE_IDENTIFIER],
     page: _page,
-    count: _count,
+    pageSize: _count,
     orderBy: resourceTranslator.toDiagnosticReportOrderBy(_sort),
     offset: _offset,
   });
@@ -129,7 +129,7 @@ const getDiagnosticReportById = async (id) => {
 const getAllObservations = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 } = {}) => {
   const [rows, count] = await DiagnosisService.get({
     page: _page,
-    count: _count,
+    pageSize: _count,
     orderBy: resourceTranslator.toObservationOrderBy(_sort),
     offset: _offset,
   });
@@ -155,7 +155,7 @@ const getObservationById = async (id) => {
 const getAllSpecimen = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 } = {}) => {
   const [rows, count] = await BiospecimenService.get({
     page: _page,
-    count: _count,
+    pageSize: _count,
     orderBy: resourceTranslator.toSpecimenOrderBy(_sort),
     offset: _offset,
   });
@@ -185,7 +185,7 @@ const getAllResearchStudies = async ({ _page = 1, _count = 20, _sort = '', _offs
     selection: ['proj__name', PROJECT_IDENTIFIER],
     distinct: true,
     page: _page,
-    count: _count,
+    pageSize: _count,
     orderBy: resourceTranslator.toResearchStudyOrderBy(_sort),
     offset: _offset,
   });
@@ -213,7 +213,7 @@ const getResearchStudyById = async (id) => {
 const getAllPatients = async ({ _page = 1, _count = 20, _sort = '', _offset = 0 } = {}) => {
   const [rows, count] = await ClinicalGDCRawService.get({
     page: _page,
-    count: _count,
+    pageSize: _count,
     orderBy: resourceTranslator.toPatientOrderBy(_sort),
     offset: _offset,
   });
