@@ -11,7 +11,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 interface FilterListType {
   params: any;
-  onDelete: any;
+  onDelete: (key: string) => void;
 }
 
 const useStyles = makeStyles(() => ({
@@ -35,7 +35,7 @@ function FilterList({ params, onDelete }: FilterListType) {
               {k}-{v}
             </ListItemText>
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
+              <IconButton edge="end" aria-label="delete" onClick={(_) => onDelete(k)}>
                 <HighlightOffIcon />
               </IconButton>
             </ListItemSecondaryAction>

@@ -292,7 +292,7 @@ export function Search(props: any) {
 
       <div className={classes.table}>
         <PaginatedTable
-          rows={bundle ? bundle.entry.map(({ resource }: any) => resource) : []}
+          rows={bundle && !loading ? bundle.entry.map(({ resource }: any) => resource) : []}
           renderers={renderers}
           columns={columns}
           count={bundle ? bundle.total : 0}

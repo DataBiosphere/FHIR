@@ -43,6 +43,7 @@ const searchReducer = (state = initialState, action: any) =>
         // TODO: maybe make error more descriptive?
         draft.error = action.payload.error;
         draft.bundle = undefined;
+        draft.pageLinks = [];
         draft.loading = false;
         break;
 
@@ -61,7 +62,7 @@ const searchReducer = (state = initialState, action: any) =>
         draft.pageLinks = [];
         break;
       case DELETE_PARAM:
-        delete draft.params.action.payload.key;
+        delete draft.params[action.payload.key];
         draft.pageLinks = [];
         break;
       case RESET_PARAM:
