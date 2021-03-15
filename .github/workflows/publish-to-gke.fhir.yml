@@ -50,7 +50,7 @@ jobs:
         with:
           cluster_name: broad-fhir-cluster
           location: us-east1-b
-          credentials: ${{ secrets.GKE_SA_KEY }}
+          credentials: ${{ secrets.GCR_KEY }}
 
       - name: Setup KUBECONFIG
         run: kubectl get pods
