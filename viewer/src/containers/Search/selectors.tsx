@@ -18,6 +18,7 @@ export const selectSelectedResource = createSelector(
   (substate) => substate.selectedResource
 );
 export const selectParams = createSelector(selectSearchDomain, (substate) => substate.params);
+export const selectMeta = createSelector(selectSearchDomain, (substate) => substate.meta);
 
 // page selectors
 export const selectPage = createSelector(selectSearchDomain, (substate) => substate.page);

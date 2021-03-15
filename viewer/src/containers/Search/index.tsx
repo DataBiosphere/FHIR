@@ -30,6 +30,7 @@ import {
   selectParams,
   selectViewingEntry,
   selectError,
+  selectMeta,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -82,6 +83,7 @@ const useStyles = makeStyles((theme) => {
 });
 
 const getColumnsAndRenderers = (resource: string) => {
+  console.log(`switching to ${resource}`);
   return mappings[resource];
 };
 
@@ -98,6 +100,7 @@ export function Search(props: any) {
 
     selectedResource,
     params,
+    meta,
 
     page,
     pageLinks,
@@ -113,13 +116,8 @@ export function Search(props: any) {
   // hooks
   const [fileName, setFileName] = useState('results.json');
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
-  const [paramKey, setParamKey] = useState<any>('_id');
-  const [paramValue, setParamValue] = useState<any>('');
   const [open, setOpen] = useState(false);
   const [viewingEntry, setViewingEntry] = useState<any>();
-
-  // TODO: this ref can be typed better
-  const paramRef = useRef<any>(null);
 
   const classes = useStyles();
 
@@ -170,8 +168,6 @@ export function Search(props: any) {
 
   const { columns, renderers } = getColumnsAndRenderers(selectedResource);
 
-  // TODO: look into making the search bar Flexbox
-  //        https://css-tricks.com/snippets/css/a-guide-to-flexbox/
   return (
     <>
       <Helmet>
@@ -254,6 +250,7 @@ const mapStateToProps = (state: any) => {
 
     selectedResource: selectSelectedResource(state),
     params: selectParams(state),
+    meta: selectMeta(state),
 
     page: selectPage(state),
     pageLinks: selectPageLinks(state),

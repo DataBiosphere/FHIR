@@ -89,6 +89,25 @@ interface GetDownloadErrorAction {
   payload: { error: Error };
 }
 
+export const GET_META = 'app/Search/GET_META';
+export const GET_META_REQUEST = 'app/Search/GET_META_REQUEST';
+export const GET_META_SUCCESS = 'app/Search/GET_META_SUCCESS';
+export const GET_META_ERROR = 'app/Search/GET_META_ERROR';
+
+interface GetMetaRequestAction {
+  type: typeof GET_META_REQUEST;
+}
+
+interface GetMetaSuccessAction {
+  type: typeof GET_META_SUCCESS;
+  payload: { meta: fhir.CapabilityStatement };
+}
+
+interface GetMetaErrorAction {
+  type: typeof GET_META_ERROR;
+  payload: { error: Error };
+}
+
 export type SearchActionTypes =
   | GetDefautAction
   | GetBundleRequestAction
@@ -103,4 +122,7 @@ export type SearchActionTypes =
   | GetDownloadRequestAction
   | GetDownloadUpdateAction
   | GetDownloadSuccessAction
-  | GetDownloadErrorAction;
+  | GetDownloadErrorAction
+  | GetMetaRequestAction
+  | GetMetaSuccessAction
+  | GetMetaErrorAction;
