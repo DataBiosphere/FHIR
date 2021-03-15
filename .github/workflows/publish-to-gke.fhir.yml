@@ -48,8 +48,8 @@ jobs:
 
       - uses: google-github-actions/get-gke-credentials@main
         with:
-          cluster_name: $GKE_CLUSTER
-          location: $GKE_ZONE
+          cluster_name: '$GKE_CLUSTER'
+          location: '$GKE_ZONE'
           credentials: ${{ secrets.GKE_SA_KEY }}
 
       - name: Setup KUBECONFIG
@@ -59,7 +59,7 @@ jobs:
         run: gcloud auth configure-docker
 
       - name: Setup GKE Creds
-        run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone `$GKE_ZONE"
+        run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
       - name: Install Node Modules
         run: npm install
