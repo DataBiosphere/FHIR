@@ -20,12 +20,14 @@ npm run dev
 
 ## API Routes
 
-- **/workspace**
-- **/workspace/:id**
+To limit results to only this adapter, please use the `_source=https://anvil.terra.bio/` in your FHIR search
+
+- **/researchstudy**
+- **/researchstudy/:id**
 - **/sample/**
 - **/sample/:id**
-- **/subject**
-- **/subject/:id**
+- **/patient**
+- **/patient/:id**
 - **/observation**
 - **/observation/:id**
 
