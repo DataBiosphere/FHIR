@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: tcga
-          image: gcr.io/broad-fhir-dev/broad/tcga:bf4719e
+          image: gcr.io/broad-fhir-dev/broad/tcga:2a641df
           ports:
             - containerPort: 3001
           imagePullPolicy: Always
