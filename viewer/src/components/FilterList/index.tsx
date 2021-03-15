@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  makeStyles,
-  IconButton,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-} from '@material-ui/core';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import { makeStyles, Chip } from '@material-ui/core';
 
 interface FilterListType {
   params: any;
@@ -26,8 +17,6 @@ const useStyles = makeStyles(() => ({
 function FilterList({ params, onDelete }: FilterListType) {
   const classes = useStyles();
 
-  // const processClick = () => {};
-
   return (
     <>
       {Object.entries(params).map(([k, v]) => (
@@ -40,9 +29,6 @@ function FilterList({ params, onDelete }: FilterListType) {
       ))}
     </>
   );
-}
-{
-  /* <IconButton edge="end" aria-label="delete" onClick={(_) => onDelete(k)}> */
 }
 
 export default FilterList;

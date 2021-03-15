@@ -11,22 +11,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import {
-  Button,
-  Box,
-  Typography,
-  makeStyles,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-} from '@material-ui/core';
+import { Typography, makeStyles, CircularProgress } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import AddIcon from '@material-ui/icons/Add';
-import RotateLeftIcon from '@material-ui/icons/RotateLeft';
-import SearchIcon from '@material-ui/icons/Search';
 import { compose } from 'redux';
 import saveAs from 'file-saver';
 
@@ -52,6 +38,7 @@ import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 
 import mappings from './mappings';
 import { DEFAULT_ROWS_PER_PAGE } from './constants';
+import SearchBar from '../../components/SearchBar';
 import FilterList from '../../components/FilterList';
 import ExportButton from '../../components/ExportButton';
 import PaginatedTable from '../../components/PaginatedTable';
@@ -153,25 +140,8 @@ export function Search(props: any) {
     getDownload(selectedResource, params);
   };
 
-  const onAddClicked = () => {
-    addParams(paramKey, paramValue);
-  };
-
-  const onResetClicked = () => {
-    clearParamField();
-    resetParams();
-  };
-
-  const onApplyClicked = () => {
-    getResources(selectedResource, 1, rowsPerPage, pageLinks, params);
-  };
-
   const onDeleteParam = (name: string) => {
     deleteParam(name);
-  };
-
-  const clearParamField = () => {
-    paramRef.current.value = '';
   };
 
   const closeViewingEntry = () => setOpen(false);
@@ -210,83 +180,14 @@ export function Search(props: any) {
       </Helmet>
       <Typography variant="h1">Search</Typography>
 
-      <Box display="flex" justifyContent="center" alignItems="center">
-        <Box flexGrow={0}>
-          <FormControl className={classes.formControl}>
-            <InputLabel>Resource</InputLabel>
-            <Select
-              defaultValue="DiagnosticReport"
-              onChange={(event) => {
-                clearParamField();
-                resetParams();
-                getResources(event.target.value, 1, rowsPerPage, {}, {});
-              }}
-            >
-              <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
-              <MenuItem value="Observation">Observation</MenuItem>
-              <MenuItem value="Specimen">Specimen</MenuItem>
-              <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl className={classes.formControl}>
-            <InputLabel>Parameter</InputLabel>
-            <Select
-              id="paramKey"
-              defaultValue="_id"
-              onChange={(event) => {
-                clearParamField();
-                setParamKey(event.target.value);
-              }}
-            >
-              <MenuItem value="_id">ID</MenuItem>
-              <MenuItem value="_source">Source</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-        <Box></Box>
-
-        <Box className={classes.formControl} flexGrow={1} alignContent="center">
-          <TextField
-            className={classes.flexCenter}
-            inputRef={paramRef} // inputRef != ref...
-            label="Search Value"
-            onChange={(event) => {
-              setParamValue(event.target.value);
-            }}
-          />
-        </Box>
-
-        <Box className={classes.formControl} flexGrow={0}>
-          <Button
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={onAddClicked}
-          >
-            Add Filter
-          </Button>
-          <Button
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            startIcon={<RotateLeftIcon />}
-            onClick={onResetClicked}
-          >
-            Reset Filters
-          </Button>
-          <Button
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={onApplyClicked}
-          >
-            Apply Filter
-          </Button>
-        </Box>
-      </Box>
+      <SearchBar
+        getResources={getResources}
+        addParams={addParams}
+        resetParams={resetParams}
+        pageLinks={pageLinks}
+        params={params}
+        rowsPerPage={rowsPerPage}
+      />
 
       <div className={classes.flexCenter}>
         <FilterList params={params} onDelete={onDeleteParam} />
