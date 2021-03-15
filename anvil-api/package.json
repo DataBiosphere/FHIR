@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@asymmetrik/node-fhir-server-core": "^2.2.2",
+    "@asymmetrik/node-fhir-server-core": "^2.2.3",
     "@google-cloud/bigquery": "^5.3.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

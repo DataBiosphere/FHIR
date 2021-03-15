@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,6 +9,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
+interface LinkType {
+  icon: React.ReactNode; // PropTypes.node
+  text: string;
+  to: string;
+  external: boolean;
+}
+
 const useStyles = makeStyles(() => ({
   drawerText: {
     color: '#757575',
@@ -17,7 +23,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MyLink = ({ icon, text, to, external }: any) => {
+const MyLink = ({ icon, text, to, external }: LinkType) => {
   const classes = useStyles();
 
   if (external) {
@@ -40,13 +46,7 @@ const MyLink = ({ icon, text, to, external }: any) => {
   );
 };
 
-MyLink.propTypes = {
-  icon: PropTypes.node.isRequired,
-  text: PropTypes.string.isRequired,
-  to: PropTypes.string.isRequired,
-  external: PropTypes.bool,
-};
-
+// WARN: figure out defaultProp typing?
 MyLink.defaultProps = {
   external: undefined,
 };

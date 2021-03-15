@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button, makeStyles } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
+
+interface ExportButtonType {
+  onClick: any;
+  downloadProgress: number;
+}
 
 const useStyles = makeStyles(() => ({
   divider: {
@@ -10,7 +14,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function ExportButton({ onClick, downloadProgress }: any) {
+function ExportButton({ onClick, downloadProgress }: ExportButtonType) {
   const classes = useStyles();
   const [downloading, setDownloading] = useState(false);
 
@@ -24,10 +28,14 @@ function ExportButton({ onClick, downloadProgress }: any) {
     if (downloadProgress >= 1) {
       setDownloading(false);
     }
+
+    if (downloading && downloadProgress == 0) {
+      setDownloading(false);
+    }
   }, [downloadProgress]);
 
   return (
-    <div>
+    <>
       <Button
         color="primary"
         variant="contained"
@@ -35,8 +43,8 @@ function ExportButton({ onClick, downloadProgress }: any) {
         onClick={processClick}
         disabled={downloading}
       >
-        Export Page
-        <div className={classes.divider} />
+        Export Results
+        <span className={classes.divider} />
         <CircularProgress
           color="inherit"
           variant="determinate"
@@ -44,13 +52,8 @@ function ExportButton({ onClick, downloadProgress }: any) {
           value={downloadProgress * 100}
         />
       </Button>
-    </div>
+    </>
   );
 }
-
-ExportButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  downloadProgress: PropTypes.number.isRequired,
-};
 
 export default ExportButton;

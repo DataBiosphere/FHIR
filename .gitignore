@@ -73,7 +73,10 @@ anvil/data/*
 *.sqlite
 *.sqlite3
 
-#
+# MongoDB
 anvil-mongodb/database/*
-
 paging.db
+
+# Viewer
+viewer/src/react-app-env.d.ts
+viewer/public/launch.html

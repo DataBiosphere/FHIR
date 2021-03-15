@@ -6,25 +6,32 @@ import {
   loadBundleSuccessAction,
   loadBundleRequestAction,
   loadBundleErrorAction,
+  loadEntryRequestAction,
+  loadEntrySuccessAction,
+  loadEntryErrorAction,
   downloadBundleRequestAction,
   downloadBundleErrorAction,
   downloadBundleUpdateAction,
   downloadBundleSuccessAction,
 } from './actions';
-import { GET_BUNDLE, GET_DOWNLOAD, PARSING_ROWS_PER_PAGE } from './constants';
+import { PARSING_ROWS_PER_PAGE } from './constants';
+import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 
 // TODO: explore memoizing this for pageLinks
-function* getResourceType({ resourceType, page, count, pageLinks }: any) {
+function* getBundle({ resourceType, page, count, pageLinks, params }: any) {
+  // @ts-ignore
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
-    yield put(loadBundleRequestAction(resourceType, page, count));
+    yield put(loadBundleRequestAction(resourceType, page));
 
     // create API call
+    const paramString = makeParamString(params);
     const requestUrl: string =
       pageLinks && pageLinks[page]
         ? pageLinks[page]
-        : `${resourceType}?_page=${page}&_count=${count}`;
+        : `${resourceType}?_count=${count}&${paramString}`;
+    // @ts-ignore
     const bundle = yield call(requester, requestUrl);
 
     // create paging array
@@ -47,29 +54,62 @@ function* getResourceType({ resourceType, page, count, pageLinks }: any) {
 
     yield put(loadBundleSuccessAction(bundle, links));
   } catch (e) {
-    loadBundleErrorAction(e);
+    yield put(loadBundleErrorAction(e));
   }
 }
 
-function* getDownloadType({ resourceType, params }: any) {
+function* getEntry({ resourceType, id }: any) {
+  // @ts-ignore
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
-    yield put(downloadBundleRequestAction(resourceType, params));
-    let count = 0;
-    let page = 1;
+    yield put(loadEntryRequestAction(resourceType, id));
 
-    const entries: Array<any> = [];
+    // @ts-ignore
+    const entry = yield call(requester, `${resourceType}/${id}`);
+
+    yield put(loadEntrySuccessAction(entry));
+  } catch (e) {
+    loadEntryErrorAction(e);
+  }
+}
+
+function* getDownload({ resourceType, params }: any) {
+  // @ts-ignore
+  const client = yield call(connect);
+  const requester = makeRequester(client);
+  try {
+    yield put(downloadBundleRequestAction());
+    let nextPage;
+    let count = 0;
+
+    const entries: Array<string> = [];
     // parse through and get all entries into bundle
     do {
-      const bundle = yield call(
-        requester,
-        `${resourceType}?_page=${page}&_count=${PARSING_ROWS_PER_PAGE}&${params}`
-      );
+      const paramString = makeParamString(params);
 
-      bundle.entry.forEach((entry: any) => {
-        entries.push(JSON.stringify(entry));
-      });
+      // get the initial page, or get the next page
+      let bundle: any;
+      if (!nextPage) {
+        // @ts-ignore
+        bundle = yield call(
+          requester,
+          `${resourceType}?_count=${PARSING_ROWS_PER_PAGE}&${paramString}`
+        );
+      } else {
+        // @ts-ignore
+        bundle = yield call(requester, nextPage);
+      }
+
+      // get next link
+      nextPage = bundle.link.filter((l: any) => l.relation === 'next')[0].url;
+
+      // insert if there's more entries
+      if (bundle.entry) {
+        bundle.entry.forEach((entry: fhir.BundleEntry) => {
+          entries.push(JSON.stringify(entry));
+        });
+      }
 
       // get the initial count, if needed
       if (count === 0) {
@@ -78,18 +118,29 @@ function* getDownloadType({ resourceType, params }: any) {
 
       // update the counter
       yield put(downloadBundleUpdateAction(entries.length / count));
-      page += 1;
     } while (entries.length < count);
 
     // put into package
     const download = '['.concat(entries.join(',\n'), ']');
     yield put(downloadBundleSuccessAction(download));
   } catch (e) {
-    downloadBundleErrorAction(e);
+    yield put(downloadBundleUpdateAction(-1));
+    yield put(downloadBundleErrorAction(e));
   }
 }
 
 export default function* searchSaga() {
-  yield all([takeEvery(GET_BUNDLE, getResourceType)]);
-  yield all([takeEvery(GET_DOWNLOAD, getDownloadType)]);
+  yield all([takeEvery(GET_BUNDLE, getBundle)]);
+  yield all([takeEvery(GET_ENTRY, getEntry)]);
+  yield all([takeEvery(GET_DOWNLOAD, getDownload)]);
 }
+
+// util functions
+const makeParamString = (params: any): string => {
+  return Object.entries(params)
+    .map(([k, v]) => {
+      const value = v as any;
+      `${k}=${encodeURIComponent(value.toString())}`;
+    })
+    .join('&');
+};

@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -18,7 +17,11 @@ import reducer from './reducer';
 import saga from './saga';
 import SEO from '../../components/SEO';
 
-export function Capability(props: any) {
+interface CapabilityType {
+  metadata: fhir.CapabilityStatement; // PropTypes.shape({})
+}
+
+export function Capability(props: CapabilityType) {
   const { metadata } = props;
   useInjectReducer({ key: 'capability', reducer });
   useInjectSaga({ key: 'capability', saga });
@@ -48,10 +51,6 @@ function mapDispatchToProps(dispatch: any) {
     dispatch,
   };
 }
-
-Capability.propTypes = {
-  metadata: PropTypes.shape({}).isRequired,
-};
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
