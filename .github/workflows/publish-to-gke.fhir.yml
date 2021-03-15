@@ -49,7 +49,7 @@ jobs:
       - uses: google-github-actions/get-gke-credentials@main
         with:
           cluster_name: '$GKE_CLUSTER'
-          location: '$GKE_ZONE'
+          location: us-east1-b
           credentials: ${{ secrets.GKE_SA_KEY }}
 
       - name: Setup KUBECONFIG
