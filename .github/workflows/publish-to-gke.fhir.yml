@@ -1,0 +1,117 @@
+name: FHIR - Build and Publish to GKE testing
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  GITHUB_REF: ${{ github.ref }}
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  IMAGE: fhir
+  ORGANIZATION: broad
+  REGISTRY_HOSTNAME: gcr.io
+  TYPE: ${{ secrets.TYPE }}
+  PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
+  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+  CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+  CLIENT_ID: ${{ secrets.CLIENT_ID }}
+  AUTH_URI: ${{ secrets.AUTH_URI }}
+  TOKEN_URI: ${{ secrets.TOKEN_URI }}
+  AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
+  CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
+  URL: ${{ secrets.URL }}
+  TCGA_URL: ${{ secrets.TCGA_URL }}
+  ANVIL_URL: ${{ secrets.ANVIL_URL }}
+
+jobs:
+  run-tests:
+    name: Run Jest tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: fhir
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: npm install
+      - name: Test
+        run: npm test
+
+  build-and-publish-to-gcr:
+    needs: run-tests
+    name: Setup, Build, and Publish
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: fhir
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '270.0.0'
+          service_account_key: ${{ secrets.GCR_KEY }}
+      
+      - uses: google-github-actions/setup-gcloud@v0.2.0
+          with:
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ secrets.PROJECT_ID }}
+
+      - name: Setup docker
+        run: gcloud auth configure-docker
+
+      - name: Install Node Modules
+        run: npm install
+
+      - name: Generate env
+        run: node ../scripts/create-env-file.js TCGA_URL=${{ secrets.TCGA_URL }} ANVIL_URL=${{ secrets.ANVIL_URL }} URL=${{ secrets.URL }}
+
+      - name: Build
+        run: |
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
+          echo Building image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker build \
+            --tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" \
+            .
+
+      - name: Publish
+        run: |
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
+          echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+          echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+          docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+
+      - name: Set up Kustomize
+        run: |
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+      
+      - name: Deploy
+        run: |
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
+          ./kustomize edit set image gcr.io/"$PROJECT_ID"/broad/fhir:"$TAG"
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment/fhir
+          kubectl get services -o wide
