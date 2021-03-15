@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Box,
   Button,
@@ -56,7 +56,7 @@ function SearchBar({
   // hooks
   const [paramKey, setParamKey] = useState<any>('_id');
   const [paramValue, setParamValue] = useState<any>('');
-  const [resource, setResource] = useState<string>('');
+  const [resource, setResource] = useState<any>('');
 
   const paramRef = useRef<any>(null);
 
@@ -88,10 +88,10 @@ function SearchBar({
             <Select
               defaultValue="DiagnosticReport"
               onChange={(event) => {
-                setResource(event.target.value as string);
+                setResource(event.target.value);
                 resetParams();
                 clearParamField();
-                getResources(resource, 1, rowsPerPage, [], {});
+                getResources(event.target.value, 1, rowsPerPage, [], {});
               }}
             >
               <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
