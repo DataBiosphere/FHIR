@@ -10,6 +10,8 @@ env:
   IMAGE: fhir
   ORGANIZATION: broad
   REGISTRY_HOSTNAME: gcr.io
+  GKE_CLUSTER: broad-fhir-cluster
+  GKE_ZONE: us-east1-b
   TYPE: ${{ secrets.TYPE }}
   PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
   PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
@@ -39,18 +41,17 @@ jobs:
         with:
           node-version: '12'
 
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@master
         with:
-          version: '270.0.0'
-          service_account_key: ${{ secrets.GCR_KEY }}
-
-      - uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
+          version: '290.0.1'
           service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ secrets.PROJECT_ID }}
 
       - name: Setup docker
         run: gcloud auth configure-docker
+
+      - name: Setup GKE Creds
+        run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
       - name: Install Node Modules
         run: npm install
