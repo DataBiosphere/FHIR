@@ -41,18 +41,25 @@ jobs:
         with:
           node-version: '12'
 
-      - uses: google-github-actions/setup-gcloud@master
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          version: '290.0.1'
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
-          service_account_email: ${{ secrets.GKE_EMAIL }}
-          project_id: ${{ secrets.PROJECT_ID }}
+          version: '270.0.0'
+          service_account_key: ${{ secrets.GCR_KEY }}
+
+      - uses: google-github-actions/get-gke-credentials@main
+        with:
+          cluster_name: $GKE_CLUSTER
+          location: GKE_ZONE
+          credentials: ${{ secrets.GKE_SA_KEY }}
+
+      - name: Setup KUBECONFIG
+        run: kubectl get pods
 
       - name: Setup docker
         run: gcloud auth configure-docker
 
       - name: Setup GKE Creds
-        run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+        run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone `$GKE_ZONE"
 
       - name: Install Node Modules
         run: npm install
@@ -79,7 +86,7 @@ jobs:
           echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
           docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
 
-      - name: Set up Kustomize
+      - name: Setup Kustomize
         run: |
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
