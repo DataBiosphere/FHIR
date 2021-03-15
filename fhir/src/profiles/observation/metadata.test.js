@@ -11,7 +11,13 @@ describe('Observation metadata test', () => {
       profile: { reference: 'http://www.hl7.org/fhir/Observation.profile.json' },
       readHistory: false,
       searchInclude: [],
-      searchParam: [],
+      searchParam: [
+        {
+          name: '_source',
+          type: 'uri',
+          documentation: 'URL of the source site. Currently only supports AnVIL and TCGA',
+        },
+      ],
       searchRevInclude: [],
       type: 'Observation',
       updateCreate: false,

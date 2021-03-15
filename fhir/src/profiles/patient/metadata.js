@@ -15,7 +15,13 @@ module.exports = {
       conditionalDelete: 'not-supported',
       searchInclude: [],
       searchRevInclude: [],
-      searchParam: [],
+      searchParam: [
+        {
+          name: '_source',
+          type: 'uri',
+          documentation: 'URL of the source site. Currently only supports AnVIL and TCGA',
+        },
+      ],
     };
   },
 };

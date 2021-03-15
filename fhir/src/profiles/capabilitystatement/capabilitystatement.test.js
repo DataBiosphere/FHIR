@@ -27,25 +27,44 @@ describe('CapabilityStatement tests', () => {
       },
     ];
     expect(JSON.parse(JSON.stringify(makeStatement(resources)))).toEqual({
-      date: '20201013',
+      date: '20210315',
+      contact: [
+        {
+          name: 'Asymmetrik, Ltd.',
+          telecom: [
+            {
+              system: 'email',
+              value: 'info@asymmetrik.com',
+              use: 'work',
+            },
+            {
+              system: 'phone',
+              value: '(443) 470-6480',
+              use: 'work',
+            },
+          ],
+        },
+      ],
       fhirVersion: '4_0_0',
       format: ['application/fhir+json'],
       implementation: { description: 'Broad FHIR Server' },
       kind: 'instance',
-      publisher: 'The Publisher',
+      publisher: 'Asymmetrik, Ltd.',
       resourceType: 'CapabilityStatement',
       rest: [
         {
           searchParam: [
             {
-              definition: 'https://www.hl7.org/fhir/search.html#count',
               name: '_count',
+              definition: 'https://www.hl7.org/fhir/search.html#count',
               type: 'number',
             },
+            { name: '_id', type: 'token', documentation: 'Standard _id parameter' },
           ],
+          mode: 'server',
         },
       ],
-      software: { name: 'Broad', releaseDate: '20201013', version: '1.0.0' },
+      software: { name: 'Broad', releaseDate: '20201013', version: '2.0.0' },
       status: 'draft',
     });
   });
