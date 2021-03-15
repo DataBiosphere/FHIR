@@ -48,7 +48,7 @@ jobs:
 
       - uses: google-github-actions/get-gke-credentials@main
         with:
-          cluster_name: '$GKE_CLUSTER'
+          cluster_name: broad-fhir-cluster
           location: us-east1-b
           credentials: ${{ secrets.GKE_SA_KEY }}
 
