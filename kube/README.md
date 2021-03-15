@@ -27,7 +27,7 @@ Update the commit hashes for each of the following files:
 - **fhir-deployment.yml**
 - **tcga-deployment.yml**
 
-Wait for (GitHub Actions)[gcloud container clusters get-credentials broad-fhir-cluster --region=us-east1-b] to finish uploading the containers.
+Wait for [GitHub Actions](gcloud container clusters get-credentials broad-fhir-cluster --region=us-east1-b) to finish uploading the containers.
 
 Deploy the containers to GCP.
 
