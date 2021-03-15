@@ -5,7 +5,7 @@
     <img src="https://github.com/DataBiosphere/FHIR/workflows/ANVIL%20-%20Tests/badge.svg" /></a>
 </p>
 
-This micro-service is an API used by Broad FHIR in order to power AnVIL Applications.
+This micro-service is an API used by Broad FHIR in order to power AnVIL Applications
 
 ## Getting started
 
