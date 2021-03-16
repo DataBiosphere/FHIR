@@ -26,7 +26,7 @@ function* getBundle({ resourceType, page, count, pageLinks, params }: any) {
     yield put(loadBundleRequestAction(resourceType, page));
 
     // create API call
-    const paramString = makeParamString(params);
+    const paramString = params ? makeParamString(params) : '';
     const requestUrl: string =
       pageLinks && pageLinks[page]
         ? pageLinks[page]
@@ -139,8 +139,7 @@ export default function* searchSaga() {
 const makeParamString = (params: any): string => {
   return Object.entries(params)
     .map(([k, v]) => {
-      const value = v as any;
-      `${k}=${encodeURIComponent(value.toString())}`;
+      return `${k}=${encodeURIComponent(v as string)}`;
     })
     .join('&');
 };

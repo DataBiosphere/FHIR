@@ -8,25 +8,11 @@
 // TCGA   - https://portal.gdc.cancer.gov/
 // AnVIL  - https://anvil.terra.bio/
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import {
-  Button,
-  Box,
-  Typography,
-  makeStyles,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-} from '@material-ui/core';
+import { Typography, makeStyles, CircularProgress } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import AddIcon from '@material-ui/icons/Add';
-import RotateLeftIcon from '@material-ui/icons/RotateLeft';
-import SearchIcon from '@material-ui/icons/Search';
 import { compose } from 'redux';
 import saveAs from 'file-saver';
 
@@ -44,14 +30,21 @@ import {
   selectParams,
   selectViewingEntry,
   selectError,
+  selectMeta,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { addParamAction, deleteParamAction, resetParamAction } from './actions';
+import {
+  updateResourceAction,
+  addParamAction,
+  deleteParamAction,
+  resetParamAction,
+} from './actions';
 import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 
 import mappings from './mappings';
 import { DEFAULT_ROWS_PER_PAGE } from './constants';
+import SearchBar from '../../components/SearchBar';
 import FilterList from '../../components/FilterList';
 import ExportButton from '../../components/ExportButton';
 import PaginatedTable from '../../components/PaginatedTable';
@@ -59,6 +52,7 @@ import ViewingEntry from '../../components/ViewingEntry';
 
 interface SearchType {
   getResources: any; // TODO: fix this PropTypes.func
+  updateResource: any;
   getDownload: any; // TODO: fix this PropTypes.func
   bundle: fhir.Bundle;
   params?: any; // TODO: fix this
@@ -101,6 +95,7 @@ const getColumnsAndRenderers = (resource: string) => {
 export function Search(props: any) {
   const {
     getResources,
+    updateResource,
     addParams,
     deleteParam,
     resetParams,
@@ -111,6 +106,7 @@ export function Search(props: any) {
 
     selectedResource,
     params,
+    meta,
 
     page,
     pageLinks,
@@ -126,15 +122,26 @@ export function Search(props: any) {
   // hooks
   const [fileName, setFileName] = useState('results.json');
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
-  const [paramKey, setParamKey] = useState<any>('_id');
-  const [paramValue, setParamValue] = useState<any>('');
   const [open, setOpen] = useState(false);
   const [viewingEntry, setViewingEntry] = useState<any>();
 
-  // TODO: this ref can be typed better
-  const paramRef = useRef<any>(null);
-
   const classes = useStyles();
+
+  const onUpdateResource = (resource: string) => {
+    updateResource(resource);
+  };
+
+  const onAddParam = (key: string, value: any) => {
+    addParams(key, value);
+  };
+
+  const onResetParam = () => {
+    resetParams();
+  };
+
+  const onDeleteParam = (name: string) => {
+    deleteParam(name);
+  };
 
   const onChangePage = (_: any, newPage: number) => {
     getResources(selectedResource, newPage + 1, rowsPerPage, pageLinks, params);
@@ -145,41 +152,31 @@ export function Search(props: any) {
     getResources(selectedResource, 1, rowsPerPage, {}, params);
   };
 
-  const onExportClicked = () => {
-    const date = new Date();
-    setFileName(
-      `Export_${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${selectedResource}`
-    );
-    getDownload(selectedResource, params);
-  };
-
-  const onAddClicked = () => {
-    addParams(paramKey, paramValue);
-  };
-
-  const onResetClicked = () => {
-    clearParamField();
-    resetParams();
-  };
-
   const onApplyClicked = () => {
     getResources(selectedResource, 1, rowsPerPage, pageLinks, params);
   };
 
-  const onDeleteParam = (name: string) => {
-    deleteParam(name);
-  };
-
-  const clearParamField = () => {
-    paramRef.current.value = '';
+  const onExportClicked = () => {
+    const date = new Date();
+    setFileName(
+      `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${date.getHours}-${
+        date.getMinutes
+      }-${date.getSeconds}_${selectedResource}_Export`
+    );
+    getDownload(selectedResource, params);
   };
 
   const closeViewingEntry = () => setOpen(false);
 
-  // runs on inital launch
+  // // runs on inital launch
+  // useEffect(() => {
+  //   getResources(selectedResource, page, rowsPerPage, pageLinks, params);
+  // }, []);
+
+  // runs when resource changes
   useEffect(() => {
-    getResources(selectedResource, page, rowsPerPage, pageLinks, params);
-  }, []);
+    getResources(selectedResource, 1, rowsPerPage, [], {});
+  }, [selectedResource]);
 
   // runs when download changes
   // not too sure if this is the best implementation though
@@ -200,8 +197,6 @@ export function Search(props: any) {
 
   const { columns, renderers } = getColumnsAndRenderers(selectedResource);
 
-  // TODO: look into making the search bar Flexbox
-  //        https://css-tricks.com/snippets/css/a-guide-to-flexbox/
   return (
     <>
       <Helmet>
@@ -210,83 +205,12 @@ export function Search(props: any) {
       </Helmet>
       <Typography variant="h1">Search</Typography>
 
-      <Box display="flex" justifyContent="center" alignItems="center">
-        <Box flexGrow={0}>
-          <FormControl className={classes.formControl}>
-            <InputLabel>Resource</InputLabel>
-            <Select
-              defaultValue="DiagnosticReport"
-              onChange={(event) => {
-                clearParamField();
-                resetParams();
-                getResources(event.target.value, 1, rowsPerPage, {}, {});
-              }}
-            >
-              <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
-              <MenuItem value="Observation">Observation</MenuItem>
-              <MenuItem value="Specimen">Specimen</MenuItem>
-              <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl className={classes.formControl}>
-            <InputLabel>Parameter</InputLabel>
-            <Select
-              id="paramKey"
-              defaultValue="_id"
-              onChange={(event) => {
-                clearParamField();
-                setParamKey(event.target.value);
-              }}
-            >
-              <MenuItem value="_id">ID</MenuItem>
-              <MenuItem value="_source">Source</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-        <Box></Box>
-
-        <Box className={classes.formControl} flexGrow={1} alignContent="center">
-          <TextField
-            className={classes.flexCenter}
-            inputRef={paramRef} // inputRef != ref...
-            label="Search Value"
-            onChange={(event) => {
-              setParamValue(event.target.value);
-            }}
-          />
-        </Box>
-
-        <Box className={classes.formControl} flexGrow={0}>
-          <Button
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={onAddClicked}
-          >
-            Add Filter
-          </Button>
-          <Button
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            startIcon={<RotateLeftIcon />}
-            onClick={onResetClicked}
-          >
-            Reset Filters
-          </Button>
-          <Button
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={onApplyClicked}
-          >
-            Apply Filter
-          </Button>
-        </Box>
-      </Box>
+      <SearchBar
+        updateResource={onUpdateResource}
+        addParams={onAddParam}
+        resetParams={onResetParam}
+        applyParams={onApplyClicked}
+      />
 
       <div className={classes.flexCenter}>
         <FilterList params={params} onDelete={onDeleteParam} />
@@ -353,6 +277,7 @@ const mapStateToProps = (state: any) => {
 
     selectedResource: selectSelectedResource(state),
     params: selectParams(state),
+    meta: selectMeta(state),
 
     page: selectPage(state),
     pageLinks: selectPageLinks(state),
@@ -378,6 +303,10 @@ function mapDispatchToProps(dispatch: any) {
       params: any
     ) => {
       dispatch({ type: GET_BUNDLE, resourceType, page, count, pageLinks, params });
+    },
+
+    updateResource: (resource: string) => {
+      dispatch(updateResourceAction(resource));
     },
 
     addParams: (key: string, value: any) => {

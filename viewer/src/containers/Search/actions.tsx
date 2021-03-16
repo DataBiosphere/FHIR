@@ -9,6 +9,7 @@ import {
   GET_BUNDLE_REQUEST,
   GET_BUNDLE_SUCCESS,
   GET_BUNDLE_ERROR,
+  UPDATE_RESOURCE,
   GET_ENTRY_REQUEST,
   GET_ENTRY_SUCCESS,
   GET_ENTRY_ERROR,
@@ -47,6 +48,13 @@ export function loadBundleErrorAction(error: Error): SearchActionTypes {
   return {
     type: GET_BUNDLE_ERROR,
     payload: { error },
+  };
+}
+
+export function updateResourceAction(resource: string): SearchActionTypes {
+  return {
+    type: UPDATE_RESOURCE,
+    payload: { resource },
   };
 }
 
