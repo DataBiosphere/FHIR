@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box,
   Button,
@@ -14,18 +14,10 @@ import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import SearchIcon from '@material-ui/icons/Search';
 
 interface SearchBarType {
-  getResources: (
-    resourceType: any,
-    page: number,
-    count: number,
-    pageLinks: string[],
-    params: any
-  ) => void;
+  updateResource: any;
   addParams: (key: string, value: string) => void;
   resetParams: () => void;
-  pageLinks: string[];
-  params: any;
-  rowsPerPage: number;
+  applyParams: () => void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -45,18 +37,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SearchBar({
-  getResources,
-  addParams,
-  resetParams,
-  pageLinks,
-  params,
-  rowsPerPage,
-}: SearchBarType) {
+function SearchBar({ updateResource, addParams, resetParams, applyParams }: SearchBarType) {
   // hooks
   const [paramKey, setParamKey] = useState<any>('_id');
   const [paramValue, setParamValue] = useState<any>('');
-  const [resource, setResource] = useState<any>('');
 
   const paramRef = useRef<any>(null);
 
@@ -67,16 +51,13 @@ function SearchBar({
   };
 
   const onAddClicked = () => {
+    console.log(`${paramKey} - ${paramValue}`);
     addParams(paramKey, paramValue);
   };
 
   const onResetClicked = () => {
     clearParamField();
     resetParams();
-  };
-
-  const onApplyClicked = () => {
-    getResources(resource, 1, rowsPerPage, pageLinks, params);
   };
 
   return (
@@ -88,10 +69,9 @@ function SearchBar({
             <Select
               defaultValue="DiagnosticReport"
               onChange={(event) => {
-                setResource(event.target.value);
                 resetParams();
                 clearParamField();
-                getResources(event.target.value, 1, rowsPerPage, [], {});
+                updateResource(event.target.value);
               }}
             >
               <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
@@ -153,7 +133,7 @@ function SearchBar({
             color="primary"
             variant="contained"
             startIcon={<SearchIcon />}
-            onClick={onApplyClicked}
+            onClick={applyParams}
           >
             Apply Filter
           </Button>
@@ -162,5 +142,9 @@ function SearchBar({
     </>
   );
 }
+
+SearchBar.defaultProps = {
+  selectedResource: 'DiagnosticReport',
+};
 
 export default SearchBar;

@@ -9,6 +9,7 @@ import {
   GET_BUNDLE_REQUEST,
   GET_BUNDLE_SUCCESS,
   GET_BUNDLE_ERROR,
+  UPDATE_RESOURCE,
   GET_ENTRY_REQUEST,
   GET_ENTRY_SUCCESS,
   ADD_PARAM,
@@ -45,6 +46,10 @@ const searchReducer = (state = initialState, action: any) =>
         draft.bundle = undefined;
         draft.pageLinks = [];
         draft.loading = false;
+        break;
+
+      case UPDATE_RESOURCE:
+        draft.selectedResource = action.payload.resource;
         break;
 
       case GET_ENTRY_REQUEST:

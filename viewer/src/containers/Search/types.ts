@@ -26,6 +26,13 @@ interface GetBundleErrorAction {
   payload: { error: Error };
 }
 
+export const UPDATE_RESOURCE = 'app/Search/UPDATE_RESOURCE';
+
+interface UpdateResourceAction {
+  type: typeof UPDATE_RESOURCE;
+  payload: { resource: string };
+}
+
 export const GET_ENTRY = 'app/Search/GET_ENTRY';
 export const GET_ENTRY_REQUEST = 'app/Search/GET_ENTRY_REQUEST';
 export const GET_ENTRY_SUCCESS = 'app/Search/GET_ENTRY_SUCCESS';
@@ -113,6 +120,7 @@ export type SearchActionTypes =
   | GetBundleRequestAction
   | GetBundleSuccessAction
   | GetBundleErrorAction
+  | UpdateResourceAction
   | GetEntryRequestAction
   | GetEntrySuccessAction
   | GetEntryErrorAction

@@ -26,13 +26,16 @@ function* getBundle({ resourceType, page, count, pageLinks, params }: any) {
     yield put(loadBundleRequestAction(resourceType, page));
 
     // create API call
-    const paramString = makeParamString(params);
+    const paramString = params ? makeParamString(params) : '';
     const requestUrl: string =
       pageLinks && pageLinks[page]
         ? pageLinks[page]
         : `${resourceType}?_count=${count}&${paramString}`;
     // @ts-ignore
     const bundle = yield call(requester, requestUrl);
+
+    // DEV
+    console.log(`requesting: ${requestUrl}`);
 
     // create paging array
     const pageArray = [];

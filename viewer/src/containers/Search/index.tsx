@@ -8,7 +8,7 @@
 // TCGA   - https://portal.gdc.cancer.gov/
 // AnVIL  - https://anvil.terra.bio/
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { Typography, makeStyles, CircularProgress } from '@material-ui/core';
@@ -34,7 +34,12 @@ import {
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { addParamAction, deleteParamAction, resetParamAction } from './actions';
+import {
+  updateResourceAction,
+  addParamAction,
+  deleteParamAction,
+  resetParamAction,
+} from './actions';
 import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
 
 import mappings from './mappings';
@@ -47,6 +52,7 @@ import ViewingEntry from '../../components/ViewingEntry';
 
 interface SearchType {
   getResources: any; // TODO: fix this PropTypes.func
+  updateResource: any;
   getDownload: any; // TODO: fix this PropTypes.func
   bundle: fhir.Bundle;
   params?: any; // TODO: fix this
@@ -90,6 +96,7 @@ const getColumnsAndRenderers = (resource: string) => {
 export function Search(props: any) {
   const {
     getResources,
+    updateResource,
     addParams,
     deleteParam,
     resetParams,
@@ -121,6 +128,22 @@ export function Search(props: any) {
 
   const classes = useStyles();
 
+  const onUpdateResource = (resource: string) => {
+    updateResource(resource);
+  };
+
+  const onAddParam = (key: string, value: any) => {
+    addParams(key, value);
+  };
+
+  const onResetParam = () => {
+    resetParams();
+  };
+
+  const onDeleteParam = (name: string) => {
+    deleteParam(name);
+  };
+
   const onChangePage = (_: any, newPage: number) => {
     getResources(selectedResource, newPage + 1, rowsPerPage, pageLinks, params);
   };
@@ -130,24 +153,32 @@ export function Search(props: any) {
     getResources(selectedResource, 1, rowsPerPage, {}, params);
   };
 
+  const onApplyClicked = () => {
+    console.log(`APPLY: ${params}`);
+    getResources(selectedResource, 1, rowsPerPage, pageLinks, params);
+  };
+
   const onExportClicked = () => {
     const date = new Date();
     setFileName(
-      `Export_${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${selectedResource}`
+      `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${date.getHours}-${
+        date.getMinutes
+      }-${date.getSeconds}_${selectedResource}_Export`
     );
     getDownload(selectedResource, params);
   };
 
-  const onDeleteParam = (name: string) => {
-    deleteParam(name);
-  };
-
   const closeViewingEntry = () => setOpen(false);
 
-  // runs on inital launch
+  // // runs on inital launch
+  // useEffect(() => {
+  //   getResources(selectedResource, page, rowsPerPage, pageLinks, params);
+  // }, []);
+
+  // runs when resource changes
   useEffect(() => {
-    getResources(selectedResource, page, rowsPerPage, pageLinks, params);
-  }, []);
+    getResources(selectedResource, 1, rowsPerPage, [], {});
+  }, [selectedResource]);
 
   // runs when download changes
   // not too sure if this is the best implementation though
@@ -160,9 +191,9 @@ export function Search(props: any) {
   }, [download]);
 
   // DEV: prints when params is change
-  // useEffect(() => {
-  //   console.log(params);
-  // }, [params]);
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
 
   const itemKey = 'id';
 
@@ -177,12 +208,10 @@ export function Search(props: any) {
       <Typography variant="h1">Search</Typography>
 
       <SearchBar
-        getResources={getResources}
-        addParams={addParams}
-        resetParams={resetParams}
-        pageLinks={pageLinks}
-        params={params}
-        rowsPerPage={rowsPerPage}
+        updateResource={onUpdateResource}
+        addParams={onAddParam}
+        resetParams={onResetParam}
+        applyParams={onApplyClicked}
       />
 
       <div className={classes.flexCenter}>
@@ -276,6 +305,10 @@ function mapDispatchToProps(dispatch: any) {
       params: any
     ) => {
       dispatch({ type: GET_BUNDLE, resourceType, page, count, pageLinks, params });
+    },
+
+    updateResource: (resource: string) => {
+      dispatch(updateResourceAction(resource));
     },
 
     addParams: (key: string, value: any) => {
