@@ -40,7 +40,7 @@ import {
   deleteParamAction,
   resetParamAction,
 } from './actions';
-import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
+import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD, GET_META } from './types';
 
 import mappings from './mappings';
 import { DEFAULT_ROWS_PER_PAGE } from './constants';
@@ -54,6 +54,7 @@ interface SearchType {
   getResources: any; // TODO: fix this PropTypes.func
   updateResource: any;
   getDownload: any; // TODO: fix this PropTypes.func
+  getMeta: any;
   bundle: fhir.Bundle;
   params?: any; // TODO: fix this
   download?: string;
@@ -100,6 +101,7 @@ export function Search(props: any) {
     deleteParam,
     resetParams,
     getDownload,
+    getMeta,
 
     bundle,
     loading,
@@ -172,6 +174,7 @@ export function Search(props: any) {
   // runs when resource changes
   useEffect(() => {
     getResources(selectedResource, 1, rowsPerPage, [], {});
+    getMeta();
   }, [selectedResource]);
 
   // runs when download changes
@@ -268,7 +271,6 @@ const mapStateToProps = (state: any) => {
 
     selectedResource: selectSelectedResource(state),
     params: selectParams(state),
-    meta: selectMeta(state),
 
     page: selectPage(state),
     pageLinks: selectPageLinks(state),
@@ -276,6 +278,7 @@ const mapStateToProps = (state: any) => {
     download: selectDownload(state),
     downloadProgress: selectDownloadProgress(state),
 
+    meta: selectMeta(state),
     error: selectError(state),
 
     // TODO: figure out how to display different viewing entries
@@ -318,6 +321,10 @@ function mapDispatchToProps(dispatch: any) {
 
     getViewingEntry: (resourceType: string, id: string) => {
       dispatch({ type: GET_ENTRY, resourceType, id });
+    },
+
+    getMeta: () => {
+      dispatch({ type: GET_META });
     },
   };
 }
