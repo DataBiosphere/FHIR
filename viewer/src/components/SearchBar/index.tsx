@@ -50,15 +50,6 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams }: Sear
     paramRef.current.value = '';
   };
 
-  const onAddClicked = () => {
-    addParams(paramKey, paramValue);
-  };
-
-  const onResetClicked = () => {
-    clearParamField();
-    resetParams();
-  };
-
   return (
     <>
       <Box display="flex" justifyContent="center" alignItems="center">
@@ -114,7 +105,9 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams }: Sear
             color="primary"
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={onAddClicked}
+            onClick={() => {
+              addParams(paramKey, paramValue);
+            }}
           >
             Add Filter
           </Button>
@@ -123,7 +116,10 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams }: Sear
             color="primary"
             variant="contained"
             startIcon={<RotateLeftIcon />}
-            onClick={onResetClicked}
+            onClick={() => {
+              clearParamField();
+              resetParams();
+            }}
           >
             Reset Filters
           </Button>

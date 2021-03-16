@@ -127,18 +127,16 @@ export function Search(props: any) {
 
   const classes = useStyles();
 
+  // TODO: there has to be a better way to condense this
   const onUpdateResource = (resource: string) => {
     updateResource(resource);
   };
-
   const onAddParam = (key: string, value: any) => {
     addParams(key, value);
   };
-
   const onResetParam = () => {
     resetParams();
   };
-
   const onDeleteParam = (name: string) => {
     deleteParam(name);
   };
@@ -159,9 +157,7 @@ export function Search(props: any) {
   const onExportClicked = () => {
     const date = new Date();
     setFileName(
-      `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${date.getHours}-${
-        date.getMinutes
-      }-${date.getSeconds}_${selectedResource}_Export`
+      `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}_${selectedResource}_Export`
     );
     getDownload(selectedResource, params);
   };
@@ -187,11 +183,6 @@ export function Search(props: any) {
       (saveAs as any)(blob, `${fileName}`);
     }
   }, [download]);
-
-  // DEV: prints when params is change
-  // useEffect(() => {
-  //   console.log(params);
-  // }, [params]);
 
   const itemKey = 'id';
 
