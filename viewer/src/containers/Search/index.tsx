@@ -174,7 +174,7 @@ export function Search(props: any) {
   // runs when resource changes
   useEffect(() => {
     getResources(selectedResource, 1, rowsPerPage, [], {});
-    getMeta();
+    getMeta(selectedResource);
   }, [selectedResource]);
 
   // runs when download changes
@@ -186,6 +186,10 @@ export function Search(props: any) {
       (saveAs as any)(blob, `${fileName}`);
     }
   }, [download]);
+
+  useEffect(() => {
+    console.log(meta);
+  }, [meta]);
 
   const itemKey = 'id';
 
@@ -323,8 +327,8 @@ function mapDispatchToProps(dispatch: any) {
       dispatch({ type: GET_ENTRY, resourceType, id });
     },
 
-    getMeta: () => {
-      dispatch({ type: GET_META });
+    getMeta: (resourceType: string) => {
+      dispatch({ type: GET_META, resourceType });
     },
   };
 }
