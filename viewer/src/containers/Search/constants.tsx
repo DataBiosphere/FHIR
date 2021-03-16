@@ -25,3 +25,8 @@ export const RESEARCH_STUDY_STATUS = 'status';
 
 // specimen renderer constants
 export const SPECIMEN_ID = 'id';
+
+// patient rednderer constants
+export const PATIENT_ID = 'id';
+export const PATIENT_STUDY = 'identifier[0].value';
+export const PATIENT_GENDER = 'gender.display';

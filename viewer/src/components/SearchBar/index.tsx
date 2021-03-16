@@ -68,6 +68,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams }: Sear
               <MenuItem value="Observation">Observation</MenuItem>
               <MenuItem value="Specimen">Specimen</MenuItem>
               <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
+              <MenuItem value="Patient">Patient</MenuItem>
             </Select>
           </FormControl>
 
