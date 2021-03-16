@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -18,6 +18,7 @@ interface SearchBarType {
   addParams: (key: string, value: string) => void;
   resetParams: () => void;
   applyParams: () => void;
+  meta: fhir.CapabilityStatementRest;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -37,17 +38,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SearchBar({ updateResource, addParams, resetParams, applyParams }: SearchBarType) {
+function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }: SearchBarType) {
   // hooks
   const [paramKey, setParamKey] = useState<any>('_id');
   const [paramValue, setParamValue] = useState<any>('');
 
+  // TODO: get ref to selected resource
+  const resourceRef = useRef<any>(null);
   const paramRef = useRef<any>(null);
 
   const classes = useStyles();
 
   const clearParamField = () => {
     paramRef.current.value = '';
+  };
+
+  // TODO: parses meta and gets searchable parameters
+  const getSearchParams = (resource?: string) => {
+    const allParams = meta.searchParam;
+    const resourceParams = meta.resource?.find((entry) => {
+      return entry.type === resource;
+    })?.searchParam;
+    const params: any[] = [];
+
+    allParams?.forEach((param) => {
+      if (param.documentation) {
+        params.push({ [param.name]: param.documentation });
+      }
+    });
+    resourceParams?.forEach((param) => {
+      params.push({ [param.name]: param.documentation });
+    });
+
+    console.log(params);
+    return params;
   };
 
   return (
@@ -62,6 +86,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams }: Sear
                 resetParams();
                 clearParamField();
                 updateResource(event.target.value);
+                getSearchParams(event.target.value as string);
               }}
             >
               <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
@@ -87,7 +112,6 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams }: Sear
             </Select>
           </FormControl>
         </Box>
-        <Box></Box>
 
         <Box className={classes.formControl} flexGrow={1} alignContent="center">
           <TextField
