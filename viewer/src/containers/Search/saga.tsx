@@ -34,9 +34,6 @@ function* getBundle({ resourceType, page, count, pageLinks, params }: any) {
     // @ts-ignore
     const bundle = yield call(requester, requestUrl);
 
-    // DEV
-    console.log(`requesting: ${requestUrl}`);
-
     // create paging array
     const pageArray = [];
     if (page > 1) pageArray.push(page - 1);
@@ -142,8 +139,7 @@ export default function* searchSaga() {
 const makeParamString = (params: any): string => {
   return Object.entries(params)
     .map(([k, v]) => {
-      const value = v as any;
-      `${k}=${encodeURIComponent(value.toString())}`;
+      return `${k}=${encodeURIComponent(v as string)}`;
     })
     .join('&');
 };

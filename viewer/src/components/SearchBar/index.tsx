@@ -51,7 +51,6 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams }: Sear
   };
 
   const onAddClicked = () => {
-    console.log(`${paramKey} - ${paramValue}`);
     addParams(paramKey, paramValue);
   };
 
