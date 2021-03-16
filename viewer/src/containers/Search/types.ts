@@ -103,7 +103,6 @@ export const GET_META_ERROR = 'app/Search/GET_META_ERROR';
 
 interface GetMetaRequestAction {
   type: typeof GET_META_REQUEST;
-  payload: { resourceType: string };
 }
 
 interface GetMetaSuccessAction {

@@ -166,15 +166,14 @@ export function Search(props: any) {
 
   const closeViewingEntry = () => setOpen(false);
 
-  // // runs on inital launch
-  // useEffect(() => {
-  //   getResources(selectedResource, page, rowsPerPage, pageLinks, params);
-  // }, []);
+  // runs on inital launch
+  useEffect(() => {
+    getMeta();
+  }, []);
 
   // runs when resource changes
   useEffect(() => {
     getResources(selectedResource, 1, rowsPerPage, [], {});
-    getMeta(selectedResource);
   }, [selectedResource]);
 
   // runs when download changes
@@ -186,10 +185,6 @@ export function Search(props: any) {
       (saveAs as any)(blob, `${fileName}`);
     }
   }, [download]);
-
-  useEffect(() => {
-    console.log(meta);
-  }, [meta]);
 
   const itemKey = 'id';
 
@@ -208,6 +203,7 @@ export function Search(props: any) {
         addParams={onAddParam}
         resetParams={onResetParam}
         applyParams={onApplyClicked}
+        meta={meta}
       />
 
       <div className={classes.flexCenter}>

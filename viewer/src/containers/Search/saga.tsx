@@ -132,19 +132,18 @@ function* getEntry({ resourceType, id }: any) {
   }
 }
 
-function* getMeta({ resourceType }: any) {
+function* getMeta() {
   // @ts-ignore
   const client = yield call(connect);
   const requester = makeRequester(client);
   try {
-    yield put(getMetaRequestAction(resourceType));
+    yield put(getMetaRequestAction());
 
     // @ts-ignore
     const meta: fhir.CapabilityStatement = yield call(requester, `metadata`);
-    const server = meta.rest?.find((entry) => entry.mode == 'server')?.resource;
-    const resource = server?.find((entry) => entry.type == resourceType);
+    const server = meta.rest?.find((entry) => entry.mode == 'server');
 
-    yield put(getMetaSuccessAction(resource));
+    yield put(getMetaSuccessAction(server));
   } catch (e) {
     yield put(getMetaErrorAction(e));
   }

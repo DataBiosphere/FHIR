@@ -133,10 +133,9 @@ export function downloadBundleErrorAction(error: Error): SearchActionTypes {
 }
 
 // meta actions
-export function getMetaRequestAction(resourceType: string): SearchActionTypes {
+export function getMetaRequestAction(): SearchActionTypes {
   return {
     type: GET_META_REQUEST,
-    payload: { resourceType },
   };
 }
 
