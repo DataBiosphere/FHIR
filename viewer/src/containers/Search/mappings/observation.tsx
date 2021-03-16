@@ -1,10 +1,16 @@
 import React from 'react';
 import { TableCell, Typography, Chip } from '@material-ui/core';
-import { OBSERVATION_CODE, OBSERVATION_ID } from '../constants';
+import {
+  OBSERVATION_ID,
+  OBSERVATION_STUDY,
+  OBSERVATION_CODE,
+  OBSERVATION_REFERENCE,
+} from '../constants';
 
-export const columns = ['Observation ID', 'Code'];
+export const columns = ['Observation ID', 'Study', 'Code', 'Subject'];
 export const renderers = [
   OBSERVATION_ID,
+  OBSERVATION_STUDY,
   [
     OBSERVATION_CODE,
     (code: fhir.CodeableConcept) => {
@@ -26,4 +32,5 @@ export const renderers = [
       );
     },
   ],
+  OBSERVATION_REFERENCE,
 ];
