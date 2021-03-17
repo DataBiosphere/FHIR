@@ -58,8 +58,8 @@ jobs:
       - name: Setup docker
         run: gcloud auth configure-docker
 
-      - name: Setup GKE Creds
-        run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+      - name: Setup GKE Pods
+        run: kubectl get pods
 
       - name: Install Node Modules
         run: npm install
