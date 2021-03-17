@@ -39,40 +39,63 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }: SearchBarType) {
-  // hooks
-  const [paramKey, setParamKey] = useState<any>('_id');
+  const DEFAULT_RESOURCE = 'DiagnosticReport';
+
+  // state hooks
+  const [menuItems, setMenuItems] = useState<any>();
+  const [menuHint, setMenuHint] = useState<any>('Filter value');
+  const [paramKey, setParamKey] = useState<any>('ID');
   const [paramValue, setParamValue] = useState<any>('');
 
-  // TODO: get ref to selected resource
-  const resourceRef = useRef<any>(null);
+  // ref hooks
+  const resRef = useRef<any>(null);
   const paramRef = useRef<any>(null);
 
   const classes = useStyles();
 
+  // clears param field
   const clearParamField = () => {
     paramRef.current.value = '';
   };
 
-  // TODO: parses meta and gets searchable parameters
+  // parses meta and gets searchable parameters
   const getSearchParams = (resource?: string) => {
-    const allParams = meta.searchParam;
-    const resourceParams = meta.resource?.find((entry) => {
+    const allParams = meta?.searchParam;
+    const resourceParams = meta?.resource?.find((entry) => {
       return entry.type === resource;
     })?.searchParam;
     const params: any[] = [];
 
     allParams?.forEach((param) => {
       if (param.documentation) {
-        params.push({ [param.name]: param.documentation });
+        params.push({ paramName: param.name, paramDoc: param.documentation });
       }
     });
     resourceParams?.forEach((param) => {
-      params.push({ [param.name]: param.documentation });
+      params.push({ paramName: param.name, paramDoc: param.documentation });
     });
 
-    console.log(params);
+    setMenuItems(params);
     return params;
   };
+
+  const getParamHint = (param: string) => {
+    menuItems
+      .filter((entry: any) => entry.paramName == param)
+      .map((entry: any) => {
+        setMenuHint(entry.paramDoc);
+      });
+  };
+
+  // run on initial launch to change parameter
+  useEffect(() => {
+    getSearchParams(DEFAULT_RESOURCE);
+  }, [meta]);
+
+  // runs when resource is changed
+  useEffect(() => {
+    getSearchParams(resRef.current.innerText);
+  }, [resRef.current?.innerText]);
 
   return (
     <>
@@ -81,12 +104,12 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
           <FormControl className={classes.formControl}>
             <InputLabel>Resource</InputLabel>
             <Select
-              defaultValue="DiagnosticReport"
+              ref={resRef}
+              defaultValue={DEFAULT_RESOURCE}
               onChange={(event) => {
                 resetParams();
                 clearParamField();
                 updateResource(event.target.value);
-                getSearchParams(event.target.value as string);
               }}
             >
               <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
@@ -98,17 +121,25 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
           </FormControl>
 
           <FormControl className={classes.formControl}>
-            <InputLabel>Parameter</InputLabel>
+            <InputLabel>Filter</InputLabel>
             <Select
               id="paramKey"
-              defaultValue="_id"
+              defaultValue=""
               onChange={(event) => {
                 clearParamField();
                 setParamKey(event.target.value);
+                getParamHint(event.target.value as string);
               }}
             >
-              <MenuItem value="_id">ID</MenuItem>
-              <MenuItem value="_source">Source</MenuItem>
+              {menuItems
+                ? menuItems.map((entry: any) => {
+                    return (
+                      <MenuItem key={entry.paramName} value={entry.paramName}>
+                        {entry.paramName}
+                      </MenuItem>
+                    );
+                  })
+                : null}
             </Select>
           </FormControl>
         </Box>
@@ -117,7 +148,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
           <TextField
             className={classes.flexCenter}
             inputRef={paramRef} // inputRef != ref...
-            label="Search Value"
+            label={menuHint}
             onChange={(event) => {
               setParamValue(event.target.value);
             }}
@@ -136,6 +167,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
           >
             Add Filter
           </Button>
+
           <Button
             className={classes.button}
             color="primary"
@@ -148,6 +180,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
           >
             Reset Filters
           </Button>
+
           <Button
             className={classes.button}
             color="primary"
@@ -162,9 +195,5 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
     </>
   );
 }
-
-SearchBar.defaultProps = {
-  selectedResource: 'DiagnosticReport',
-};
 
 export default SearchBar;
