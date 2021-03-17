@@ -52,6 +52,7 @@ Thumbs.db
 *.env
 *.local
 *.production
+*.secrets
 
 # GCP Credentials
 creds.json
@@ -75,5 +76,4 @@ anvil/data/*
 
 #
 anvil-mongodb/database/*
-
 paging.db
