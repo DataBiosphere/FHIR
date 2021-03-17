@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: broad-fhir-deployment
+  name: fhir
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: broad-fhir-deployment
+      app: fhir
   template:
     metadata:
       labels:
-        app: broad-fhir-deployment
+        app: fhir
     spec:
       containers:
         - name: fhir
