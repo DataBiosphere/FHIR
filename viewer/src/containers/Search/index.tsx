@@ -323,8 +323,8 @@ function mapDispatchToProps(dispatch: any) {
       dispatch({ type: GET_ENTRY, resourceType, id });
     },
 
-    getMeta: (resourceType: string) => {
-      dispatch({ type: GET_META, resourceType });
+    getMeta: () => {
+      dispatch({ type: GET_META });
     },
   };
 }

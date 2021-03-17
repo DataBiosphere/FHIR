@@ -40,11 +40,13 @@ const useStyles = makeStyles((theme) => ({
 
 function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }: SearchBarType) {
   const DEFAULT_RESOURCE = 'DiagnosticReport';
+  const PLEASE_SELECT_FILTER_MESSAGE = 'Please select a filter';
+  const EMPTY_ERROR_MESSAGE = 'Please enter a valid filter';
 
   // state hooks
   const [menuItems, setMenuItems] = useState<any>();
-  const [menuHint, setMenuHint] = useState<any>('Filter value');
-  const [paramKey, setParamKey] = useState<any>('ID');
+  const [menuHint, setMenuHint] = useState<any>(PLEASE_SELECT_FILTER_MESSAGE);
+  const [paramKey, setParamKey] = useState<any>('');
   const [paramValue, setParamValue] = useState<any>('');
 
   // ref hooks
@@ -56,6 +58,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
   // clears param field
   const clearParamField = () => {
     paramRef.current.value = '';
+    setMenuHint(PLEASE_SELECT_FILTER_MESSAGE);
   };
 
   // parses meta and gets searchable parameters
@@ -79,7 +82,8 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
     return params;
   };
 
-  const getParamHint = (param: string) => {
+  // sets the param hint
+  const setParamHint = (param: string) => {
     menuItems
       .filter((entry: any) => entry.paramName == param)
       .map((entry: any) => {
@@ -95,6 +99,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
   // runs when resource is changed
   useEffect(() => {
     getSearchParams(resRef.current.innerText);
+    clearParamField();
   }, [resRef.current?.innerText]);
 
   return (
@@ -126,11 +131,14 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
               id="paramKey"
               defaultValue=""
               onChange={(event) => {
-                clearParamField();
                 setParamKey(event.target.value);
-                getParamHint(event.target.value as string);
+                setParamHint(event.target.value as string);
+                clearParamField();
               }}
             >
+              <MenuItem value="" disabled>
+                Select one...
+              </MenuItem>
               {menuItems
                 ? menuItems.map((entry: any) => {
                     return (
@@ -162,7 +170,11 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => {
-              addParams(paramKey, paramValue);
+              {
+                paramKey && paramValue
+                  ? addParams(paramKey, paramValue)
+                  : alert(EMPTY_ERROR_MESSAGE);
+              }
             }}
           >
             Add Filter
