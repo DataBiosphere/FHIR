@@ -1,7 +1,7 @@
-name: FHIR - Build and Publish to GKE testing
+name: FHIR - Build and Publish to GKE
 
 on:
-  push:
+  release:
 
 env:
   GITHUB_SHA: ${{ github.sha }}
@@ -17,8 +17,32 @@ env:
   ANVIL_URL: ${{ secrets.ANVIL_URL }}
 
 jobs:
-  build-and-publish-to-gcr:
-    name: Setup, Build, and Publish
+  run-tests:
+    name: FHIR - Run Jest tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: fhir
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: npm install
+      - name: Test
+        run: npm test
+
+  build-and-publish-to-gke:
+    needs: run-tests
+    name: FHIR - Setup, Build, and Publish
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -28,23 +52,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v1
+      - name: Install Node
+        uses: actions/setup-node@v1
         with:
           node-version: '12'
 
-      - uses: google-github-actions/setup-gcloud@master
+      - name: Setup Google GitHub Actions
+        uses: google-github-actions/setup-gcloud@master
         with:
           projecct_id: '$PROJECT_ID'
           service_account_key: ${{ secrets.GKE_SA_KEY }}
           export_default_credentials: true
 
-      - uses: google-github-actions/get-gke-credentials@main
+      - name: Setup GKE Credentials
+        uses: google-github-actions/get-gke-credentials@main
         with:
           cluster_name: broad-fhir-cluster
           location: us-east1-b
-
-      - name: Setup KUBECONFIG
-        run: kubectl get pods
 
       - name: Setup docker
         run: gcloud auth configure-docker
@@ -55,7 +79,7 @@ jobs:
       - name: Install Node Modules
         run: npm install
 
-      - name: Generate env
+      - name: Generate .env
         run: node ../scripts/create-env-file.js TCGA_URL=${{ secrets.TCGA_URL }} ANVIL_URL=${{ secrets.ANVIL_URL }} URL=${{ secrets.URL }}
 
       - name: Build
