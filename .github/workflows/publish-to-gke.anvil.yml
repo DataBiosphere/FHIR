@@ -1,8 +1,7 @@
 name: ANVIL - Build and Publish to GKE
 
 on:
-  release:
-    types: [published]
+  push:
 
 env:
   GITHUB_SHA: ${{ github.sha }}
@@ -80,8 +79,8 @@ jobs:
       - name: Install Node Modules
         run: npm install
 
-      - name: Generate .env
-        run: node ../scripts/create-env-file.js TCGA_URL=${{ secrets.TCGA_URL }} ANVIL_URL=${{ secrets.ANVIL_URL }} URL=${{ secrets.URL }}
+    - name: Generate env
+        run: node ../scripts/create-env-file.js PORT=3002 MONGO_CONNECTION_STRING=${{ secrets.MONGO_READ_CONNECTION_STRING }} PROJECT_ID=${{ secrets.PROJECT_ID }}
 
       - name: Build
         run: |
