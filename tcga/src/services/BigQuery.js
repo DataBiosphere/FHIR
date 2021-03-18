@@ -56,6 +56,7 @@ class BigQuery {
     distinct,
     orderBy = [],
     offset = 0,
+    searchFunc,
   } = {}) {
     let counter = 0;
     const tableAlias = `table_${counter}`;
@@ -86,6 +87,10 @@ class BigQuery {
       }, {});
 
     dataQuery = dataQuery.where(whereClause);
+
+    if (searchFunc) {
+      dataQuery = dataQuery.where((builder) => searchFunc(builder));
+    }
 
     // Only now do we clone the count query before adding possible limits and offsets
     let countQuery;

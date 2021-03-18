@@ -178,8 +178,8 @@ function buildOrderBy(sort, getFieldsFn) {
         const descending = str[0] === '-';
         const realStr = descending ? str.substring(1) : str;
         const fields = getFieldsFn(realStr);
-        console.log(fields);
-        orderBy = orderBy.concat(...fields.map((f) => {
+
+        orderBy = orderBy.concat(...fields.fields.map((f) => {
           return {
             column: f.field,
             tableAlias: f.tableAlias,
@@ -188,7 +188,6 @@ function buildOrderBy(sort, getFieldsFn) {
         }));
       });
 
-  console.log(JSON.stringify(orderBy));
   return orderBy;
 }
 
