@@ -19,9 +19,9 @@ const get = memoize(axios.get, {
 class ANVIL {
   constructor() {}
 
-  async getAllResearchStudy({ _page, _count, _offset, _sort } = {}) {
+  async getAllResearchStudy(params) {
     const { data } = await get(`${ANVIL_URL}/api/researchstudy`, {
-      params: { _page, _count, _offset, _sort },
+      params,
     });
 
     const { results, count } = data;
@@ -32,9 +32,9 @@ class ANVIL {
     return data;
   }
 
-  async getAllObservations({ _page, _count, _offset, _sort } = {}) {
+  async getAllObservations(params) {
     const { data } = await get(`${ANVIL_URL}/api/observation`, {
-      params: { _page, _count, _offset, _sort },
+      params,
     });
 
     const { results, count } = data;
@@ -45,9 +45,9 @@ class ANVIL {
     return data;
   }
 
-  async getAllPatients({ _page, _count, _offset, _sort } = {}) {
+  async getAllPatients() {
     const { data } = await get(`${ANVIL_URL}/api/patient`, {
-      params: { _page, _count, _offset, _sort },
+      params,
     });
 
     const { results, count } = data;

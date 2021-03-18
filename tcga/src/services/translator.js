@@ -147,7 +147,7 @@ class Translator {
     }
   }
 
-  diagnosticReportValueResolver({ field = '', value = undefined } = {}) {
+  diagnosticReportValueResolver(field, value) {
     switch (field) {
       case 'id':
         return [{ field: 'case_id', value: value }];
@@ -200,7 +200,7 @@ class Translator {
     }
   }
 
-  specimenValueResolver({ field = '', value = undefined } = {}) {
+  specimenValueResolver(field, value) {
     const translateIdentifier = (f, v) => {
       if (v === undefined) {
         return undefined;
@@ -275,7 +275,7 @@ class Translator {
     }
   }
 
-  researchStudyValueResolver({ field = '', value = undefined } = {}) {
+  researchStudyValueResolver(field, value) {
     switch (field) {
       case 'id':
       case 'identifier':
@@ -344,7 +344,7 @@ class Translator {
     }
   }
 
-  patientValueResolver({ field = '', value = undefined } = {}) {
+  patientValueResolver(field, value) {
     switch (field) {
       case 'id':
         return [{ field: 'submitter_id', value: value }];
