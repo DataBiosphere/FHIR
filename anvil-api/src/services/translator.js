@@ -82,16 +82,35 @@ class Translator {
     return observation;
   }
 
-  toObservationSortParams(sortFields) {
-    return translateSortObj(sortFields, (sortObj, existsObj, key) => {
-      switch (key) {
-        case 'id':
-          sortObj['workspaceName'] = sortObj[key];
-          sortObj['name'] = sortObj[key];
-          delete sortObj[key];
-          break;
-      }
-    });
+  observationFieldResolver(field) {
+    switch (field) {
+      case 'id':
+        return { type: 'token', fields: [{ field: 'workspaceName' }, { field: 'name' }] };
+      case 'identifier':
+        return { type: 'token', fields: [{ field: 'id' }, { field: 'diseaseId' }] };
+      case 'subject':
+        return { type: 'reference', fields: [{ field: 'workspaceName' }, { field: 'name' }] };
+    }
+  }
+
+  observationValueResolver(field, value) {
+    switch (field) {
+      case 'id':
+        return [{ field: 'workspaceName', value: value.split('-')[0] }, { field: 'name', value: value.split('-')[2] }];
+      case 'identifier':
+        const newValue = value.replace('Observation-', '');
+        const split = newValue.split('-');
+        const fields = [];
+
+        if (split.length === 4) {
+          fields.push({ field: 'diseaseId', value: split.pop() });
+        }
+
+        fields.push({ field: 'id', value: split.join('-') });
+        return fields;
+      case 'subject':
+        return [{ field: 'workspaceName', value: value.split('-')[0] }, { field: 'name', value: value.split('-')[2] }];
+    }
   }
 
   toResearchStudy(workspace) {
@@ -141,17 +160,24 @@ class Translator {
     return researchStudy;
   }
 
-  toResearchStudySortParams(sortFields) {
-    return translateSortObj(sortFields, (sortObj, existsObj, key) => {
-      switch (key) {
-        case 'title':
-          sortObj['datasetName'] = sortObj[key];
-          existsObj['datasetName'] = existsObj[key];
-          delete sortObj[key];
-          delete existsObj[key];
-          break;
-      }
-    });
+  researchStudyFieldResolver(field) {
+    switch (field) {
+      case 'id':
+      case 'identifier':
+        return { type: 'token', fields: [{ field: 'name' }] };
+      case 'title':
+        return { type: 'string', fields: [{ field: 'datasetName' }] };
+    }
+  }
+
+  researchStudyValueResolver(field, value) {
+    switch (field) {
+       case 'id':
+       case 'identifier':
+        return [{ field: 'name', value: value }];
+       case 'title':
+        return [{ field: 'datasetName', value: value }];
+    }
   }
 
   toPatient(subject) {
@@ -189,6 +215,32 @@ class Translator {
 
     // TODO: we can probably put ethnicity info in here too if we want
     return patient;
+  }
+
+  patientFieldResolver(field) {
+    switch (field) {
+      case 'id':
+      case 'identifier':
+        return { type: 'token', fields: [{ field: 'workspaceName' }, { field: 'name'}] };
+      case 'gender':
+        return { type: 'token', fields: [{ field: 'sex' }] };
+    }
+  }
+
+  patientValueResolver(field, value) {
+    switch (field) {
+      case 'id':
+        const idSplit = value.split('-Su-');
+        return [{ field: 'workspaceName', value: idSplit[0] }, { field: 'name', value: idSplit[1] }];
+        break;
+      case 'identifier':
+        const newValue = value.replace('Patient-', '');
+        const identifierSplit = newValue.split('-Su-');
+        return [{ field: 'workspaceName', value: identifierSplit[0] }, { field: 'name', value: identifierSplit[1] }];
+        break;
+      case 'gender':
+        return [{ field: 'sex', value: value === 'Unknown' ? null : value }];
+    }
   }
 
   toPatientSortParams(sortFields) {

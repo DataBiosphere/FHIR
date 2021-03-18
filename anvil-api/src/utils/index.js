@@ -89,18 +89,15 @@ const buildSlug = (...args) => {
   let slug = [];
   // filter all bad matches
   args.forEach((arg) => {
-    arg = arg ? arg.match(/[A-Za-z0-9\-\.]/g) : null;
-
-    // edge case for null and '-' diseaseId's
-    if (arg && arg.length >= 1) {
-      slug.push(arg.join(''));
+    if (arg && arg !== '-') {
+      slug.push(arg);
     }
   });
 
   if (slug.length < 1) {
     throw 'Invalid slug arguments';
   }
-  return slug.join('-').substring(0, 64);
+  return slug.join('-');
 };
 
 /**

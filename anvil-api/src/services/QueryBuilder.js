@@ -1,21 +1,13 @@
-const knex = require('knex')({ client: 'mysql' });
+const { AnvilMongo } = require('.');
 const {
   prefixModifiers,
   stringModifiers,
   tokenModifiers,
   uriModifiers
 } = require('../utils/searching');
-const QUERY_COMMANDS = {
-  LIKE: 'like'
-};
 
 class QueryBuilder {
   constructor({
-    page = 1,
-    count = 20,
-    offset = 0,
-    sort = 0,
-    search = {},
     fieldResolver = undefined,
     valueResolver = undefined
   } = {}) {
@@ -33,15 +25,15 @@ class QueryBuilder {
           const split = value.split('|');
           return { system: split[0], value: split[1] };
         },
-        where: (builder, meta) => {
+        query: (meta) => {
           switch (meta.modifier) {
             case 'text':
               break;
             case 'not':
-              builder.whereNot({ [`${meta.field}`]: meta.value });
+              return { [`${meta.field}`]: { $ne: meta.value } } ;
               break;
             default:
-              builder.where({ [`${meta.field}`]: meta.value });
+              return { [`${meta.field}`]: meta.value };
               break;
           }
         }
@@ -50,16 +42,16 @@ class QueryBuilder {
         parser: (value) => {
           return { value: value };
         },
-        where: (builder, meta) => {
+        query: (meta) => {
           switch (meta.modifier) {
             case 'contains':
-              builder.where(meta.field, QUERY_COMMANDS.LIKE, `%${meta.value}%`);
+              return { [`${meta.field}`]: { $regex: meta.value } };
               break;
             case 'exact':
-              builder.where({ [`${meta.field}`]: meta.value });
+              return { [`${meta.field}`]: meta.value };
               break;
             default:
-              builder.where(meta.field, QUERY_COMMANDS.LIKE, `${meta.value}%`);
+              return { [`${meta.field}`]: { $regex: `^${meta.value}` } };
               break;
           }
         }
@@ -68,7 +60,7 @@ class QueryBuilder {
         parser: (value) => {
           return {};
         },
-        where: (builder, meta) => {
+        query: (meta) => {
 
         }
       },
@@ -76,7 +68,7 @@ class QueryBuilder {
         parser: (value) => {
           return {};
         },
-        where: (builder, meta) => {
+        query: (meta) => {
 
         }
       },
@@ -84,7 +76,7 @@ class QueryBuilder {
         parser: (value) => {
           return {};
         },
-        where: (builder, meta) => {
+        query: (meta) => {
 
         }
       },
@@ -98,8 +90,8 @@ class QueryBuilder {
           const val = split.pop();
           return { url: split.join('/'), value: val };
         },
-        where: (builder, meta) => {
-          builder.where({ [`${meta.field}`]: meta.value });
+        query: (meta) => {
+          return { [`${meta.field}`]: meta.value };
         }
       }
     }
@@ -111,7 +103,7 @@ class QueryBuilder {
     if (search && Object.keys(search).length > 0) {
       Object.entries(search).forEach((entry) => {
         const [k, v] = entry;
-        console.log(k);
+
         const splitField = k.split(':');
         let modifier = '';
         let fieldName = '';
@@ -143,7 +135,6 @@ class QueryBuilder {
   }
 
   getValueFromType(type, value) {
-    console.log(type, value);
     const returnValue = this.typeFunctions[type].parser(value);
     return returnValue;
   }
@@ -151,7 +142,6 @@ class QueryBuilder {
   resolve(field, value) {
     const resolvedFields = this.fieldResolver(field);
     const resolvedValues = this.valueResolver(field, this.getValueFromType(resolvedFields.type, value).value);
-
     resolvedFields.fields.forEach((rf) => {
       const resVal = resolvedValues.filter((rv) => rv.field === rf.field);
       if (resVal && resVal.length === 1) {
@@ -162,34 +152,31 @@ class QueryBuilder {
     return resolvedFields;
   }
 
-  orderBy(_sort) {
-    if (!_sort)
-      return null;
+  sortObject(_sort) {
+    // edge case
+    if (!_sort) {
+      return {};
+    }
 
-    let order = [];
+    let sortObj = {};
 
-    _sort.split(',')
-        .filter((str) => str)
-        .forEach((str) => {
-          str = str.trim();
+    _sort
+      .split(',')
+      .filter((str) => str)
+      .forEach((str) => {
+        str = str.trim();
 
-          const descending = str[0] === '-';
-          const realStr = descending ? str.substring(1) : str;
-          const fields = this.fieldResolver(realStr);
-
-          order = order.concat(...fields.fields.map((f) => {
-            return {
-              column: f.field,
-              tableAlias: f.tableAlias,
-              order: descending ? 'desc' : 'asc',
-            };
-          }));
+        const field = str[0] === '-' ? str.substring(1) : str;
+        const fieldMeta = this.fieldResolver(field);
+        fieldMeta.fields.forEach((f) => {
+          sortObj[f.field] = str[0] === '-' ? -1 : 1;
         });
+      });
 
-    return order;
+    return sortObj;
   }
 
-  where(_search) {
+  query(_search) {
     const searchFields = this.initSearch(_search);
 
     if (!searchFields || Object.keys(searchFields).length === 0){
@@ -198,13 +185,37 @@ class QueryBuilder {
 
     const fields = searchFields;
 
-    return (knexBuilder) => {
-      fields.forEach((k) => {
-        k.fields.filter((f) => f.value).forEach((f) => {
-          this.typeFunctions[k.type].where(knexBuilder, { field: f.field, value: f.value, modifier: k.modifier });
-        });
-      });
+    let myQuery = {};
+    const and = fields.length > 1;
+    if (and) {
+      myQuery.$and = [];
     }
+
+    fields.forEach((k) => {
+      const innerAnd = k.fields.length > 1;
+      let innerQuery = innerAnd ? { $and: [] } : { };
+      k.fields.forEach((f) => {
+        const q = this.typeFunctions[k.type].query({ field: f.field, value: f.value, modifier: k.modifier });
+
+        if (innerAnd) {
+          innerQuery.$and.push(q);
+        } else {
+          innerQuery = q;
+        }
+      });
+
+      if (and) {
+        if (innerQuery.$and && innerQuery.$and.length > 0) {
+          myQuery.$and.push(...innerQuery.$and);
+        } else {
+          myQuery.$and.push(innerQuery);
+        }
+      } else {
+        myQuery = innerQuery;
+      }
+    });
+
+    return myQuery;
   }
 }
 
