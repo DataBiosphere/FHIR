@@ -16,15 +16,28 @@ export const renderers = [
     DIAGNOSTIC_REPORT_RESULT,
     // we map both the result's display and the reference to a TableCell
     (results: any) => {
-      return results.map((result: any) => (
-        <TableCell
-          key={`${result.display}${result.reference}`}
-          style={{ display: 'flex', flexDirection: 'column', padding: '.25rem' }}
-        >
-          <span>{result.display}</span>
-          <Chip label={result.reference} />
-        </TableCell>
-      ));
+      return results ? (
+        results.map((result: any) => (
+          <TableCell
+            key={`${result.display}${result.reference}`}
+            style={{ display: 'flex', flexDirection: 'column', padding: '.25rem' }}
+          >
+            {result.display ? (
+              <>
+                <span>{result.display}</span>
+                <Chip label={result.reference} />{' '}
+              </>
+            ) : (
+              <>
+                <span>No Mapping</span>
+                <Chip label={result.reference} />
+              </>
+            )}
+          </TableCell>
+        ))
+      ) : (
+        <TableCell style={{ display: 'flex', flexDirection: 'column', padding: '.25rem' }} />
+      );
     },
   ],
 ];

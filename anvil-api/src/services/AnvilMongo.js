@@ -1,3 +1,4 @@
+const logger = require('../logger');
 const MongoClient = require('mongodb').MongoClient;
 
 const { MONGO_CONNECTION_STRING } = process.env;
@@ -12,7 +13,7 @@ class AnvilMongo {
   async queryWrapper(callback) {
     const client = await MongoClient.connect(this.url, { useUnifiedTopology: true }).catch(
       (err) => {
-        console.log(err);
+        logger.error(err);
       }
     );
 

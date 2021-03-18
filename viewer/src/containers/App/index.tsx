@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { compose } from 'redux';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import SearchIcon from '@material-ui/icons/Search';
@@ -22,6 +21,13 @@ import Layout from '../../components/Layout';
 import Capability from '../Capability';
 import Search from '../Search';
 import Home from '../Home';
+
+interface AppType {
+  dispatch: any; // PropTypes.func
+  smart?: {
+    serverUrl: string;
+  };
+}
 
 function App(props: any) {
   const { dispatch, smart } = props;
@@ -77,13 +83,6 @@ function App(props: any) {
     </Layout>
   );
 }
-
-App.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  smart: PropTypes.shape({
-    serverUrl: PropTypes.string,
-  }),
-};
 
 App.defaultProps = {
   smart: undefined,

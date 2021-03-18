@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -25,6 +24,23 @@ import Link from '../Link';
 import SEO from '../SEO';
 
 import config from '../../config';
+
+interface LayoutType {
+  topSideBarMenu: {
+    icon: React.ReactNode;
+    to: string;
+    text: string;
+    external?: boolean | undefined;
+  }[];
+  bottomSideBarMenu: {
+    icon: React.ReactNode;
+    to: string;
+    text: string;
+    external?: boolean | undefined;
+  }[];
+  children: React.ReactNode; // Proptypes.node
+  iss?: string;
+}
 
 const { iss: fhirUrl } = config;
 
@@ -128,7 +144,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }: any) {
+function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }: LayoutType) {
   const classes = useStyles();
   const [open, setOpen] = useState<boolean>(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<any>();
@@ -278,13 +294,7 @@ function Layout({ topSideBarMenu, bottomSideBarMenu, children, iss }: any) {
   );
 }
 
-Layout.propTypes = {
-  topSideBarMenu: PropTypes.array.isRequired,
-  bottomSideBarMenu: PropTypes.array.isRequired,
-  children: PropTypes.node.isRequired,
-  iss: PropTypes.string,
-};
-
+// WARN: figure out default props for iss?
 Layout.defaultProps = {
   iss: undefined,
 };

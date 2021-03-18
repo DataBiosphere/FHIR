@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import {
   TableContainer,
@@ -14,6 +13,22 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
+interface PaginatedTableType {
+  count?: number;
+  rows: any[];
+  renderers: any[];
+  columns: any[];
+  onView: (event: any, item: any) => any;
+  page: number;
+  onChangePage: (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    page: number
+  ) => void;
+  itemKey: string;
+  rowsPerPage: number;
+  onChangeRowsPerPage: React.ChangeEventHandler<Element>;
+}
+
 const useStyles = makeStyles(() => ({
   pagination: {
     borderBottom: '0px',
@@ -26,7 +41,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const labelDisplayedRows = ({ from, to, count }: any) =>
-  `Displaying ${from}-${to} of ${count} results`;
+  count ? `Displaying ${from}-${to} of ${count} results` : `No Results`;
 const rowsPerPageOptions = [25, 50, 100, 250];
 
 function PaginatedTable({
@@ -40,7 +55,7 @@ function PaginatedTable({
   itemKey,
   onChangeRowsPerPage,
   rowsPerPage,
-}: any) {
+}: PaginatedTableType) {
   const classes = useStyles();
 
   return (
@@ -48,7 +63,7 @@ function PaginatedTable({
       <div className={classes.flexCenter}>
         <TablePagination
           className={classes.pagination}
-          count={count}
+          count={count ? count : 0}
           labelDisplayedRows={labelDisplayedRows}
           onChangePage={onChangePage}
           page={page}
@@ -89,7 +104,6 @@ function PaginatedTable({
                       variant="contained"
                       color="primary"
                     >
-                      {/* TODO: coming soon un-disable it above when ready */}
                       View
                     </Button>
                   </TableCell>
@@ -102,18 +116,5 @@ function PaginatedTable({
     </>
   );
 }
-
-PaginatedTable.propTypes = {
-  count: PropTypes.number.isRequired,
-  rows: PropTypes.array.isRequired,
-  renderers: PropTypes.array.isRequired,
-  columns: PropTypes.array.isRequired,
-  onView: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  itemKey: PropTypes.string.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-  onChangeRowsPerPage: PropTypes.func.isRequired,
-};
 
 export default PaginatedTable;

@@ -40,5 +40,6 @@ module.exports = {
     'no-unused-vars': 'warn',
 
     'no-console': 'warn', // we don't want to ship with console logs
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
 };
