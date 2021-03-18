@@ -111,7 +111,6 @@ class QueryBuilder {
     if (search && Object.keys(search).length > 0) {
       Object.entries(search).forEach((entry) => {
         const [k, v] = entry;
-        console.log(k);
         const splitField = k.split(':');
         let modifier = '';
         let fieldName = '';
@@ -143,7 +142,6 @@ class QueryBuilder {
   }
 
   getValueFromType(type, value) {
-    console.log(type, value);
     const returnValue = this.typeFunctions[type].parser(value);
     return returnValue;
   }

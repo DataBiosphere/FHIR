@@ -122,7 +122,6 @@ class BigQuery {
 
       // probably a prettier way of doing this
       orderBy.forEach((entry) => {
-        console.log(JSON.stringify(entry));
         ordering.push(`${(entry.tableAlias ? `\`${entry.tableAlias}\`.` : `\`table_0\`.`)}\`${entry.column}\` ${entry.order} nulls last`);
       });
 

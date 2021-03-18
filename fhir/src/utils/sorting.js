@@ -24,8 +24,6 @@ const buildCompareFn = (sort) => {
     }
 
     const compareFields = (field1, field2) => {
-      console.log(JSON.stringify(field1));
-      console.log(JSON.stringify(field2));
       if (field1.reference) {
         if (field1.reference <= field2.reference){
           return -1;
@@ -67,7 +65,8 @@ const mergeResults = (compareFn, limit, ...arrays) => {
       if (
         winningVal === null ||
         winningVal === undefined ||
-        compareFn(arrays[i][positions[i]], winningVal) < 0
+        (compareFn(arrays[i][positions[i]], winningVal) < 0
+        && arrays[i][positions[i]])
       ) {
         winningIdx = i;
         winningVal = arrays[i][positions[i]];
