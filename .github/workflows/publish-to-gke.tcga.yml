@@ -13,9 +13,15 @@ env:
   REGISTRY_HOSTNAME: gcr.io
   GKE_CLUSTER: broad-fhir-cluster
   GKE_ZONE: us-east1-b
-  URL: ${{ secrets.URL }}
-  TCGA_URL: ${{ secrets.TCGA_URL }}
-  ANVIL_URL: ${{ secrets.ANVIL_URL }}
+  TYPE: ${{ secrets.TYPE }}
+  PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
+  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+  CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+  CLIENT_ID: ${{ secrets.CLIENT_ID }}
+  AUTH_URI: ${{ secrets.AUTH_URI }}
+  TOKEN_URI: ${{ secrets.TOKEN_URI }}
+  AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
+  CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
 
 jobs:
   run-tests:
@@ -80,8 +86,11 @@ jobs:
       - name: Install Node Modules
         run: npm install
 
-      - name: Generate .env
-        run: node ../scripts/create-env-file.js TCGA_URL=${{ secrets.TCGA_URL }} ANVIL_URL=${{ secrets.ANVIL_URL }} URL=${{ secrets.URL }}
+      - name: Generate GCP Credentials
+        run: node ../scripts/create-gcp-cred-file.js
+
+      - name: Generate env
+        run: node ../scripts/create-env-file.js PORT=3001 GOOGLE_APPLICATION_CREDENTIALS=./creds.json PROJECT_ID=${{ secrets.PROJECT_ID }}
 
       - name: Build
         run: |
