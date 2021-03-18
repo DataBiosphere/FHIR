@@ -1,7 +1,8 @@
 name: TCGA - Build and Publish to GKE
 
 on:
-  push:
+  release:
+    types: [published]
 
 env:
   GITHUB_SHA: ${{ github.sha }}
