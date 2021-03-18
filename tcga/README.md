@@ -5,7 +5,7 @@
     <img src="https://github.com/DataBiosphere/FHIR/workflows/TCGA%20-%20Tests/badge.svg" /></a>
 </p>
 
-This micro-service is an API used by Broad FHIR in order to power FHIR Applications.
+This micro-service is an API used by Broad FHIR in order to power FHIR Applications
 
 ## Getting started
 
@@ -20,11 +20,17 @@ npm run dev
 
 ## API Routes
 
-- **/api/gdc**
-- **/api/gdc/:id**
-- **/api/diagnosis**
-- **/api/diagnosis/:id**
-- **/api/biospecimen**
-- **/api/biospecimen/:id**
+To limit results to only this adapter, please use the `_source=https://portal.gdc.cancer.gov/` in your FHIR search
+
+- **/api/diagnosticreport**
+- **/api/diagnosticreport/:id**
+- **/api/observation**
+- **/api/observation/:id**
+- **/api/specimen**
+- **/api/specimen/:id**
+- **/api/researchstudy**
+- **/api/researchstudy/:id**
+- **/api/patient**
+- **/api/patient/:id**
 
 ## [If you are having trouble, remember to configure the application correctly.](../docs/CONFIGURATION.md)

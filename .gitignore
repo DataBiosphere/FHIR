@@ -52,6 +52,7 @@ Thumbs.db
 *.env
 *.local
 *.production
+*.secrets
 
 # GCP Credentials
 creds.json
