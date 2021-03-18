@@ -2,6 +2,7 @@ name: FHIR - Build and Publish to GKE
 
 on:
   release:
+    types: [published]
 
 env:
   GITHUB_SHA: ${{ github.sha }}

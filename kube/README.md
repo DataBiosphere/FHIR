@@ -9,13 +9,13 @@
     <img src="https://github.com/DataBiosphere/FHIR/workflows/ANVIL%20-%20Tests/badge.svg" /></a>
 </p>
 
-These are the deployment scripts for the adapters and the FHIR server.
+These are the deployment scripts for the adapters and the FHIR server
 
-Note: This is just a quick reference guide to deployment to the Broad FHIR server. [For more details on custom deployment read the Deployment documentation](../docs/DEPLOYMENT.md)
+Note: This is just a quick reference guide for manual deployment to the Broad FHIR server. [For more details on custom deployment read the Deployment documentation](../docs/DEPLOYMENT.md)
 
 ## Getting started
 
-Configure `kubectl` with gcloud.
+Configure `kubectl` with gcloud
 
 ```
 gcloud container clusters get-credentials broad-fhir-cluster --region=us-east1-b
@@ -29,7 +29,7 @@ Update the commit hashes for each of the following files:
 
 Wait for [GitHub Actions](gcloud container clusters get-credentials broad-fhir-cluster --region=us-east1-b) to finish uploading the containers.
 
-Deploy the containers to GCP.
+Deploy the containers to GCP
 
 ```
 kubectl apply -f fhir-deployment.yml && kubectl rollout status deployment/broad-fhir-deployment
