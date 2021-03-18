@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: broad-tcga-svc
+spec:
+  selector:
+    app: broad-tcga-deployment
+  ports:
+    - port: 3001
+      targetPort: 3001
+      protocol: TCP

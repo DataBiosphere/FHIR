@@ -5,7 +5,7 @@
     <img src="https://github.com/DataBiosphere/FHIR/workflows/ANVIL%20-%20Tests/badge.svg" /></a>
 </p>
 
-This micro-service is an API used by Broad FHIR in order to power AnVIL Applications.
+This micro-service is an API used by Broad FHIR in order to power AnVIL Applications
 
 ## Getting started
 
@@ -20,12 +20,14 @@ npm run dev
 
 ## API Routes
 
-- **/workspace**
-- **/workspace/:id**
+To limit results to only this adapter, please use the `_source=https://anvil.terra.bio/` in your FHIR search
+
+- **/researchstudy**
+- **/researchstudy/:id**
 - **/sample/**
 - **/sample/:id**
-- **/subject**
-- **/subject/:id**
+- **/patient**
+- **/patient/:id**
 - **/observation**
 - **/observation/:id**
 

@@ -1,9 +1,6 @@
 name: TCGA - Build and Publish to GCR
 
-on:
-  push:
-    branches:
-      - master
+on: workflow_dispatch
 
 env:
   GITHUB_SHA: ${{ github.sha }}

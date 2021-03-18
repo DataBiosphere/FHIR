@@ -11,23 +11,24 @@
     <img src="https://github.com/DataBiosphere/FHIR/workflows/Viewer%20-%20Tests/badge.svg" /></a>
 </p>
 
-> FHIR is an interoperability standard intended to facilitate the exchange of healthcare information between healthcare providers, patients, caregivers, payers, researchers, and any one else involved in the healthcare ecosystem. It consists of 2 main parts – a content model in the form of ‘resources’, and a specification for the exchange of these resources in the form of real-time RESTful interfaces as well as messaging and Documents.
+> FHIR is an interoperability standard intended to facilitate the exchange of healthcare information between healthcare providers, patients, caregivers, payers, researchers, and any one else involved in the healthcare ecosystem. It consists of 2 main parts – a content model in the form of ‘resources’, and a specification for the exchange of these resources in the form of real-time RESTful interfaces as well as messaging and Documents
 
 ## Getting started
 
-Clone.
+Clone
 
 ```
 git clone https://github.com/DataBiosphere/FHIR
 ```
 
-Install. You must run these separately in these directories: `anvil-api`, `fhir`, `tcga`, `viewer`
+Install
+You must run these separately in these directories: `anvil-api`, `fhir`, `tcga`, `viewer`
 
 ```
 npm i
 ```
 
-Run the tests.
+Run the tests
 
 ```
 npm run test
@@ -42,15 +43,15 @@ touch tcga/.env
 touch viewer/.env
 ```
 
-Run Docker Compose.
+Run Docker Compose
 
 ```
-docker-compose up
+docker-compose up --build
 ```
 
 ## SMART App
 
-Broad FHIR comes with it's own [SMART on FHIR](http://www.hl7.org/fhir/smart-app-launch/) application. You can run it locally or host it statically.
+Broad FHIR comes with it's own [SMART on FHIR](http://www.hl7.org/fhir/smart-app-launch/) application. You can run it locally or host it statically
 
 ```
 cd viewer
@@ -62,7 +63,7 @@ npm start
 
 ## Documentation
 
-Read our docs pages for information on deployment, tech stack, design decisions, and more.
+Read our docs pages for information on deployment, tech stack, design decisions, and more
 
 [Docs](./docs/INDEX.md)
 
