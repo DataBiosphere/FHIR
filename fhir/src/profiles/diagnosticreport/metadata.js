@@ -16,6 +16,12 @@ module.exports = {
       searchInclude: ['DiagnosticReport:result'],
       searchRevInclude: [],
       searchParam: [
+        {
+          name : "subject",
+          definition : "http://hl7.org/fhir/SearchParameter/DiagnosticReport-subject",
+          type : "reference",
+          documentation : "The subject of the report"
+        }
         // {
         //   name: 'researchStudy',
         //   definition: 'http://hl7.org/fhir/StructureDefinition/workflow-researchStudy',

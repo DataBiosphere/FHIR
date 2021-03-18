@@ -15,7 +15,20 @@ module.exports = {
       conditionalDelete: 'not-supported',
       searchInclude: [],
       searchRevInclude: [],
-      searchParam: [],
+      searchParam: [
+        {
+          name: "identifier",
+          definition: "http://hl7.org/fhir/SearchParameter/Patient-identifier",
+          type: "token",
+          documentation: "A patient identifier"
+        },
+        {
+          name: "gender",
+          definition: "http://hl7.org/fhir/SearchParameter/individual-gender",
+          type: "token",
+          documentation: "Gender of the patient"
+        }
+      ],
     };
   },
 };
