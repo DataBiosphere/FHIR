@@ -84,7 +84,6 @@ const findDiseaseDisplay = (code) => {
   return display ? display : null;
 };
 
-// regex: [A-Za-z0-9\-\.]{1,64}
 const buildSlug = (...args) => {
   let slug = [];
   // filter all bad matches
