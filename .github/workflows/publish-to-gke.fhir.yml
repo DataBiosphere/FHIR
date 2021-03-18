@@ -111,5 +111,5 @@ jobs:
           export TAG=`echo $GITHUB_SHA | cut -c1-7`
           ./kustomize edit set image gcr.io/"$PROJECT_ID"/broad/fhir:"$TAG"
           ./kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/fhir
+          kubectl rollout status deployment/broad-fhir-deployment
           kubectl get services -o wide

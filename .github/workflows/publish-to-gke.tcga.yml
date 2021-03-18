@@ -1,4 +1,4 @@
-name: ANVIL - Build and Publish to GKE
+name: TCGA - Build and Publish to GKE
 
 on:
   push:
@@ -7,7 +7,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   GITHUB_REF: ${{ github.ref }}
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
-  IMAGE: anvil
+  IMAGE: tcga
   ORGANIZATION: broad
   REGISTRY_HOSTNAME: gcr.io
   GKE_CLUSTER: broad-fhir-cluster
@@ -18,12 +18,12 @@ env:
 
 jobs:
   run-tests:
-    name: ANVIL - Run Jest tests
+    name: TCGA - Run Jest tests
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
-        working-directory: anvil-api
+        working-directory: tcga
 
     strategy:
       matrix:
@@ -42,12 +42,12 @@ jobs:
 
   build-and-publish-to-gke:
     needs: run-tests
-    name: ANVIL - Setup, Build, and Publish
+    name: TCGA - Setup, Build, and Publish
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
-        working-directory: anvil-api
+        working-directory: tcga
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -109,7 +109,7 @@ jobs:
       - name: Deploy
         run: |
           export TAG=`echo $GITHUB_SHA | cut -c1-7`
-          ./kustomize edit set image gcr.io/"$PROJECT_ID"/broad/anvil:"$TAG"
+          ./kustomize edit set image gcr.io/"$PROJECT_ID"/broad/tcga:"$TAG"
           ./kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/broad-anvil-deployment
+          kubectl rollout status deployment/broad-tcga-deployment
           kubectl get services -o wide
