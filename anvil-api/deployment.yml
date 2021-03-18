@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: anvil
+  name: broad-anvil-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: anvil
+      app: broad-anvil-deployment
   template:
     metadata:
       labels:
-        app: anvil
+        app: broad-anvil-deployment
     spec:
       containers:
         - name: anvil
