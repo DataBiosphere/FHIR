@@ -45,7 +45,7 @@ class ANVIL {
     return data;
   }
 
-  async getAllPatients() {
+  async getAllPatients(params) {
     const { data } = await get(`${ANVIL_URL}/api/patient`, {
       params,
     });

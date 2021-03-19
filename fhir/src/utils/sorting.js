@@ -24,22 +24,26 @@ const buildCompareFn = (sort) => {
     }
 
     const compareFields = (field1, field2) => {
-      if (field1.reference) {
-        if (field1.reference <= field2.reference){
-          return -1;
-        }
-        else
-          return 1;
-      } else if (field1.code) {
-        if (field1.code <= field2.code)
-          return -1;
-        else
-          return 1;
+      if (!field1 && field2) {
+        return -1;
+      } else if (field1 && !field2){
+        return 1;
+      } else if (!field1 && !field2) {
+        return 0;
+      }
+
+      const [f1, f2] = field1.reference
+        ? [field1.reference, field2.reference]
+        : field1.code
+          ? [field1.code, field2.code]
+          : [field1, field2];
+
+      if (f1 < f2) {
+        return -1;
+      } else if (f1 === f2) {
+        return 0;
       } else {
-        if (field1 <= field2)
-          return -1;
-        else
-          return 1;
+        return 1;
       }
     };
 
