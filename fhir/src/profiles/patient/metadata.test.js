@@ -23,6 +23,11 @@ describe('Patient metadata test', () => {
           definition: "http://hl7.org/fhir/SearchParameter/individual-gender",
           type: "token",
           documentation: "Gender of the patient"
+        },
+        {
+          name: '_source',
+          type: 'uri',
+          documentation: 'URL of the source site. Currently only supports AnVIL and TCGA',
         }
       ],
       searchRevInclude: [],

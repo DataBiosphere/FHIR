@@ -52,6 +52,7 @@ Thumbs.db
 *.env
 *.local
 *.production
+*.secrets
 
 # GCP Credentials
 creds.json
@@ -73,7 +74,10 @@ anvil/data/*
 *.sqlite
 *.sqlite3
 
-#
+# MongoDB
 anvil-mongodb/database/*
-
 paging.db
+
+# Viewer
+viewer/src/react-app-env.d.ts
+viewer/public/launch.html

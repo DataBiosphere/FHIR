@@ -1,6 +1,7 @@
 # Broad FHIR Project Documentation
 
-- [Tech](./TECH.md)
+- [Our Tech stack](./TECH.md)
 - [How to configure the server](./CONFIGURATION.md)
 - [How to Deploy to Kubernetes GCP](./DEPLOYMENT.md)
-- [GitHub Secrets](./SECRETS.md)
+- [Info on GitHub Secrets](./SECRETS.md)
+- [GitHub Actions CI/CD](./.github/workflows/README.md)

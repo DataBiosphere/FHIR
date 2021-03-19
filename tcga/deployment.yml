@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broad-tcga-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broad-tcga-deployment
+  template:
+    metadata:
+      labels:
+        app: broad-tcga-deployment
+    spec:
+      containers:
+        - name: tcga
+          image: gcr.io/broad-fhir-dev/broad/tcga:latest
+          ports:
+            - containerPort: 3001
+          imagePullPolicy: Always

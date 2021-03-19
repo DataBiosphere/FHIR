@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -15,6 +14,24 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Link from './Link';
 
 const drawerWidth = 240;
+
+interface DrawerType {
+  open?: boolean;
+  handleDrawerClose: () => void;
+  // TODO: probably can combine these
+  top: {
+    icon: React.ReactNode;
+    to: string;
+    text: string;
+    external?: boolean | undefined;
+  }[];
+  bottom: {
+    icon: React.ReactNode;
+    to: string;
+    text: string;
+    external?: boolean | undefined;
+  }[];
+}
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -54,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyDrawer = ({ open, handleDrawerClose, top, bottom }: any) => {
+const MyDrawer = ({ open, handleDrawerClose, top, bottom }: DrawerType) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -91,27 +108,6 @@ const MyDrawer = ({ open, handleDrawerClose, top, bottom }: any) => {
       </List>
     </Drawer>
   );
-};
-
-MyDrawer.propTypes = {
-  open: PropTypes.bool,
-  handleDrawerClose: PropTypes.func.isRequired,
-  top: PropTypes.arrayOf(
-    PropTypes.shape({
-      icon: PropTypes.node.isRequired,
-      to: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      external: PropTypes.bool,
-    })
-  ).isRequired,
-  bottom: PropTypes.arrayOf(
-    PropTypes.shape({
-      icon: PropTypes.node.isRequired,
-      to: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      external: PropTypes.bool,
-    })
-  ).isRequired,
 };
 
 MyDrawer.defaultProps = {

@@ -33,6 +33,11 @@ module.exports = {
           definition: "http://hl7.org/fhir/SearchParameter/clinical-identifier",
           type: "token",
           documentation: "The unique id for a particular observation"
+        },
+        {
+          name: '_source',
+          type: 'uri',
+          documentation: 'URL of the source site. Currently only supports AnVIL and TCGA',
         }
       ],
     };

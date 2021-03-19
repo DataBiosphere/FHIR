@@ -27,6 +27,11 @@ module.exports = {
           definition: "http://hl7.org/fhir/SearchParameter/ResearchStudy-title",
           type: "string",
           documentation: "Name for this study"
+        },
+        {
+          name: '_source',
+          type: 'uri',
+          documentation: 'URL of the source site. Currently only supports AnVIL and TCGA',
         }
       ],
     };

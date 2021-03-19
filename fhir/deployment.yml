@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broad-fhir-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broad-fhir-deployment
+  template:
+    metadata:
+      labels:
+        app: broad-fhir-deployment
+    spec:
+      containers:
+        - name: fhir
+          image: gcr.io/broad-fhir-dev/broad/fhir:latest
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always

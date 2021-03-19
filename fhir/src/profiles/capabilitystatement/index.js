@@ -6,12 +6,29 @@ const makeStatement = (resources) => {
 
   return new CapabilityStatement({
     status: 'draft',
-    date: '20201013',
-    publisher: 'The Publisher',
+    date: '20210315',
+    publisher: 'Asymmetrik, Ltd.',
+    contact: [
+      {
+        name: 'Asymmetrik, Ltd.',
+        telecom: [
+          {
+            system: 'email',
+            value: 'info@asymmetrik.com',
+            use: 'work',
+          },
+          {
+            system: 'phone',
+            value: '(443) 470-6480',
+            use: 'work',
+          },
+        ],
+      },
+    ],
     kind: 'instance',
     software: {
       name: 'Broad',
-      version: '1.0.0',
+      version: '2.0.0',
       releaseDate: '20201013',
     },
     implementation: {
@@ -21,6 +38,7 @@ const makeStatement = (resources) => {
     acceptUnknown: 'extensions',
     format: ['application/fhir+json'],
     rest: {
+      mode: 'server',
       ...resources,
       searchParam: [
         {
@@ -28,6 +46,7 @@ const makeStatement = (resources) => {
           definition: 'https://www.hl7.org/fhir/search.html#count',
           type: 'number',
         },
+        { name: '_id', type: 'token', documentation: 'Standard _id parameter' },
       ],
     },
   });

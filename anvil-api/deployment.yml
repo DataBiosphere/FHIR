@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broad-anvil-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broad-anvil-deployment
+  template:
+    metadata:
+      labels:
+        app: broad-anvil-deployment
+    spec:
+      containers:
+        - name: anvil
+          image: gcr.io/broad-fhir-dev/broad/anvil:latest
+          ports:
+            - containerPort: 3002
+          imagePullPolicy: Always

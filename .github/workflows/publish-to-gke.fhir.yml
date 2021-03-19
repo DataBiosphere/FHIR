@@ -1,0 +1,116 @@
+name: FHIR - Build and Publish to GKE
+
+on:
+  release:
+    types: [published]
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  GITHUB_REF: ${{ github.ref }}
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  IMAGE: fhir
+  ORGANIZATION: broad
+  REGISTRY_HOSTNAME: gcr.io
+  GKE_CLUSTER: broad-fhir-cluster
+  GKE_ZONE: us-east1-b
+  URL: ${{ secrets.URL }}
+  TCGA_URL: ${{ secrets.TCGA_URL }}
+  ANVIL_URL: ${{ secrets.ANVIL_URL }}
+
+jobs:
+  run-tests:
+    name: FHIR - Run Jest tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: fhir
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: npm install
+      - name: Test
+        run: npm test
+
+  build-and-publish-to-gke:
+    needs: run-tests
+    name: FHIR - Setup, Build, and Publish
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: fhir
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - name: Setup Google GitHub Actions
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          projecct_id: '$PROJECT_ID'
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Setup GKE Credentials
+        uses: google-github-actions/get-gke-credentials@main
+        with:
+          cluster_name: broad-fhir-cluster
+          location: us-east1-b
+
+      - name: Setup docker
+        run: gcloud auth configure-docker
+
+      - name: Setup GKE Pods
+        run: kubectl get pods
+
+      - name: Install Node Modules
+        run: npm install
+
+      - name: Generate .env
+        run: node ../scripts/create-env-file.js TCGA_URL=${{ secrets.TCGA_URL }} ANVIL_URL=${{ secrets.ANVIL_URL }} URL=${{ secrets.URL }}
+
+      - name: Build
+        run: |
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
+          echo Building image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker build \
+            --tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" \
+            .
+
+      - name: Publish
+        run: |
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
+          echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG"
+          docker tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+          echo Publishing image "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+          docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$ORGANIZATION"/"$IMAGE":latest
+
+      - name: Setup Kustomize
+        run: |
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      - name: Deploy
+        run: |
+          export TAG=`echo $GITHUB_SHA | cut -c1-7`
+          ./kustomize edit set image gcr.io/"$PROJECT_ID"/broad/fhir:"$TAG"
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment/broad-fhir-deployment
+          kubectl get services -o wide
