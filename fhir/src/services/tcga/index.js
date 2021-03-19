@@ -19,9 +19,9 @@ const get = memoize(axios.get, {
 class TCGA {
   constructor() {}
 
-  async getAllDiagnosticReports({ _page, _count, _include, _sort, _offset } = {}) {
+  async getAllDiagnosticReports(params) {
     const { data } = await get(`${TCGA_URL}/api/diagnosticreport`, {
-      params: { _page, _count, _sort, _offset },
+      params,
     });
 
     const { results, count } = data;
@@ -32,9 +32,9 @@ class TCGA {
     return data;
   }
 
-  async getAllObservations({ _page, _count, _sort, _offset } = {}) {
+  async getAllObservations(params) {
     const { data } = await get(`${TCGA_URL}/api/observation`, {
-      params: { _page, _count, _offset, _sort },
+      params,
     });
 
     const { results, count } = data;
@@ -45,9 +45,9 @@ class TCGA {
     return data;
   }
 
-  async getAllSpecimen({ _page, _count, _sort, _offset } = {}) {
+  async getAllSpecimen(params) {
     const { data } = await get(`${TCGA_URL}/api/specimen`, {
-      params: { _page, _count, _sort, _offset },
+      params,
     });
 
     const { results, count } = data;
@@ -58,9 +58,9 @@ class TCGA {
     return data;
   }
 
-  async getAllResearchStudy({ _page, _count, _sort, _offset } = {}) {
+  async getAllResearchStudy(params) {
     const { data } = await get(`${TCGA_URL}/api/researchstudy`, {
-      params: { _page, _count, _offset, _sort },
+      params,
     });
 
     const { results, count } = data;
@@ -71,9 +71,9 @@ class TCGA {
     return data;
   }
 
-  async getAllPatients({ _page, _count, _sort, _offset } = {}) {
+  async getAllPatients(params) {
     const { data } = await get(`${TCGA_URL}/api/patient`, {
-      params: { _page, _count, _offset, _sort },
+      params,
     });
 
     const { results, count } = data;

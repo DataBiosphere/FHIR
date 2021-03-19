@@ -56,6 +56,7 @@ class BigQuery {
     distinct,
     orderBy = [],
     offset = 0,
+    searchFunc,
   } = {}) {
     let counter = 0;
     const tableAlias = `table_${counter}`;
@@ -87,6 +88,10 @@ class BigQuery {
 
     dataQuery = dataQuery.where(whereClause);
 
+    if (searchFunc) {
+      dataQuery = dataQuery.where((builder) => searchFunc(builder));
+    }
+
     // Only now do we clone the count query before adding possible limits and offsets
     let countQuery;
     if (distinct) {
@@ -117,7 +122,6 @@ class BigQuery {
 
       // probably a prettier way of doing this
       orderBy.forEach((entry) => {
-        console.log(JSON.stringify(entry));
         ordering.push(`${(entry.tableAlias ? `\`${entry.tableAlias}\`.` : `\`table_0\`.`)}\`${entry.column}\` ${entry.order} nulls last`);
       });
 

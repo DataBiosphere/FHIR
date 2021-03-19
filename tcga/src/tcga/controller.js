@@ -1,10 +1,13 @@
 const logger = require('../logger');
 const service = require('./service');
+const { getSearchParameters } = require('../utils/searching');
 
 const getAllDiagnosticReports = async (req, res) => {
   logger.info('TCGA >>> getAllDiagnosticReports');
-  const { _page, _count, _sort, _offset } = req.query;
-  const [results, count] = await service.getAllDiagnosticReports({ _page, _count, _sort, _offset });
+  const { _id, _page, _count, _sort, _offset } = req.query;
+  const searchFields = getSearchParameters(req.query);
+
+  const [results, count] = await service.getAllDiagnosticReports({ _id, _page, _count, _sort, _offset, _search: searchFields });
   res.json({
     results,
     count,
@@ -23,8 +26,10 @@ const getDiagnosticReportById = async (req, res) => {
 
 const getAllObservations = async (req, res) => {
   logger.info('TCGA >>> getAllObservations');
-  const { _page, _count, _offset, _sort } = req.query;
-  const [results, count] = await service.getAllObservations({ _page, _count, _sort, _offset });
+  const { _id, _page, _count, _offset, _sort } = req.query;
+  const searchFields = getSearchParameters(req.query);
+
+  const [results, count] = await service.getAllObservations({ _id, _page, _count, _sort, _offset, _search: searchFields });
   res.json({
     results,
     count,
@@ -43,8 +48,10 @@ const getObservationById = async (req, res) => {
 
 const getAllSpecimen = async (req, res) => {
   logger.info('TCGA >>> getAllSpecimen');
-  const { _page, _count, _sort, _offset } = req.query;
-  const [results, count] = await service.getAllSpecimen({ _page, _count, _sort, _offset });
+  const { _id, _page, _count, _sort, _offset } = req.query;
+  const searchFields = getSearchParameters(req.query);
+
+  const [results, count] = await service.getAllSpecimen({ _id, _page, _count, _sort, _offset, _search: searchFields });
   res.json({
     results,
     count,
@@ -63,8 +70,10 @@ const getSpecimenById = async (req, res) => {
 
 const getAllResearchStudies = async (req, res) => {
   logger.info('TCGA >>> getAllResearchStudies');
-  const { _page, _count, _sort, _offset } = req.query;
-  const [results, count] = await service.getAllResearchStudies({ _page, _count, _sort, _offset });
+  const { _id, _page, _count, _sort, _offset } = req.query;
+  const searchFields = getSearchParameters(req.query);
+
+  const [results, count] = await service.getAllResearchStudies({ _id, _page, _count, _sort, _offset, _search: searchFields });
   res.json({
     results,
     count,
@@ -83,8 +92,10 @@ const getResearchStudyById = async (req, res) => {
 
 const getAllPatients = async (req, res) => {
   logger.info('TCGA >>> getAllPatients');
-  const { _page, _count, _sort, _offset } = req.query;
-  const [results, count] = await service.getAllPatients({ _page, _count, _sort, _offset });
+  const { _id, _page, _count, _sort, _offset } = req.query;
+  const searchFields = getSearchParameters(req.query);
+
+  const [results, count] = await service.getAllPatients({ _id, _page, _count, _sort, _offset, _search: searchFields });
   res.json({
     results,
     count,

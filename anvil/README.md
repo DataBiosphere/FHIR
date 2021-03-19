@@ -1,6 +1,6 @@
 # AnVIL Project Parsing Scripts
 
-The scripts will parse data from (The AnVIL)[https://gen3.theanvil.io/] and build out the Mongo database
+The scripts will parse data from [The AnVIL](https://gen3.theanvil.io/) and build out the Mongo database
 
 ## Getting Started
 
@@ -36,6 +36,6 @@ Run
 python main.py
 ```
 
-Running the full script may take a few minutes. Your data will be located in "./data" by default
+Running the full script may take a few minutes. Your data will be located in `./data` by default
 
 ## [If you are having trouble, remember to configure the application correctly.](../docs/CONFIGURATION.md)

@@ -7,6 +7,7 @@ const {
   buildCoding,
   buildOrderBy,
 } = require('../utils');
+const { QueryBuilder } = require('.');
 
 const Observation = resolveSchema('4_0_0', 'Observation');
 const DiagnosticReport = resolveSchema('4_0_0', 'DiagnosticReport');
@@ -54,17 +55,43 @@ class Translator {
       effectiveDateTime: diagnosis.diag__treat__updated_datetime,
     });
   }
+
+  observationFieldResolver(field) {
+    switch (field) {
+      case 'id':
+        return { type: 'token', fields: [{ field: 'diag__treat__treatment_id' }] };
+      case 'subject':
+        return { type: 'reference', fields: [{ field: 'submitter_id', tableAlias: 'table_1' }] };
+      case 'code':
+        return { type: 'token', fields: [{ field: 'diag__treat__treatment_type' }] };
+      case 'identifier':
+        return { type: 'token', fields: [{ field: 'proj__project_id' }] };
+      default:
+        return {};
+    }
+  }
+
+  observationValueResolver(field, value) {
+    switch (field) {
+      case 'id':
+        return [{ field: 'diag__treat__treatment_id', value: value }];
+      case 'subject':
+        return [{ field: 'submitter_id', value: value }];
+      case 'code':
+        return [{ field: 'diag__treat__treatment_type', value: value }];
+      case 'identifier':
+        return [{ field: 'proj__project_id', value: value }];
+      default:
+        return [];
+    }
+  }
+
   toObservationOrderBy(sortFields) {
-    return buildOrderBy(sortFields, (field) => {
-      switch (field) {
-        case 'id':
-          return [{ field: 'diag__treat__treatment_id' }];
-        case 'subject':
-          return [{ field: 'submitter_id', tableAlias: 'table_1' }];
-        default:
-          return [];
-      }
-    });
+    return buildOrderBy(sortFields, this.observationFieldResolver);
+  }
+
+  toObservationSearch(searchFields) {
+    return this.makeSearch(searchFields, this.observationFieldResolver, this.observationValueResolver);
   }
 
   toDiagnosticReport(tcgaResult) {
@@ -105,21 +132,42 @@ class Translator {
     });
   }
 
+  diagnosticReportFieldResolver(field) {
+    switch (field) {
+      case 'id':
+        return { type: 'token', fields: [{ field: 'case_id' }] };
+      case 'subject':
+        return { type: 'reference', fields: [{ field: 'demo__demographic_id' }] };
+      case 'issued':
+        return { type: 'date', fields: [{ field: 'updated_datetime' }] };
+      case 'effectiveDateTime':
+        return { type: 'date', fields: [{ field: 'updated_datetime' }] };
+      default:
+        return [];
+    }
+  }
+
+  diagnosticReportValueResolver(field, value) {
+    switch (field) {
+      case 'id':
+        return [{ field: 'case_id', value: value }];
+      case 'subject':
+        return [{ field: 'demo__demographic_id', value: value }];
+      case 'issued':
+        return [{ field: 'updated_datetime', value: value }];
+      case 'effectiveDateTime':
+        return [{ field: 'updated_datetime', value: value }];
+      default:
+        return [];
+    }
+  }
+
   toDiagnosticReportOrderBy(sortFields) {
-    return buildOrderBy(sortFields, (field) => {
-      switch (field) {
-        case 'id':
-          return [{ field: 'case_id' }];
-        case 'subject':
-          return [{ field: 'demo__demographic_id' }];
-        case 'issued':
-          return [{ field: 'updated_datetime' }];
-        case 'effectiveDateTime':
-          return [{ field: 'updated_datetime' }];
-        default:
-          return [];
-      }
-    });
+    return buildOrderBy(sortFields, this.diagnosticReportFieldResolver);
+  }
+
+  toDiagnosticReportSearch(searchFields) {
+    return this.makeSearch(searchFields, this.diagnosticReportFieldResolver, this.diagnosticReportValueResolver);
   }
 
   toSpecimen(biospecimen) {
@@ -139,19 +187,55 @@ class Translator {
     });
   }
 
-  toSpecimenOrderBy(sortFields) {
-    return buildOrderBy(sortFields, (field) => {
-      switch (field) {
-        case 'id':
-          return [{ field: 'sample_gdc_id' }];
-        case 'identifier':
-          return [{ field: 'project_short_name' }, { field: 'sample_gdc_id' }];
-        case 'subject':
-          return [{ field: 'case_gdc_id' }];
-        default:
-          return [];
+  specimenFieldResolver(field) {
+    switch (field) {
+      case 'id':
+        return { type: 'token', fields: [{ field: 'sample_gdc_id' }] };
+      case 'identifier':
+        return { type: 'token', fields: [{ field: 'project_short_name' }, { field: 'sample_gdc_id' }] };
+      case 'subject':
+        return { type: 'reference', fields: [{ field: 'case_gdc_id' }] };
+      default:
+        return [];
+    }
+  }
+
+  specimenValueResolver(field, value) {
+    const translateIdentifier = (f, v) => {
+      if (v === undefined) {
+        return undefined;
       }
-    });
+
+      const split = v.split('|');
+      if (split.length < 3) {
+        return undefined;
+      }
+
+      if (f === 'project_short_name') {
+        return v[1];
+      } else {
+        return v[2];
+      }
+    };
+
+    switch (field) {
+      case 'id':
+        return [{ field: 'sample_gdc_id', value: value }];
+      case 'identifier':
+        return [{ field: 'project_short_name', value: translateIdentifier(value) }, { field: 'sample_gdc_id', value: translateIdentifier(value) }];
+      case 'subject':
+        return [{ field: 'case_gdc_id', value: value }];
+      default:
+        return [];
+    }
+  }
+
+  toSpecimenOrderBy(sortFields) {
+    return buildOrderBy(sortFields, this.specimenFieldResolver);
+  }
+
+  toSpecimenSearch(searchFields) {
+    return this.makeSearch(searchFields, this.specimenFieldResolver, this.specimenValueResolver);
   }
 
   toResearchStudy(project) {
@@ -178,18 +262,37 @@ class Translator {
       ),
     });
   }
+
+  researchStudyFieldResolver(field) {
+    switch (field) {
+      case 'id':
+      case 'identifier':
+        return { type: 'token', fields: [{ field: 'proj__project_id' }] };
+      case 'title':
+        return { type: 'string', fields: [{ field: 'proj__name' }] };
+      default:
+        return [];
+    }
+  }
+
+  researchStudyValueResolver(field, value) {
+    switch (field) {
+      case 'id':
+      case 'identifier':
+        return [{ field: 'proj__project_id', value: value }];
+      case 'title':
+        return [{ field: 'proj__name', value: value }];
+      default:
+        return [];
+    }
+  }
+
   toResearchStudyOrderBy(sortFields) {
-    return buildOrderBy(sortFields, (field) => {
-      switch (field) {
-        case 'id':
-        case 'identifier':
-          return [{ field: 'proj__project_id' }];
-        case 'title':
-          return [{ field: 'proj__name' }];
-        default:
-          return [];
-      }
-    });
+    return buildOrderBy(sortFields, this.researchStudyFieldResolver);
+  }
+
+  toResearchStudySearch(searchFields) {
+    return this.makeSearch(searchFields, this.researchStudyFieldResolver, this.researchStudyValueResolver);
   }
 
   toPatient(gdcResult) {
@@ -227,25 +330,55 @@ class Translator {
 
     return patient;
   }
+
+  patientFieldResolver(field) {
+    switch (field) {
+      case 'id':
+        return { type: 'token', fields: [{ field: 'submitter_id' }] };
+      case 'identifier':
+        return { type: 'token', fields: [{ field: 'proj__project_id' }] };
+      case 'gender':
+        return { type: 'token', fields: [{ field: 'demo__gender' }] };
+      default:
+        return [];
+    }
+  }
+
+  patientValueResolver(field, value) {
+    switch (field) {
+      case 'id':
+        return [{ field: 'submitter_id', value: value }];
+      case 'identifier':
+        return [{ field: 'proj__project_id', value: value }];
+      case 'gender':
+        return [{ field: 'demo__gender', value: value }];
+      default:
+        return [];
+    }
+  }
+
   // TODO: reduce this with ResearchStudy sort params
   toPatientOrderBy(sortFields) {
-    return buildOrderBy(sortFields, (field) => {
-      switch (field) {
-        case 'id':
-          return [{ field: 'submitter_id' }];
-        case 'identifier':
-          return [{ field: 'proj__project_id' }];
-        case 'gender':
-          return [{ field: 'demo__gender' }];
-        default:
-          return [];
-      }
-    });
+    return buildOrderBy(sortFields, this.patientFieldResolver);
+  }
+
+  toPatientSearch(searchFields) {
+    return this.makeSearch(searchFields, this.patientFieldResolver, this.patientValueResolver);
   }
 
   // TODO: remove this at some point
   makeNCIP(resourceType, projectName, id) {
     return `${resourceType}|${projectName}|${id}`;
+  }
+
+  makeSearch(fields, fieldResolver, valueResolver){
+    const searchBuilder = new QueryBuilder(fieldResolver, valueResolver);
+
+    for (const field in fields) {
+      searchBuilder.add({ field: field, value: fields[field] });
+    }
+
+    return searchBuilder.buildWhere();
   }
 }
 
