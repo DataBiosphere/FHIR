@@ -23,7 +23,7 @@ function FilterList({ params, onDelete }: FilterListType) {
         <Chip
           key={k}
           className={classes.chip}
-          label={`${k}: ${v}`}
+          label={`${k}${v}`}
           onDelete={() => onDelete(k)}
         ></Chip>
       ))}

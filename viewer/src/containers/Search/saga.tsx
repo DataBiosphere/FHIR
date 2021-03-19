@@ -160,7 +160,7 @@ export default function* searchSaga() {
 const makeParamString = (params: any): string => {
   return Object.entries(params)
     .map(([k, v]) => {
-      return `${k}=${encodeURIComponent(v as string)}`;
+      return `${k}${v}`;
     })
     .join('&');
 };

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -44,21 +44,49 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
   const EMPTY_ERROR_MESSAGE = 'Please enter a valid filter';
 
   // state hooks
+  const [resource, setResource] = useState<any>();
   const [menuItems, setMenuItems] = useState<any>();
   const [menuHint, setMenuHint] = useState<any>(PLEASE_SELECT_FILTER_MESSAGE);
+  const [paramType, setParamType] = useState<any>();
   const [paramKey, setParamKey] = useState<any>('');
   const [paramValue, setParamValue] = useState<any>('');
   const [children, setChildren] = useState<Node[]>();
 
-  // ref hooks
-  const resRef = useRef<any>(null);
-  const searchRef = useRef<any>(null);
-
   const classes = useStyles();
+
+  const onAddFilter = () => {
+    if (paramKey && paramValue) {
+      // adds filters based on paramType
+      switch (paramType) {
+        // parses for :contains and :exact
+        case 'string':
+          const regex = /"\s*(.*?)\s*"/;
+          const match = paramValue.match(regex);
+
+          let newParamValue = '';
+          if (match) {
+            newParamValue = `:exact=${match[1]}`;
+          } else {
+            newParamValue = `:contains=${paramValue}`;
+          }
+
+          addParams(paramKey, newParamValue);
+          break;
+        case 'uri':
+          addParams(paramKey, `=${encodeURIComponent(paramValue)}`);
+          break;
+        default:
+          addParams(paramKey, `=${paramValue}`);
+          break;
+      }
+    } else {
+      alert(EMPTY_ERROR_MESSAGE);
+    }
+  };
 
   // clears param field
   const clearParamField = () => {
-    searchRef.current.value = '';
+    setParamValue('');
   };
 
   // parses meta and gets searchable parameters
@@ -76,7 +104,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
       }
     });
     resourceParams?.forEach((param) => {
-      params.push({ paramName: param.name, paramDoc: param.documentation });
+      params.push({ paramName: param.name, paramType: param.type, paramDoc: param.documentation });
     });
 
     // create child MenuItem entries
@@ -102,6 +130,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
       .filter((entry: any) => entry.paramName == param)
       .map((entry: any) => {
         setMenuHint(entry.paramDoc);
+        setParamType(encodeURIComponent(entry.paramType));
       });
   };
 
@@ -112,9 +141,15 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
 
   // gets search param after resource is changed
   useEffect(() => {
-    getSearchParams(resRef.current.innerText);
+    updateResource(resource);
+    getSearchParams(resource);
+
+    resetParams();
     clearParamField();
-  }, [resRef.current?.innerText]);
+
+    setParamKey('');
+    setMenuHint(PLEASE_SELECT_FILTER_MESSAGE);
+  }, [resource]);
 
   return (
     <>
@@ -123,14 +158,11 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
           <FormControl className={classes.formControl}>
             <InputLabel>Resource</InputLabel>
             <Select
-              ref={resRef}
+              id="resource"
+              value={resource}
               defaultValue={DEFAULT_RESOURCE}
               onChange={(event) => {
-                resetParams();
-                clearParamField();
-                setParamKey('');
-                setMenuHint(PLEASE_SELECT_FILTER_MESSAGE);
-                updateResource(event.target.value);
+                setResource(event.target.value);
               }}
             >
               <MenuItem value="" disabled>
@@ -139,8 +171,8 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
               <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
               <MenuItem value="Observation">Observation</MenuItem>
               <MenuItem value="Specimen">Specimen</MenuItem>
-              <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
               <MenuItem value="Patient">Patient</MenuItem>
+              <MenuItem value="ResearchStudy">ResearchStudy</MenuItem>
             </Select>
           </FormControl>
 
@@ -165,7 +197,6 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
             id="paramValue"
             value={paramValue}
             className={classes.flexCenter}
-            inputRef={searchRef} // inputRef != ref...
             label={menuHint}
             onChange={(event) => {
               setParamValue(event.target.value);
@@ -179,13 +210,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
             color="primary"
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => {
-              {
-                paramKey && paramValue
-                  ? addParams(paramKey, paramValue)
-                  : alert(EMPTY_ERROR_MESSAGE);
-              }
-            }}
+            onClick={onAddFilter}
           >
             Add Filter
           </Button>
