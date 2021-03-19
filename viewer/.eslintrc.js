@@ -38,6 +38,7 @@ module.exports = {
     'react/display-name': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     'no-unused-vars': 'warn',
+    'react/no-children-prop': 'warn',
 
     'no-console': 'warn', // we don't want to ship with console logs
     '@typescript-eslint/ban-ts-comment': 'off',
