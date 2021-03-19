@@ -1,6 +1,6 @@
 # AnVIL Project Parsing Scripts
 
-The scripts will parse data from (The AnVIL)[https://gen3.theanvil.io/] and build out the Mongo database
+The scripts will parse data from [The AnVIL](https://gen3.theanvil.io/) and build out the Mongo database
 
 ## Getting Started
 
