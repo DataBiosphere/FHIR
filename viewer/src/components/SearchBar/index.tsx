@@ -69,6 +69,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
     })?.searchParam;
     const params: any[] = [];
 
+    // create menu item params with documentation
     allParams?.forEach((param) => {
       if (param.documentation) {
         params.push({ paramName: param.name, paramDoc: param.documentation });
@@ -78,6 +79,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
       params.push({ paramName: param.name, paramDoc: param.documentation });
     });
 
+    // create child MenuItem entries
     const children: any[] = [];
     params.map((entry: any) => {
       children.push(
@@ -87,6 +89,7 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
       );
     });
 
+    // set menu items
     setMenuItems(params);
     setChildren(children);
 
