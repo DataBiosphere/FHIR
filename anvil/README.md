@@ -36,6 +36,6 @@ Run
 python main.py
 ```
 
-Running the full script may take a few minutes. Your data will be located in "./data" by default
+Running the full script may take a few minutes. Your data will be located in `./data` by default
 
 ## [If you are having trouble, remember to configure the application correctly.](../docs/CONFIGURATION.md)
