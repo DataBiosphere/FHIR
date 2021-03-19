@@ -99,6 +99,7 @@ const search = async ({ base_version: baseVersion }, { req }) => {
     fhirVersion: baseVersion,
     total: count,
     entries: results.map((resource) => buildEntry(resource)),
+    params,
     hashes: {
       prev: session ? session.previous : '',
       _self: _hash,

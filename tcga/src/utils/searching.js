@@ -1,4 +1,4 @@
-const standardQueryParameters = ['_count', '_sort', '_offset', '_hash', '_include', '_revinclude', '_page'];
+const standardQueryParameters = ['_count', '_sort', '_offset', '_hash', '_include', '_revinclude', '_page', '_source'];
 const prefixModifiers = ['gt', 'lt', 'eq', 'ne', 'ge', 'le', 'sa', 'eb', 'ap'];
 const stringModifiers = ['exact', 'contains'];
 const uriModifiers = ['above', 'below'];

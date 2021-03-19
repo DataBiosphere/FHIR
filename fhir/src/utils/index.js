@@ -37,7 +37,7 @@ const buildLinkFromUrl = (relation, linkUrl) => {
  * @param {string} pageSize
  * @param {string} fhirVersion
  */
-const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion, hashes }) => {
+const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion, hashes, params }) => {
   const urlAndVersion = addTrailingSlash(baseUrl) + fhirVersion;
   const links = [];
 
@@ -86,13 +86,14 @@ const buildSearchBundle = ({
   page,
   pageSize,
   fhirVersion = VERSIONS['4_0_0'],
+  params = {},
   hashes = {}
 }) => {
   const Bundle = resolveSchema(fhirVersion, 'Bundle');
   return new Bundle({
     type: 'searchset',
     timestamp: new Date(),
-    link: getLinks({ baseUrl: url, resourceType, page, pageSize, fhirVersion, hashes }),
+    link: getLinks({ baseUrl: url, resourceType, page, pageSize, fhirVersion, hashes, params }),
     entry: entries,
     total,
   });
