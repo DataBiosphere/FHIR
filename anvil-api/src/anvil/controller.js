@@ -1,10 +1,12 @@
 const logger = require('../logger');
 const service = require('./service');
+const { getSearchParameters } = require('../utils/searching');
 
 const getAllResearchStudies = async (req, res) => {
   logger.info('ANVIL >>> getAllResearchStudies');
-  const { _page, _count, _sort, _offset } = req.query;
-  const [results, count] = await service.getAllResearchStudies({ _page, _count, _sort, _offset });
+  const { _id, _page, _count, _sort, _offset } = req.query;
+  const searchFields = getSearchParameters(req.query);
+  const [results, count] = await service.getAllResearchStudies({ _id, _page, _count, _sort, _offset, _search: searchFields });
   res.json({
     results,
     count,
@@ -23,13 +25,11 @@ const getResearchStudyById = async (req, res) => {
 
 const getAllSamples = async (req, res) => {
   logger.info('ANVIL >>> getAllSamples');
-  let workspace;
-  if (req.params) {
-    workspace = req.params.workspace;
-  }
 
-  const { _page, _count } = req.query;
-  const [results, count] = await service.getAllSamples({ workspace, _page, _count });
+  const { _id, _page, _count } = req.query;
+  const searchFields = getSearchParameters(req.query);
+
+  const [results, count] = await service.getAllSamples({ _id, _page, _count, _search: searchFields });
   res.json({
     results,
     count,
@@ -48,18 +48,17 @@ const getSampleById = async (req, res) => {
 
 const getAllPatients = async (req, res) => {
   logger.info('ANVIL >>> getAllPatients');
-  let workspace;
-  if (req.params) {
-    workspace = req.params.workspace;
-  }
 
-  const { _page, _count, _sort, _offset } = req.query;
+  const { _id, _page, _count, _sort, _offset } = req.query;
+  const searchFields = getSearchParameters(req.query);
+
   const [results, count] = await service.getAllPatients({
-    workspace,
+    _id,
     _page,
     _count,
     _sort,
     _offset,
+    _search: searchFields
   });
   res.json({
     results,
@@ -79,18 +78,17 @@ const getPatientById = async (req, res) => {
 
 const getAllObservations = async (req, res) => {
   logger.info('ANVIL >>> getAllObservations');
-  let workspace;
-  if (req.params) {
-    workspace = req.params.workspace;
-  }
 
-  const { _page, _count, _sort, _offset } = req.query;
+  const { _id, _page, _count, _sort, _offset } = req.query;
+  const searchFields = getSearchParameters(req.query);
+
   const [results, count] = await service.getAllObservations({
-    workspace,
+    _id,
     _page,
     _count,
     _sort,
     _offset,
+    _search: searchFields
   });
   res.json({
     results,
@@ -99,8 +97,8 @@ const getAllObservations = async (req, res) => {
 };
 const getObservationById = async (req, res) => {
   logger.info('ANVIL >>> getObservationById');
-  const { workspace, id } = req.params;
-  const results = await service.getObservationById({ workspace, id });
+  const { id } = req.params;
+  const results = await service.getObservationById({ id });
   if (!results) {
     res.sendStatus(404);
   } else {

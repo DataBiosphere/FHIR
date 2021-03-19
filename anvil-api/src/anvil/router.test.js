@@ -52,28 +52,12 @@ describe('router tests', () => {
         done();
       });
   });
-  it('should route Sample Requests with a Workspace to getAllSamples controller', (done) => {
-    supertest(app)
-      .get('/Workspace/foobar/Sample')
-      .end(() => {
-        expect(controller.getAllSamples.mock.calls.length).toEqual(2);
-        done();
-      });
-  });
 
   it('should route Sample ID Requests to getSampleById controller', (done) => {
     supertest(app)
       .get('/Sample/foobar')
       .end(() => {
         expect(controller.getSampleById.mock.calls.length).toEqual(1);
-        done();
-      });
-  });
-  it('should route Workspace Sample ID Requests to getSampleById controller', (done) => {
-    supertest(app)
-      .get('/workspace/foo/Sample/bar')
-      .end(() => {
-        expect(controller.getSampleById.mock.calls.length).toEqual(2);
         done();
       });
   });
@@ -86,28 +70,12 @@ describe('router tests', () => {
         done();
       });
   });
-  it('should route Subject Requests with a Workspace to getAllPatients controller', (done) => {
-    supertest(app)
-      .get('/Workspace/foobar/Subject')
-      .end(() => {
-        expect(controller.getAllPatients.mock.calls.length).toEqual(2);
-        done();
-      });
-  });
 
   it('should route Patient ID Requests to getPatientById controller', (done) => {
     supertest(app)
       .get('/Patient/foobar')
       .end(() => {
         expect(controller.getPatientById.mock.calls.length).toEqual(1);
-        done();
-      });
-  });
-  it('should route Workspace Patient ID Requests to getPatientById controller', (done) => {
-    supertest(app)
-      .get('/workspace/foo/Subject/bar')
-      .end(() => {
-        expect(controller.getPatientById.mock.calls.length).toEqual(2);
         done();
       });
   });
@@ -120,28 +88,12 @@ describe('router tests', () => {
         done();
       });
   });
-  it('should route Observation Requests with a Workspace to getAllObservations controller', (done) => {
-    supertest(app)
-      .get('/Workspace/foobar/Observation')
-      .end(() => {
-        expect(controller.getAllObservations.mock.calls.length).toEqual(2);
-        done();
-      });
-  });
 
   it('should route Observation ID Requests to getObservationById controller', (done) => {
     supertest(app)
       .get('/Observation/foobar')
       .end(() => {
         expect(controller.getObservationById.mock.calls.length).toEqual(1);
-        done();
-      });
-  });
-  it('should route Workspace Observation ID Requests to getObservationById controller', (done) => {
-    supertest(app)
-      .get('/workspace/foo/Observation/bar')
-      .end(() => {
-        expect(controller.getObservationById.mock.calls.length).toEqual(2);
         done();
       });
   });

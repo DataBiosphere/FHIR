@@ -13,11 +13,12 @@ describe('DiagnosticReport metadata test', () => {
       searchInclude: ['DiagnosticReport:result'],
       searchRevInclude: [],
       searchParam: [
-        // {
-        //   name: 'researchStudy',
-        //   definition: 'http://hl7.org/fhir/StructureDefinition/workflow-researchStudy',
-        //   type: 'string',
-        // },
+        {
+          name : "subject",
+          definition : "http://hl7.org/fhir/SearchParameter/DiagnosticReport-subject",
+          type : "reference",
+          documentation : "The subject of the report"
+        }
       ],
       type: 'DiagnosticReport',
       updateCreate: false,

@@ -75,7 +75,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   }
 
   // create promises and add both adapters
-  const params = { _page, _count, _sort };
+  const params = Object.assign(req.query, {});
+  delete params._hash;
   let results = [];
   let count = 0;
   let newHash = '';

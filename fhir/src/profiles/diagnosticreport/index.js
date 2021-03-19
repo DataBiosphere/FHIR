@@ -70,7 +70,8 @@ const search = async ({ base_version: baseVersion }, { req }) => {
   }
 
   // create results
-  const params = { _page, _include, _count, _sort };
+  const params = Object.assign(req.query, {});
+  delete params._hash;
   let results = [];
   let count = 0;
   let newHash = '';
