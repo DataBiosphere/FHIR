@@ -48,17 +48,17 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
   const [menuHint, setMenuHint] = useState<any>(PLEASE_SELECT_FILTER_MESSAGE);
   const [paramKey, setParamKey] = useState<any>('');
   const [paramValue, setParamValue] = useState<any>('');
+  const [children, setChildren] = useState<Node[]>();
 
   // ref hooks
   const resRef = useRef<any>(null);
-  const paramRef = useRef<any>(null);
+  const searchRef = useRef<any>(null);
 
   const classes = useStyles();
 
   // clears param field
   const clearParamField = () => {
-    paramRef.current.value = '';
-    setMenuHint(PLEASE_SELECT_FILTER_MESSAGE);
+    searchRef.current.value = '';
   };
 
   // parses meta and gets searchable parameters
@@ -78,7 +78,18 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
       params.push({ paramName: param.name, paramDoc: param.documentation });
     });
 
+    const children: any[] = [];
+    params.map((entry: any) => {
+      children.push(
+        <MenuItem key={entry.paramName} value={entry.paramName}>
+          {entry.paramName}
+        </MenuItem>
+      );
+    });
+
     setMenuItems(params);
+    setChildren(children);
+
     return params;
   };
 
@@ -91,12 +102,12 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
       });
   };
 
-  // run on initial launch to change parameter
+  // run on initial launch to get search params
   useEffect(() => {
     getSearchParams(DEFAULT_RESOURCE);
   }, [meta]);
 
-  // runs when resource is changed
+  // gets search param after resource is changed
   useEffect(() => {
     getSearchParams(resRef.current.innerText);
     clearParamField();
@@ -114,9 +125,14 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
               onChange={(event) => {
                 resetParams();
                 clearParamField();
+                setParamKey('');
+                setMenuHint(PLEASE_SELECT_FILTER_MESSAGE);
                 updateResource(event.target.value);
               }}
             >
+              <MenuItem value="" disabled>
+                Select one...
+              </MenuItem>
               <MenuItem value="DiagnosticReport">DiagnosticReport</MenuItem>
               <MenuItem value="Observation">Observation</MenuItem>
               <MenuItem value="Specimen">Specimen</MenuItem>
@@ -129,33 +145,24 @@ function SearchBar({ updateResource, addParams, resetParams, applyParams, meta }
             <InputLabel>Filter</InputLabel>
             <Select
               id="paramKey"
+              value={paramKey}
               defaultValue=""
               onChange={(event) => {
                 setParamKey(event.target.value);
                 setParamHint(event.target.value as string);
                 clearParamField();
               }}
-            >
-              <MenuItem value="" disabled>
-                Select one...
-              </MenuItem>
-              {menuItems
-                ? menuItems.map((entry: any) => {
-                    return (
-                      <MenuItem key={entry.paramName} value={entry.paramName}>
-                        {entry.paramName}
-                      </MenuItem>
-                    );
-                  })
-                : null}
-            </Select>
+              children={children}
+            ></Select>
           </FormControl>
         </Box>
 
         <Box className={classes.formControl} flexGrow={1} alignContent="center">
           <TextField
+            id="paramValue"
+            value={paramValue}
             className={classes.flexCenter}
-            inputRef={paramRef} // inputRef != ref...
+            inputRef={searchRef} // inputRef != ref...
             label={menuHint}
             onChange={(event) => {
               setParamValue(event.target.value);
