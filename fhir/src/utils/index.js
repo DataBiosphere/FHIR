@@ -56,16 +56,34 @@ const getLinks = ({ baseUrl, resourceType, page, pageSize, fhirVersion, hashes, 
   }
   linkNext.searchParams.set('_count', pageSize);
 
-  const urlNext = buildLinkFromUrl('next', linkNext);
-  const urlSelf = buildLinkFromUrl('self', linkSelf);
-
-  if (page > 1) {
-    const linkPrevious = new URL(resourceType, urlAndVersion);
+  const prevExists = page > 1;
+  let linkPrevious = undefined;
+  if (prevExists) {
+    linkPrevious = new URL(resourceType, urlAndVersion);
     linkPrevious.searchParams.set('_page', Number(page) - 1);
     if (hashes && hashes.prev) {
       linkPrevious.searchParams.set('_hash', hashes.prev);
     }
     linkPrevious.searchParams.set('_count', pageSize);
+  }
+
+  if (params) {
+    for (const k in params) {
+      if (!['_page', '_count', '_hash'].includes(k)) {
+        linkSelf.searchParams.set(k, params[k]);
+        linkNext.searchParams.set(k, params[k]);
+
+        if (prevExists) {
+          linkPrevious.searchParams.set(k, params[k]);
+        }
+      }
+    }
+  }
+
+  const urlNext = buildLinkFromUrl('next', linkNext);
+  const urlSelf = buildLinkFromUrl('self', linkSelf);
+
+  if (prevExists) {
     links.push(buildLinkFromUrl('previous', linkPrevious));
   }
 

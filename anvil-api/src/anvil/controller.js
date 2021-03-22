@@ -92,9 +92,9 @@ const getAllPatients = async (req, res) => {
 };
 const getPatientById = async (req, res) => {
   logger.info('ANVIL >>> getPatientById');
-  const { workspace, id } = req.params;
+  const { id } = req.params;
   try {
-    const results = await service.getPatientById({ workspace, id });
+    const results = await service.getPatientById({ id });
     if (!results) {
       res.sendStatus(404);
     } else {
