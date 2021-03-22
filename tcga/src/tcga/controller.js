@@ -7,20 +7,30 @@ const getAllDiagnosticReports = async (req, res) => {
   const { _id, _page, _count, _sort, _offset } = req.query;
   const searchFields = getSearchParameters(req.query);
 
-  const [results, count] = await service.getAllDiagnosticReports({ _id, _page, _count, _sort, _offset, _search: searchFields });
-  res.json({
-    results,
-    count,
-  });
+  try {
+    const [results, count] = await service.getAllDiagnosticReports({ _id, _page, _count, _sort, _offset, _search: searchFields });
+    res.json({
+      results,
+      count,
+    });
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
+  }
 };
 const getDiagnosticReportById = async (req, res) => {
   logger.info('TCGA >>> getDiagnosticReportById');
   const { id } = req.params;
-  const results = await service.getDiagnosticReportById(id);
-  if (!results) {
-    res.sendStatus(404);
-  } else {
-    res.json(results);
+  try {
+    const results = await service.getDiagnosticReportById(id);
+    if (!results) {
+      res.sendStatus(404);
+    } else {
+      res.json(results);
+    }
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
   }
 };
 
@@ -29,20 +39,31 @@ const getAllObservations = async (req, res) => {
   const { _id, _page, _count, _offset, _sort } = req.query;
   const searchFields = getSearchParameters(req.query);
 
-  const [results, count] = await service.getAllObservations({ _id, _page, _count, _sort, _offset, _search: searchFields });
-  res.json({
-    results,
-    count,
-  });
+  try {
+    const [results, count] = await service.getAllObservations({ _id, _page, _count, _sort, _offset, _search: searchFields });
+    res.json({
+      results,
+      count,
+    });
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
+  }
 };
 const getObservationById = async (req, res) => {
   logger.info('TCGA >>> getObservationById');
   const { id } = req.params;
-  const results = await service.getObservationById(id);
-  if (!results) {
-    res.sendStatus(404);
-  } else {
-    res.json(results);
+
+  try {
+    const results = await service.getObservationById(id);
+    if (!results) {
+      res.sendStatus(404);
+    } else {
+      res.json(results);
+    }
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
   }
 };
 
@@ -51,20 +72,31 @@ const getAllSpecimen = async (req, res) => {
   const { _id, _page, _count, _sort, _offset } = req.query;
   const searchFields = getSearchParameters(req.query);
 
-  const [results, count] = await service.getAllSpecimen({ _id, _page, _count, _sort, _offset, _search: searchFields });
-  res.json({
-    results,
-    count,
-  });
+  try {
+    const [results, count] = await service.getAllSpecimen({ _id, _page, _count, _sort, _offset, _search: searchFields });
+    res.json({
+      results,
+      count,
+    });
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
+  }
 };
 const getSpecimenById = async (req, res) => {
   logger.info('TCGA >>> getSpecimenById');
   const { id } = req.params;
-  const results = await service.getSpecimenById(id);
-  if (!results) {
-    res.sendStatus(404);
-  } else {
-    res.json(results);
+
+  try {
+    const results = await service.getSpecimenById(id);
+    if (!results) {
+      res.sendStatus(404);
+    } else {
+      res.json(results);
+    }
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
   }
 };
 
@@ -73,20 +105,31 @@ const getAllResearchStudies = async (req, res) => {
   const { _id, _page, _count, _sort, _offset } = req.query;
   const searchFields = getSearchParameters(req.query);
 
-  const [results, count] = await service.getAllResearchStudies({ _id, _page, _count, _sort, _offset, _search: searchFields });
-  res.json({
-    results,
-    count,
-  });
+  try {
+    const [results, count] = await service.getAllResearchStudies({ _id, _page, _count, _sort, _offset, _search: searchFields });
+    res.json({
+      results,
+      count,
+    });
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
+  }
 };
 const getResearchStudyById = async (req, res) => {
   logger.info('TCGA >>> getResearchStudyById');
   const { id } = req.params;
-  const results = await service.getResearchStudyById(id);
-  if (!results) {
-    res.sendStatus(404);
-  } else {
-    res.json(results);
+
+  try {
+    const results = await service.getResearchStudyById(id);
+    if (!results) {
+      res.sendStatus(404);
+    } else {
+      res.json(results);
+    }
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
   }
 };
 
@@ -95,20 +138,31 @@ const getAllPatients = async (req, res) => {
   const { _id, _page, _count, _sort, _offset } = req.query;
   const searchFields = getSearchParameters(req.query);
 
-  const [results, count] = await service.getAllPatients({ _id, _page, _count, _sort, _offset, _search: searchFields });
-  res.json({
-    results,
-    count,
-  });
+  try {
+    const [results, count] = await service.getAllPatients({ _id, _page, _count, _sort, _offset, _search: searchFields });
+    res.json({
+      results,
+      count,
+    });
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
+  }
 };
 const getPatientById = async (req, res) => {
   logger.info('TCGA >>> getPatientById');
   const { id } = req.params;
-  const results = await service.getPatientById(id);
-  if (!results) {
-    res.sendStatus(404);
-  } else {
-    res.json(results);
+
+  try {
+    const results = await service.getPatientById(id);
+    if (!results) {
+      res.sendStatus(404);
+    } else {
+      res.json(results);
+    }
+  } catch (e) {
+    logger.info('TCGA >>> ' + e);
+    res.sendStatus(500);
   }
 };
 
