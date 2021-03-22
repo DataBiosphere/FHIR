@@ -20,6 +20,9 @@ import {
   GET_DOWNLOAD_UPDATE,
   GET_DOWNLOAD_SUCCESS,
   GET_DOWNLOAD_ERROR,
+  GET_META_REQUEST,
+  GET_META_SUCCESS,
+  GET_META_ERROR,
 } from './types';
 
 // default action
@@ -125,6 +128,27 @@ export function downloadBundleSuccessAction(download: any): SearchActionTypes {
 export function downloadBundleErrorAction(error: Error): SearchActionTypes {
   return {
     type: GET_DOWNLOAD_ERROR,
+    payload: { error },
+  };
+}
+
+// meta actions
+export function getMetaRequestAction(): SearchActionTypes {
+  return {
+    type: GET_META_REQUEST,
+  };
+}
+
+export function getMetaSuccessAction(meta: any): SearchActionTypes {
+  return {
+    type: GET_META_SUCCESS,
+    payload: { meta },
+  };
+}
+
+export function getMetaErrorAction(error: Error): SearchActionTypes {
+  return {
+    type: GET_META_ERROR,
     payload: { error },
   };
 }

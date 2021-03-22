@@ -13,21 +13,21 @@ describe('ResearchStudy metadata test', () => {
       searchInclude: [],
       searchParam: [
         {
-          name: "identifier",
-          definition: "http://hl7.org/fhir/SearchParameter/ResearchStudy-identifier",
-          type: "token",
-          documentation: "Business Identifier for study"
-        },
-        {
-          name: "title",
-          definition: "http://hl7.org/fhir/SearchParameter/ResearchStudy-title",
-          type: "string",
-          documentation: "Name for this study"
-        },
-        {
           name: '_source',
           type: 'uri',
           documentation: 'URL of the source site. Currently only supports AnVIL and TCGA',
+        },
+        {
+          name: 'identifier',
+          definition: 'http://hl7.org/fhir/researchstudy-definitions.html#ResearchStudy.identifier',
+          type: 'token',
+          documentation: 'The unique id for a particular research study',
+        },
+        {
+          name: 'title',
+          definition: 'http://hl7.org/fhir/researchstudy-definitions.html#ResearchStudy.title',
+          type: 'string',
+          documentation: 'The name of the study',
         },
       ],
       searchRevInclude: [],

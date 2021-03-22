@@ -107,7 +107,7 @@ interface GetMetaRequestAction {
 
 interface GetMetaSuccessAction {
   type: typeof GET_META_SUCCESS;
-  payload: { meta: fhir.CapabilityStatement };
+  payload: { meta: any };
 }
 
 interface GetMetaErrorAction {

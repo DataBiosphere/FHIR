@@ -19,6 +19,8 @@ import {
   GET_DOWNLOAD_UPDATE,
   GET_DOWNLOAD_SUCCESS,
   GET_DOWNLOAD_ERROR,
+  GET_META_SUCCESS,
+  GET_META_ERROR,
 } from './types';
 
 export const initialState = {
@@ -52,14 +54,6 @@ const searchReducer = (state = initialState, action: any) =>
         draft.selectedResource = action.payload.resource;
         break;
 
-      case GET_ENTRY_REQUEST:
-        draft.resourceType = action.payload.resourceType;
-        draft.id = action.payload.id;
-        break;
-      case GET_ENTRY_SUCCESS:
-        draft.viewingEntry = action.payload.entry;
-        break;
-
       // TODO: figure out this data race
       //        it should update the params before it makes the first API call
       case ADD_PARAM:
@@ -91,6 +85,25 @@ const searchReducer = (state = initialState, action: any) =>
         draft.error = action.payload.error;
         draft.bundle = undefined;
         draft.downloadProgress = 0;
+        break;
+
+      case GET_ENTRY_REQUEST:
+        draft.resourceType = action.payload.resourceType;
+        draft.id = action.payload.id;
+        break;
+      case GET_ENTRY_SUCCESS:
+        draft.viewingEntry = action.payload.entry;
+        break;
+
+      case GET_META_SUCCESS:
+        draft.meta = action.payload.meta;
+        break;
+      case GET_META_ERROR:
+        // TODO: maybe make error more descriptive?
+        draft.error = action.payload.error;
+        draft.bundle = undefined;
+        draft.pageLinks = [];
+        draft.loading = false;
         break;
 
       case DEFAULT_ACTION:

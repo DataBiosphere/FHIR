@@ -13,9 +13,12 @@ import {
   downloadBundleErrorAction,
   downloadBundleUpdateAction,
   downloadBundleSuccessAction,
+  getMetaRequestAction,
+  getMetaSuccessAction,
+  getMetaErrorAction,
 } from './actions';
 import { PARSING_ROWS_PER_PAGE } from './constants';
-import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
+import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD, GET_META } from './types';
 
 // TODO: explore memoizing this for pageLinks
 function* getBundle({ resourceType, page, count, pageLinks, params }: any) {
@@ -55,22 +58,6 @@ function* getBundle({ resourceType, page, count, pageLinks, params }: any) {
     yield put(loadBundleSuccessAction(bundle, links));
   } catch (e) {
     yield put(loadBundleErrorAction(e));
-  }
-}
-
-function* getEntry({ resourceType, id }: any) {
-  // @ts-ignore
-  const client = yield call(connect);
-  const requester = makeRequester(client);
-  try {
-    yield put(loadEntryRequestAction(resourceType, id));
-
-    // @ts-ignore
-    const entry = yield call(requester, `${resourceType}/${id}`);
-
-    yield put(loadEntrySuccessAction(entry));
-  } catch (e) {
-    loadEntryErrorAction(e);
   }
 }
 
@@ -129,17 +116,51 @@ function* getDownload({ resourceType, params }: any) {
   }
 }
 
+function* getEntry({ resourceType, id }: any) {
+  // @ts-ignore
+  const client = yield call(connect);
+  const requester = makeRequester(client);
+  try {
+    yield put(loadEntryRequestAction(resourceType, id));
+
+    // @ts-ignore
+    const entry = yield call(requester, `${resourceType}/${id}`);
+
+    yield put(loadEntrySuccessAction(entry));
+  } catch (e) {
+    yield put(loadEntryErrorAction(e));
+  }
+}
+
+function* getMeta() {
+  // @ts-ignore
+  const client = yield call(connect);
+  const requester = makeRequester(client);
+  try {
+    yield put(getMetaRequestAction());
+
+    // @ts-ignore
+    const meta: fhir.CapabilityStatement = yield call(requester, `metadata`);
+    const server = meta.rest?.find((entry) => entry.mode == 'server');
+
+    yield put(getMetaSuccessAction(server));
+  } catch (e) {
+    yield put(getMetaErrorAction(e));
+  }
+}
+
 export default function* searchSaga() {
   yield all([takeEvery(GET_BUNDLE, getBundle)]);
   yield all([takeEvery(GET_ENTRY, getEntry)]);
   yield all([takeEvery(GET_DOWNLOAD, getDownload)]);
+  yield all([takeEvery(GET_META, getMeta)]);
 }
 
 // util functions
 const makeParamString = (params: any): string => {
   return Object.entries(params)
     .map(([k, v]) => {
-      return `${k}=${encodeURIComponent(v as string)}`;
+      return `${k}${v}`;
     })
     .join('&');
 };

@@ -40,7 +40,7 @@ import {
   deleteParamAction,
   resetParamAction,
 } from './actions';
-import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD } from './types';
+import { GET_BUNDLE, GET_ENTRY, GET_DOWNLOAD, GET_META } from './types';
 
 import mappings from './mappings';
 import { DEFAULT_ROWS_PER_PAGE } from './constants';
@@ -54,6 +54,7 @@ interface SearchType {
   getResources: any; // TODO: fix this PropTypes.func
   updateResource: any;
   getDownload: any; // TODO: fix this PropTypes.func
+  getMeta: any;
   bundle: fhir.Bundle;
   params?: any; // TODO: fix this
   download?: string;
@@ -100,6 +101,7 @@ export function Search(props: any) {
     deleteParam,
     resetParams,
     getDownload,
+    getMeta,
 
     bundle,
     loading,
@@ -127,18 +129,16 @@ export function Search(props: any) {
 
   const classes = useStyles();
 
+  // TODO: there has to be a better way to condense this
   const onUpdateResource = (resource: string) => {
     updateResource(resource);
   };
-
   const onAddParam = (key: string, value: any) => {
     addParams(key, value);
   };
-
   const onResetParam = () => {
     resetParams();
   };
-
   const onDeleteParam = (name: string) => {
     deleteParam(name);
   };
@@ -159,19 +159,17 @@ export function Search(props: any) {
   const onExportClicked = () => {
     const date = new Date();
     setFileName(
-      `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${date.getHours}-${
-        date.getMinutes
-      }-${date.getSeconds}_${selectedResource}_Export`
+      `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}_${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}_${selectedResource}_Export`
     );
     getDownload(selectedResource, params);
   };
 
   const closeViewingEntry = () => setOpen(false);
 
-  // // runs on inital launch
-  // useEffect(() => {
-  //   getResources(selectedResource, page, rowsPerPage, pageLinks, params);
-  // }, []);
+  // runs on inital launch
+  useEffect(() => {
+    getMeta();
+  }, []);
 
   // runs when resource changes
   useEffect(() => {
@@ -187,11 +185,6 @@ export function Search(props: any) {
       (saveAs as any)(blob, `${fileName}`);
     }
   }, [download]);
-
-  // DEV: prints when params is change
-  // useEffect(() => {
-  //   console.log(params);
-  // }, [params]);
 
   const itemKey = 'id';
 
@@ -210,6 +203,7 @@ export function Search(props: any) {
         addParams={onAddParam}
         resetParams={onResetParam}
         applyParams={onApplyClicked}
+        meta={meta}
       />
 
       <div className={classes.flexCenter}>
@@ -277,7 +271,6 @@ const mapStateToProps = (state: any) => {
 
     selectedResource: selectSelectedResource(state),
     params: selectParams(state),
-    meta: selectMeta(state),
 
     page: selectPage(state),
     pageLinks: selectPageLinks(state),
@@ -285,6 +278,7 @@ const mapStateToProps = (state: any) => {
     download: selectDownload(state),
     downloadProgress: selectDownloadProgress(state),
 
+    meta: selectMeta(state),
     error: selectError(state),
 
     // TODO: figure out how to display different viewing entries
@@ -327,6 +321,10 @@ function mapDispatchToProps(dispatch: any) {
 
     getViewingEntry: (resourceType: string, id: string) => {
       dispatch({ type: GET_ENTRY, resourceType, id });
+    },
+
+    getMeta: () => {
+      dispatch({ type: GET_META });
     },
   };
 }
