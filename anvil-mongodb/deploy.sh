@@ -10,5 +10,3 @@ kubectl apply -f mongodb-secret.yml
 kubectl apply -f mongodb-deployment.yml
 
 kubectl apply -f mongodb-configmap.yml
-
-kubectl apply -f mongodb-express.yml
