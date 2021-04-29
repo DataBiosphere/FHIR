@@ -4,7 +4,7 @@
  * @param {*} ttl in milliseconds
  */
 const isExpired = (time, ttl) => {
-  return new Date().getTime() - time > ttl;
+  return new Date().getTime() - time >= ttl;
 };
 
 /**
@@ -15,14 +15,20 @@ const createCache = (ttl) => {
   return {
     create() {
       const store = new Map();
+      const ttlNum = parseInt(ttl);
+
+      if (isNaN(ttlNum)) {
+        throw new Error(`ttl is ${ttlNum}`);
+      }
+
       return {
         has(key) {
-          return store.has(key) && !isExpired(store.get(key).time, ttl);
+          return store.has(key) && !isExpired(store.get(key).time, ttlNum);
         },
 
         get(key) {
           const hit = store.get(key);
-          if (hit && !isExpired(hit.time, ttl)) {
+          if (hit && !isExpired(hit.time, ttlNum)) {
             return hit.value;
           }
           store.delete(key);
