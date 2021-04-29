@@ -6,6 +6,7 @@ const {
   buildEntry,
   buildCompareFn,
   mergeResults,
+  createCache,
 } = require('.');
 
 const LOCAL_URL = process.env.URL;
@@ -118,5 +119,25 @@ describe('Utils tests', () => {
       [{ test: 'a' }, { test: 'b' }],
       [0, 2],
     ]);
+  });
+
+  it('should properly create a cache', () => {
+    const cache = createCache('5000').create();
+    cache.set(1, 'one');
+
+    expect(cache.get(1)).toEqual('one');
+    expect(cache.has(1)).toEqual(true);
+  });
+
+  it('should reject this cache', () => {
+    expect(() => createCache('one').create()).toThrow();
+  });
+
+  it('should timeout the cache', () => {
+    const cache = createCache(0).create();
+    cache.set(1, 'two');
+
+    expect(cache.get(1)).toEqual(undefined);
+    expect(cache.has(1)).toEqual(false);
   });
 });
